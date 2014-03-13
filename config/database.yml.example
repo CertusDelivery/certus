@@ -1,0 +1,17 @@
+default: &DEFAULT
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: <%=`whoami`.strip.inspect %>
+
+development:
+  <<: *DEFAULT
+  database: certus_development
+  
+test:
+  <<: *DEFAULT
+  database: certus_test
+
+production:
+  <<: *DEFAULT
+  database: certus_production
