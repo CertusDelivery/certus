@@ -18,13 +18,13 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'factory_girl_rails'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
 end
 
 group :test, :development do
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
 end
 
 group :deployment do
