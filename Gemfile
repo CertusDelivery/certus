@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 gem 'formtastic'
 gem 'haml'
@@ -8,6 +8,7 @@ gem 'pg'
 gem 'rails', '4.0.3'
 gem 'will_paginate'
 gem 'nested_form'
+gem "inherited_resources", "~> 1.4.1"
 
 group :assets do
   gem 'sass-rails', '~> 4.0.0'
