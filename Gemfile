@@ -1,7 +1,9 @@
 source 'http://rubygems.org'
 
+gem 'angularjs-rails'
 gem 'formtastic'
 gem 'haml'
+gem 'jbuilder', '~> 1.2'
 gem 'jquery-rails'
 gem 'json'
 gem 'pg'

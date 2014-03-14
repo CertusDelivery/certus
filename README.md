@@ -45,6 +45,18 @@ PostgreSQL
     create role [your login] superuser login
 
 
+NodeJS
+---
+
+    brew install node
+
+
+Karma
+---
+
+    npm install karma
+
+
 Pow
 ---
 
