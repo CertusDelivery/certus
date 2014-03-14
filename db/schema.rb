@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20140314084711) do
     t.text     "other_adjustments"
     t.decimal  "order_item_amount"
     t.string   "order_item_options_flags"
+    t.string   "shipping_weight_unit"
   end
 
 end

@@ -9,5 +9,6 @@ class AddOrderItemsFieldsToDeliveryItems < ActiveRecord::Migration
     add_column :delivery_items, :other_adjustments, :text
     add_column :delivery_items, :order_item_amount, :decimal
     add_column :delivery_items, :order_item_options_flags, :string
+    add_column :delivery_items, :shipping_weight_unit, :string
   end
 end
