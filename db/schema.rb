@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140314021414) do
+ActiveRecord::Schema.define(version: 20140314084711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,14 @@ ActiveRecord::Schema.define(version: 20140314021414) do
     t.string   "picker_bin_number"
     t.string   "payment_adjustment"
     t.text     "additional"
+    t.integer  "delivery_id"
+    t.string   "client_slu"
+    t.decimal  "quantity"
+    t.decimal  "price"
+    t.decimal  "tax"
+    t.text     "other_adjustments"
+    t.decimal  "order_item_amount"
+    t.string   "order_item_options_flags"
   end
 
 end
