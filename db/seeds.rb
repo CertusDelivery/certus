@@ -5,6 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Delivery.delete_all
 deliveries = []
 deliveries << Delivery.create(bin_geocode: 1, order_status: 'PICKING')
 deliveries << Delivery.create(bin_geocode: 2, order_status: 'PICKING')

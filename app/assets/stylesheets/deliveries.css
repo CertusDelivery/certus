@@ -1,4 +1,158 @@
 /*
-  Place all the styles related to the matching controller here.
-  They will automatically be included in application.css.
+  Please NOTE: All these css code are just for tmp use. Will delete all later.
 */
+
+p {
+  padding: 10px 0; }
+
+table thead {
+  background-color: #d9d9db;
+  text-transform: uppercase; 
+}
+table thead tr th {
+  padding: 5px 10px; 
+}
+table tbody tr, table tfoot tr {
+  border-bottom: 1px solid #d9d9db; 
+}
+table tbody tr td, table tfoot tr td {
+  vertical-align: middle;
+  padding: 5px 10px; 
+}
+table tbody tr.alt, table tbody tr.odd, table tfoot tr.alt, table tfoot tr.odd {
+  background-color: #eefaff; 
+}
+table {
+  width: 100%;
+  margin-bottom: 15px;
+  border-collapse: separate;
+  border-spacing: 0px;
+ }
+  table th, table td {
+    padding: 7px 5px;
+    border-right: 1px solid #cee1f4;
+    border-bottom: 1px solid #cee1f4;
+    vertical-align: middle;
+    text-overflow: ellipsis; }
+    table th img, table td img {
+      border: 1px solid transparent; }
+    table th:first-child, table td:first-child {
+      border-left: 1px solid #cee1f4; }
+    table th a, table td a {
+      border-bottom: 1px dotted #7eb1e3; }
+      table th a:hover, table th #admin-menu li.selected a, #admin-menu li.selected table th a, table td a:hover, table td #admin-menu li.selected a, #admin-menu li.selected table td a {
+        border-color: #b8e03b; }
+    table th .handle, table td .handle {
+      display: block !important;
+      text-align: center;
+      padding-right: 0; }
+    table th.actions, table td.actions {
+      background-color: transparent;
+      border: none !important;
+      text-align: center; }
+      table th.actions span.text, table td.actions span.text {
+        font-size: 13px; }
+      table th.actions [class*='icon-'].no-text, table td.actions [class*='icon-'].no-text {
+        font-size: 120%;
+        background-color: #f3f8fc;
+        border: 1px solid #cee1f4;
+        border-radius: 15px;
+        width: 29px;
+        height: 29px;
+        display: inline-block;
+        padding-top: 2px; }
+        table th.actions [class*='icon-'].no-text:before, table td.actions [class*='icon-'].no-text:before {
+          text-align: center !important;
+          width: 27px;
+          display: inline-block; }
+        table th.actions [class*='icon-'].no-text:hover, table td.actions [class*='icon-'].no-text:hover {
+          border-color: transparent; }
+      table th.actions button[class*='icon-'], table td.actions button[class*='icon-'] {
+        color: #5498da;
+        padding: 0 !important; }
+      table th.actions .icon-envelope-alt, table th.actions .icon-eye-open, table td.actions .icon-envelope-alt, table td.actions .icon-eye-open {
+        color: #5498da;
+        padding-left: 0px; }
+        table th.actions .icon-envelope-alt:hover, table th.actions .icon-eye-open:hover, table td.actions .icon-envelope-alt:hover, table td.actions .icon-eye-open:hover {
+          background-color: #5498da;
+          color: white; }
+      table th.actions .icon-trash:hover, table th.actions .icon-void:hover, table td.actions .icon-trash:hover, table td.actions .icon-void:hover {
+        background-color: #c60f13;
+        color: white; }
+      table th.actions .icon-cancel:hover, table td.actions .icon-cancel:hover {
+        background-color: #ff9300;
+        color: white; }
+      table th.actions .icon-edit:hover, table th.actions .icon-capture:hover, table th.actions .icon-ok:hover, table th.actions #vakata-dragged.jstree-apple .jstree-ok:hover, #vakata-dragged.jstree-apple table th.actions .jstree-ok:hover, table th.actions .icon-plus:hover, table th.actions .icon-save:hover, table td.actions .icon-edit:hover, table td.actions .icon-capture:hover, table td.actions .icon-ok:hover, table td.actions #vakata-dragged.jstree-apple .jstree-ok:hover, #vakata-dragged.jstree-apple table td.actions .jstree-ok:hover, table td.actions .icon-plus:hover, table td.actions .icon-save:hover {
+        background-color: #9fc820;
+        color: white; }
+      table th.actions .icon-copy:hover, table td.actions .icon-copy:hover {
+        background-color: #ff9300;
+        color: white; }
+    table th input[type="number"],
+    table th input[type="text"],
+    table th .select2-search input,
+    .select2-search table th input,
+    table th .select2-container-multi .select2-choices,
+    .select2-container-multi table th .select2-choices, table td input[type="number"],
+    table td input[type="text"],
+    table td .select2-search input,
+    .select2-search table td input,
+    table td .select2-container-multi .select2-choices,
+    .select2-container-multi table td .select2-choices {
+      width: 100%; }
+    table th.no-border, table td.no-border {
+      border-right: none; }
+    table th .handle, table td .handle {
+      cursor: move; }
+  table.no-borders td, table.no-borders th {
+    border: none !important; }
+  table thead th {
+    padding: 10px;
+    border-top: 1px solid #cee1f4;
+    border-bottom: none;
+    background-color: #eff5fc;
+    text-transform: uppercase;
+    font-size: 85%;
+    font-weight: 600; }
+  table tbody tr:first-child th, table tbody tr:first-child td {
+    border-top: 1px solid #cee1f4; }
+  table tbody tr.even td {
+    background-color: #eff5fc; }
+    table tbody tr.even td img {
+      border: 1px solid #e7f0fa; }
+  table tbody tr:hover td {
+    background-color: #ebf3fb; }
+    table tbody tr:hover td img {
+      border: 1px solid #cee1f4; }
+  table tbody tr.deleted td {
+    background-color: #fde6e7;
+    border-color: #fabcbd; }
+  table tbody tr.ui-sortable-placeholder td {
+    border: 1px solid #9fc820 !important;
+    visibility: visible !important; }
+    table tbody tr.ui-sortable-placeholder td.actions {
+      background-color: transparent;
+      border-right: none !important;
+      border-top: none !important;
+      border-bottom: none !important;
+      border-left: 1px solid #9fc820 !important; }
+  table tbody tr.ui-sortable-helper {
+    width: 100%; }
+    table tbody tr.ui-sortable-helper td {
+      background-color: #deebf8;
+      border-bottom: 1px solid #cee1f4; }
+      table tbody tr.ui-sortable-helper td.actions {
+        display: none; }
+  table tbody.no-border-top tr:first-child td {
+    border-top: none; }
+  table tbody.grand-total td {
+    border-color: #9fc820 !important;
+    text-transform: uppercase;
+    font-size: 110%;
+    font-weight: 600;
+    background-color: #f8fceb; }
+  table tbody.grand-total .total {
+    background-color: #9fc820;
+    color: white; }
+
+  

@@ -9,7 +9,12 @@ Certus::Application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
-  resources :deliveries
+  resources :deliveries do
+    collection do
+      get 'unpicked_orders'
+      get 'picklist'
+    end
+  end
 
   # Example resource route with options:
   #   resources :products do
