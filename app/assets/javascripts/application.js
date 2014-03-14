@@ -14,5 +14,4 @@
 //= require angular-animate
 //= require angular-resource
 //= require main
-//= require_tree ./angular
 //= require_tree .
