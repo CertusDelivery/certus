@@ -7,12 +7,12 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 Delivery.delete_all
 deliveries = []
-deliveries << Delivery.create(bin_geocode: 1, order_status: 'PICKING')
-deliveries << Delivery.create(bin_geocode: 2, order_status: 'PICKING')
-deliveries << Delivery.create(bin_geocode: 3, order_status: 'PICKING')
-deliveries << Delivery.create(bin_geocode: 4, order_status: 'UNPICKED')
-deliveries << Delivery.create(bin_geocode: 5, order_status: 'UNPICKED')
-deliveries << Delivery.create(bin_geocode: 6, order_status: 'UNPICKED')
+deliveries << Delivery.create(order_status: 'PICKING')
+deliveries << Delivery.create(order_status: 'PICKING')
+deliveries << Delivery.create(order_status: 'PICKING')
+deliveries << Delivery.create(order_status: 'UNPICKED')
+deliveries << Delivery.create(order_status: 'UNPICKED')
+deliveries << Delivery.create(order_status: 'UNPICKED')
 
 deliveries.each do |delivery|
     delivery.delivery_items << [DeliveryItem.create(picked_status: '1/0/0/0', product_name: 'Special K Cereal - Strawberry',
