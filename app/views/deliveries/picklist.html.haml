@@ -3,9 +3,10 @@
 %p 
   = "Unpicked orders: #{@unpicked_orders_count}"
 = form_tag('#', method: :get) do
-  = text_field_tag 'scan_input'
+  = text_field_tag 'scan_input', nil, placeholder: 'Not working yet...', "ng-model" => "scan_input"
   = submit_tag 'Submit Scanner Input'
-
+  %div{style: "background: yellow; display: inline;"}
+    {{scan_input}}
 %p
 %center
   %big Products To Be Picked
