@@ -1,6 +1,7 @@
 class AddOrderItemsFieldsToDeliveryItems < ActiveRecord::Migration
   def change
     add_column :delivery_items, :delivery_id, :integer
+    add_column :delivery_items, :product_name, :string
     add_column :delivery_items, :client_slu, :string
     add_column :delivery_items, :quantity, :decimal
     add_column :delivery_items, :price, :decimal

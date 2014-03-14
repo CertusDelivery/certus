@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140314084711) do
     t.string   "payment_adjustment"
     t.text     "additional"
     t.integer  "delivery_id"
+    t.string   "product_name"
     t.string   "client_slu"
     t.decimal  "quantity"
     t.decimal  "price"
