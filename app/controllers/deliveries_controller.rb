@@ -1,7 +1,7 @@
 class DeliveriesController < ApplicationController
 
   def picklist
-    @deliveries = Delivery.where(order_status: 'PICKING').limit(2)
+    @deliveries = Delivery.where(order_status: 'PICKING').limit(3)
     @unpicked_orders_count = Delivery.where(order_status: 'UNPICKED').count
   end
 
