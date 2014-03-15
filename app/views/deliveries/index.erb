@@ -6,9 +6,35 @@
    <p style="border:1px #ddd solid;">
      <% #{delivery: Delivery.first.to_json(:include => :delivery_items) } format process if no data
         json = '{"delivery":"{\"created_at\":\"2014-03-14T12:17:51.935Z\",\"updated_at\":\"2014-03-14T12:17:51.935Z\",\"picker_id\":null,\"picked_status\":null,\"picked_sku_count\":null,\"picked_piece_count\":null,\"total_shipping_weight\":null,\"total_payment_adjustment\":null,\"bin_geocode\":\"3\",\"picked_at\":null,\"left_store_at\":null,\"hub_driver_id\":null,\"route_driver_id\":null,\"route_driver_received_at\":null,\"delivered_status\":null,\"message_status\":null,\"gratuity_status\":null,\"delivered_at\":null,\"client_id\":null,\"store_id\":null,\"order_id\":null,\"order_sku_count\":null,\"order_piece_count\":null,\"order_total_price\":null,\"order_total_tax\":null,\"order_total_adjustments\":null,\"order_non_apportionable_adjustments\":null,\"order_grand_total\":null,\"order_flag\":null,\"order_status\":\"UNPICKED\",\"payment_id\":null,\"payment_card_token\":null,\"payment_amount\":null,\"placed_at\":null,\"desired_delivery_window\":null,\"customer_name\":null,\"shipping_address\":null,\"customer_email\":null,\"delivery_items\":[{\"created_at\":\"2014-03-14T12:17:51.996Z\",\"updated_at\":\"2014-03-14T12:17:52.004Z\",\"store_sku\":\"6143854\",\"location\":\"12N-45-4\",\"picked_quantity\":1,\"picked_status\":\"1/0/0/0\",\"substitute_sku\":null,\"picked_datetime\":null,\"shipping_weight\":\"18.0\",\"picker_bin_number\":\"12400\",\"payment_adjustment\":null,\"additional\":null,\"delivery_id\":12,\"product_name\":\"Special K Cereal - Strawberry\",\"client_slu\":null,\"quantity\":null,\"price\":null,\"tax\":null,\"other_adjustments\":null,\"order_item_amount\":null,\"order_item_options_flags\":null,\"shipping_weight_unit\":\"liter\"},{\"created_at\":\"2014-03-14T12:17:51.999Z\",\"updated_at\":\"2014-03-14T12:17:52.005Z\",\"store_sku\":\"073852400908\",\"location\":\"7N-30-3\",\"picked_quantity\":3,\"picked_status\":\"2/0/0/0\",\"substitute_sku\":null,\"picked_datetime\":null,\"shipping_weight\":\"12.6\",\"picker_bin_number\":\"12345\",\"payment_adjustment\":null,\"additional\":null,\"delivery_id\":12,\"product_name\":\"Purell Hand Sanitizer\",\"client_slu\":null,\"quantity\":null,\"price\":null,\"tax\":null,\"other_adjustments\":null,\"order_item_amount\":null,\"order_item_options_flags\":null,\"shipping_weight_unit\":\"oz\"},{\"created_at\":\"2014-03-14T12:17:52.001Z\",\"updated_at\":\"2014-03-14T12:17:52.006Z\",\"store_sku\":\"073852400908\",\"location\":\"7N-35-3\",\"picked_quantity\":3,\"picked_status\":\"1/1/0/0\",\"substitute_sku\":null,\"picked_datetime\":null,\"shipping_weight\":\"12.6\",\"picker_bin_number\":\"12345\",\"payment_adjustment\":null,\"additional\":null,\"delivery_id\":12,\"product_name\":\"Diet Coke\",\"client_slu\":null,\"quantity\":null,\"price\":null,\"tax\":null,\"other_adjustments\":null,\"order_item_amount\":null,\"order_item_options_flags\":null,\"shipping_weight_unit\":\"oz\"}]}"}'
-      %>
-     <%=json %>
+        #json = Delivery.first.to_json(:include => :delivery_items)
+     %>
+     <%=raw(json) %>
    </p>
+   <button id="post_json">post_json</button>
+    <script>
+      $("#post_json").click(function(){
+        $.ajax({
+          url: "<%=  deliveries_path %>",
+          type: 'POST',
+          dataType: 'json',
+          data: { delivery: { picker_id: '100'} },
+          timeout: 60000,
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("error!" + errorThrown);
+
+          },
+          success: function (data, txtSataus) {
+            alert(data.message);
+          }
+
+        });
+
+
+      });
+
+
+    </script>
+
 
 
 </div>
