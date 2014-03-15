@@ -1,36 +1,20 @@
 %h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
 %p Put time of day and number of unassigned orders on server here
 %p 
+  = Time.now.strftime("%h %d %Y %H:%M")
+  |
   = "Unpicked orders: #{@unpicked_orders_count}"
 = form_tag('#', method: :get) do
   = text_field_tag 'scan_input', nil, placeholder: 'Not working yet...', "ng-model" => "scan_input"
   = submit_tag 'Submit Scanner Input'
   %div{style: "background: yellow; display: inline;"}
     {{scan_input}}
+
 %p
 %center
   %big Products To Be Picked
 %p
 %hr
-%table
-  %thead
-  %tbody
-    - @deliveries.each do |delivery|
-      - delivery.delivery_items.each do |item|
-        %tr
-          %td 
-            = item.picked_status
-          %td 
-            = item.product_name
-          %td 
-            &nbsp;
-          %td 
-            = item.shipping_weight
-          %td 
-            = item.location
-          %td 
-            = delivery.id
-          %td 
-            = item.picker_bin_number
-          %td 
-            = item.store_sku
+
+%div{'ng-controller' => 'PicklistCtrl'}
+  .gridStyle{"ng-grid" => "gridOptions"}

@@ -1,1 +1,1 @@
-@app = angular.module('certus', ['ngResource'])
+@app = angular.module('certus', ['ngResource', 'ui.bootstrap', 'ngGrid'])

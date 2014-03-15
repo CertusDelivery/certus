@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'angular-ui-bootstrap-rails'
 gem 'angularjs-rails'
 gem 'formtastic'
 gem 'haml'
