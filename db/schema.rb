@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140314084711) do
+ActiveRecord::Schema.define(version: 20140315041105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20140314084711) do
     t.text     "additional"
     t.integer  "delivery_id"
     t.string   "product_name"
-    t.string   "client_slu"
+    t.string   "client_sku"
     t.decimal  "quantity"
     t.decimal  "price"
     t.decimal  "tax"
