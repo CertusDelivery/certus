@@ -246,14 +246,14 @@ todo
       <td>price</td>
       <td>true</td>
       <td>Float</td>
-      <td>price per unit</td>
+      <td>Price per unit</td>
     </tr>
 
     <tr>
       <td>tax</td>
       <td>true</td>
       <td>Float</td>
-      <td>tax per unit</td>
+      <td>Tax per unit</td>
     </tr>
 
     <tr>
@@ -274,11 +274,11 @@ todo
       <td>order_item_options_flags</td>
       <td>true</td>
       <td>String</td>
-      <td>Available options: "substitute", "backorder", "critical", "skip" <br/>
-          substitute: Substitute item if out of stock,<br/>
-          backorder: Backorder item if out of stock and re-deliver when item is available,<br/>
-          critical: Cancel order if item is out of stock,<br/>
-          skip: Cancel this item only if out of stock,<br/>
+      <td>Available options: "SUBSTITUTE", "BACKORDER", "CRITICAL", "SKIP" <br/>
+          SUBSTITUTE: Substitute item if out of stock,<br/>
+          BACKORDER: Backorder item if out of stock and re-deliver when item is available,<br/>
+          CRITICAL: Cancel order if item is out of stock,<br/>
+          SKIP: Cancel this item only if out of stock,<br/>
       </td>
     </tr>
 
@@ -286,7 +286,7 @@ todo
 </table>
 
 
-Request Sample
+A sample of request parameters
 
 ```json
 {
@@ -294,7 +294,7 @@ Request Sample
   {
     "customer_name": "Jane Doe",
     "shipping_address": "979 Gerlach Villages Apt. 126 Port Annettastad",
-    "customer_email": "jave1670@example.com"
+    "customer_email": "jave1670@example.com",
     "order_placed_timestamp": "2014-04-09 11:20:25 UTC",
     "desired_deliverywindow": "2014-04-12",
     "client_id": 205697,
@@ -311,7 +311,7 @@ Request Sample
     "payment_card_token": "NSpyjd04vDS564sdG==",
     "payment_amount": 93.2,
     "order_options_flags": "",
-    "order_status": "",
+    "order_status": "PLACED",
     "order_items": [
       {
         "client_sku": "NHK1480",
@@ -339,8 +339,55 @@ Request Sample
 ```
 
 
-## Returns
+## Response
 
-todo
+Data returned in the response message is provided in JSON format.
+
+### Success
+
+If there are no communications or other problems with the order, the Workflow server responds to the client website that the order is “IN_FULFILLMENT” and returns an estimated delivery window.
+
+```json
+{
+  "status": "ok",
+  "order":
+  {
+    "order_status": "IN_FULFILLMENT",
+    "estimated_delivery_window": "2014-03-18"
+  }
+}
+```
+
+### Error
+
+Errors are returned as JSON objects that contain "status" and "reason" attributes. The value of the "status" attribute will always be "nok". The reason will a short english string that describes the error.
+Here are some generic error responses that you should be aware of.
+
+<table>
+  <thead>
+    <tr>
+      <td>Code</td>
+      <td>Message</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr>
+      <td>400</td>
+      <td>Invalid Order.</td>
+      <td>Validation failed for order data.</td>
+    </tr>
+  </tbody>
+</table>
+
+An example of error response
+
+```
+HTTP/1.1 400 Bad Request
+<http headers>
+
+{"status":"nok", "reason": "Invalid Order."}
+```
 
 ## Other Comments
