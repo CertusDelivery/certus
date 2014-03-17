@@ -15,11 +15,11 @@ class DeliveriesController < ApplicationController
   end
 
   def picklist
-    @deliveries = Delivery.includes(:delivery_items).where(order_status: 'PICKING').limit(3)
+    @deliveries = Delivery.includes(:delivery_items).picking.limit(3)
     @unpicked_orders_count = Delivery.where(order_status: 'UNPICKED').count
   end
 
   def unpicked_orders
-    render json: {unpicked_count: Delivery.where(order_status: 'UNPICKED').count}
+    render json: [{unpicked_count: Delivery.where(order_status: 'UNPICKED').count}]
   end
 end

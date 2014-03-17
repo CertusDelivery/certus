@@ -1,6 +1,8 @@
 class Delivery < ActiveRecord::Base
   has_many :delivery_items
 
+  scope :picking, -> { where(order_status: 'PICKING') }
+
   validates_presence_of :shipping_address
   validates_associated :delivery_items
   validate :order_to_delivery_convert

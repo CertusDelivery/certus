@@ -10,7 +10,32 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
       {field: 'location', displayName: 'Location'},
       {field: 'delivery_id', displayName: 'Order ID'},
       {field: 'picker_bin_number', displayName: 'Bin'},
-      {field: 'store_sku', displayName: 'Store SKU'}
-    ]
+      {field: 'store_sku', displayName: 'Store SKU'},
+      {field: 'id', visible: false}
+    ],
+    multiSelect: false,
+    enableHighlighting: true
   }
+
+  unpicked_orders = $resource('/deliveries/unpicked_orders')
+  $scope.unpicked_orders = unpicked_orders.query()
+
+  $scope.refreshUnpickedCount = ->
+    $scope.unpicked_orders = unpicked_orders.query()
+
+  $scope.timer = ->
+    today = new Date()
+    $scope.time = today.toTimeString()
+
+  $scope.time = $scope.timer()
+  setInterval(
+    ->
+      $('#current_time').click()
+    1000
+  )
+  setInterval(
+    ->
+      $('#unpicked_order_count').click()
+    2000
+  )
 ])

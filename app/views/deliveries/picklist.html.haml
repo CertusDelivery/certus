@@ -1,20 +1,23 @@
-%h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
-%p Put time of day and number of unassigned orders on server here
-%p 
-  = Time.now.strftime("%h %d %Y %H:%M")
-  |
-  = "Unpicked orders: #{@unpicked_orders_count}"
-= form_tag('#', method: :get) do
-  = text_field_tag 'scan_input', nil, placeholder: 'Not working yet...', "ng-model" => "scan_input"
-  = submit_tag 'Submit Scanner Input'
-  %div{style: "background: yellow; display: inline;"}
-    {{scan_input}}
-
-%p
-%center
-  %big Products To Be Picked
-%p
-%hr
 
 %div{'ng-controller' => 'PicklistCtrl'}
+  %h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
+  %p Put time of day and number of unassigned orders on server here
+  %p
+    %span#current_time{'ng-click' => "timer()"}
+      {{time}}
+    |
+    Unpicked orders:
+    %span#unpicked_order_count{'ng-click' => "refreshUnpickedCount()"}
+      {{unpicked_orders[0].unpicked_count}}
+  = form_tag('', method: :put, "ng-submit" => "pickProduct()") do
+    = text_field_tag 'scan_input', nil, placeholder: 'Not working yet...', "ng-model" => "scan_input"
+    = submit_tag 'Submit Scanner Input'
+    %div{style: "background: yellow; display: inline;"}
+      {{scan_input}}
+
+  %p
+  %center
+    %big Products To Be Picked
+  %p
+  %hr
   .gridStyle{"ng-grid" => "gridOptions"}
