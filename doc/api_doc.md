@@ -200,15 +200,15 @@ todo
     </tr>
 
     <tr>
-      <td>order_items</td>
+      <td>delivery_items_attributes</td>
       <td>true</td>
       <td>Array</td>
-      <td>An array contains order items object</td>
+      <td>An array contains delivery items (order items) objects</td>
     </tr>
   </tbody>
 </table>
 
-### Order Item
+### Delivery Item (Order Item)
 
 <table>
   <thead>
@@ -232,14 +232,14 @@ todo
       <td>quantity</td>
       <td>true</td>
       <td>Float</td>
-      <td></td>
+      <td>Quantity for the products in the individual order item</td>
     </tr>
 
     <tr>
       <td>shipping_weight_unit</td>
       <td>false</td>
       <td>String</td>
-      <td></td>
+      <td>Needed if this product is not sold by piece, defaults to "ea". "oz", "gal" and "lb" are also allowed.</td>
     </tr>
 
     <tr>
@@ -260,14 +260,14 @@ todo
       <td>other_adjustments</td>
       <td>false</td>
       <td>Float</td>
-      <td>Defaults to 0.0</td>
+      <td>Adjustment for the individual order item, defaults to 0.0</td>
     </tr>
 
     <tr>
       <td>order_item_amount</td>
       <td>true</td>
       <td>Float</td>
-      <td></td>
+      <td>Amount for the individual order item</td>
     </tr>
 
     <tr>
@@ -278,7 +278,7 @@ todo
           SUBSTITUTE: Substitute item if out of stock,<br/>
           BACKORDER: Backorder item if out of stock and re-deliver when item is available,<br/>
           CRITICAL: Cancel order if item is out of stock,<br/>
-          SKIP: Cancel this item only if out of stock,<br/>
+          SKIP: Cancel this item only if out of stock<br/>
       </td>
     </tr>
 
@@ -302,14 +302,14 @@ A sample of request parameters
     "client_internal_order_id": 6585395783,
     "sku_count": 3,
     "piece_count": 3,
-    "total_price": 106.0,
+    "total_price": 110.0,
     "total_tax": 8.2,
     "total_item_adjustments": -12.8,
     "non_apportionable_adjustments": 0.0,
-    "grand_total": 93.2,
+    "grand_total": 105.4,
     "client_payment_id": 7256,
     "payment_card_token": "NSpyjd04vDS564sdG==",
-    "payment_amount": 93.2,
+    "payment_amount": 105.4,
     "order_options_flags": "",
     "order_status": "PLACED",
     "delivery_items_attributes": [
@@ -319,7 +319,7 @@ A sample of request parameters
         "price": 23.0,
         "tax": 1.8,
         "other_adjustments": 0.0,
-        "order_item_amount": 2.0,
+        "order_item_amount": 49.6,
         "order_item_options_flags": "backorder"
       },
       {
@@ -329,7 +329,7 @@ A sample of request parameters
         "price": 64.0,
         "tax": 4.6,
         "other_adjustments": -2.0,
-        "order_item_amount": 1.0,
+        "order_item_amount": 66.6,
         "order_item_options_flags": "backorder"
       }
     ]
