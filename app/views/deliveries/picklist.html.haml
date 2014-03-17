@@ -9,11 +9,6 @@
     Unpicked orders:
     %span#unpicked_order_count{'ng-click' => "refreshUnpickedCount()"}
       {{unpicked_orders[0].unpicked_count}}
-  = form_tag('', method: :put, "ng-submit" => "pickProduct()") do
-    = text_field_tag 'scan_input', nil, placeholder: 'Not working yet...', "ng-model" => "scan_input"
-    = submit_tag 'Submit Scanner Input'
-    %div{style: "background: yellow; display: inline;"}
-      {{scan_input}}
 
   %p
   %center
