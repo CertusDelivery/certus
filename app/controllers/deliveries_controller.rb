@@ -2,14 +2,16 @@ class DeliveriesController < ApplicationController
   protect_from_forgery except: :create
 
   def create
-    #puts  params[:delivery]
-    @delivery = Delivery.new(params[:delivery].permit!)
-    if @delivery.save
-      render json: {:status => :true, message: ""}
-    else
-      render json: {:status => :false, message: @delivery.errors.full_messages}
+    begin
+      @delivery = Delivery.new(params[:delivery].permit!)
+      if @delivery.save
+        render json: {:status => :true, message: ''}
+      else
+        render json: {:status => :false, message: @delivery.errors.full_messages}
+      end
+    rescue
+      render json: {:status => :false, message: 'Invalid Order'}, status: 400
     end
-
   end
 
   def picklist
