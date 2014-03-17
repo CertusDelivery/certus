@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+ruby "2.1.0"
 
 gem 'angular-ui-bootstrap-rails'
 gem 'angularjs-rails'
