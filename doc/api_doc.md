@@ -312,7 +312,7 @@ A sample of request parameters
     "payment_amount": 93.2,
     "order_options_flags": "",
     "order_status": "PLACED",
-    "order_items": [
+    "delivery_items_attributes": [
       {
         "client_sku": "NHK1480",
         "quantity": 2,
