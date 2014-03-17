@@ -4,6 +4,7 @@ class DeliveriesController < ApplicationController
   def create
     begin
       @delivery = Delivery.new(params[:delivery].permit!)
+      @delivery.order_status = 'UNPICKED'
       if @delivery.save
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
