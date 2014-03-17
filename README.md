@@ -79,6 +79,7 @@ Update the configs as necessary.
     bundle install
     rake db:create
     rake db:setup
+    rake db:seed
 
 To run the spec suite (includes some integration tests)
 
