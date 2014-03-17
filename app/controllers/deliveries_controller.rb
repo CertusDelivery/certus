@@ -5,12 +5,12 @@ class DeliveriesController < ApplicationController
     begin
       @delivery = Delivery.new(params[:delivery].permit!)
       if @delivery.save
-        render json: {:status => :true, message: ''}
+        render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
-        render json: {:status => :false, message: @delivery.errors.full_messages}
+        render json: {:status => :nok, reason: @delivery.errors.full_messages}
       end
     rescue
-      render json: {:status => :false, message: 'Invalid Order'}, status: 400
+      render json: {:status => :false, reason: 'Invalid Order'}, status: 400
     end
   end
 
