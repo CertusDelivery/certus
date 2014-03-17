@@ -5,7 +5,7 @@ describe DeliveriesController do
   describe "#create" do
     it 'should response 400 when post error params' do
       post :create, {:delivery => {:picker_id => '1000',:no_filed =>'no filed in db'}}
-      response.body.should == {:status => :false, reason: 'Invalid Order'}.to_json
+      response.body.should == {:status => :nok, reason: 'Invalid Order'}.to_json
       response.status.should == 400
     end
 

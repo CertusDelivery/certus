@@ -10,7 +10,7 @@ class DeliveriesController < ApplicationController
         render json: {:status => :nok, reason: @delivery.errors.full_messages}
       end
     rescue
-      render json: {:status => :false, reason: 'Invalid Order'}, status: 400
+      render json: {:status => :nok, reason: 'Invalid Order'}, status: 400
     end
   end
 
