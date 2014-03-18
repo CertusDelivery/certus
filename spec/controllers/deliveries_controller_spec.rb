@@ -20,7 +20,7 @@ describe DeliveriesController do
       }
       post :create, post_params
       response.body.should == {:status => :nok, reason: controller.instance_variable_get(:@delivery).errors.full_messages}.to_json
-      response.status.should == 200
+      response.status.should == 400
     end
 
     it 'should response when post correct params' do

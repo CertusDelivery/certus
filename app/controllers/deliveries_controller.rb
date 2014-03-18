@@ -8,7 +8,7 @@ class DeliveriesController < ApplicationController
       if @delivery.save
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
-        render json: {:status => :nok, reason: @delivery.errors.full_messages}
+        render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: 400
       end
     rescue
       render json: {:status => :nok, reason: 'Invalid Order'}, status: 400

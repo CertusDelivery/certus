@@ -1,7 +1,7 @@
 class DeliveryItem < ActiveRecord::Base
   belongs_to :delivery
 
-  validate :order_to_delivery_convert
+  #validate :order_to_delivery_convert
 
 
   def order_to_delivery_convert

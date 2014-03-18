@@ -5,7 +5,7 @@ class Delivery < ActiveRecord::Base
 
   validates_presence_of :shipping_address
   validates_associated :delivery_items
-  validate :order_to_delivery_convert
+  #validate :order_to_delivery_convert
   accepts_nested_attributes_for :delivery_items
 
   def order_to_delivery_convert
