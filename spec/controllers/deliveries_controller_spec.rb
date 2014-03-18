@@ -11,7 +11,7 @@ describe DeliveriesController do
 
     it 'should response validate errors when post wrong params' do
       post_params = {'delivery'=> {'picker_id'=>'99999',
-                                   'shipping_address'=>'test ship address',
+                                   'shipping_address'=>'',
                                    'order_sku_count'=> 2,
                                    'delivery_items_attributes' => [
                                        {'price'=>100, 'client_sku' =>'10000', 'store_sku' =>'10000'}
