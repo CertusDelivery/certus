@@ -36,6 +36,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
   setInterval(
     ->
       $('#unpicked_order_count').click()
-    2000
+    5000
   )
 ])
