@@ -63,21 +63,28 @@ todo
       <td>customer_name</td>
       <td>true</td>
       <td>String</td>
-      <td>No more than 255 chars</td>
+      <td>Customer's name</td>
     </tr>
 
     <tr>
       <td>shipping_address</td>
       <td>true</td>
       <td>String</td>
-      <td>No more than 255 chars</td>
+      <td>Full shipping address</td>
+    </tr>
+
+    <tr>
+      <td>customer_phone_number</td>
+      <td>true</td>
+      <td>String</td>
+      <td>Customer's phone number</td>
     </tr>
 
     <tr>
       <td>customer_email</td>
       <td>true</td>
       <td>String</td>
-      <td>No more than 255 chars</td>
+      <td>Customer's email</td>
     </tr>
 
     <tr>
@@ -98,14 +105,14 @@ todo
       <td>client_id</td>
       <td>true</td>
       <td>Integer</td>
-      <td></td>
+      <td>ID of the owner of the website</td>
     </tr>
 
     <tr>
       <td>store_id</td>
       <td>true</td>
       <td>Integer</td>
-      <td></td>
+      <td>ID of the store where delivery items are picked for fulfillment</td>
     </tr>
 
     <tr>
@@ -161,7 +168,7 @@ todo
       <td>order_grand_total</td>
       <td>true</td>
       <td>Float</td>
-      <td>Order totals: Grand_total</td>
+      <td>Order totals: Grand total</td>
     </tr>
 
     <tr>
@@ -187,16 +194,22 @@ todo
 
     <tr>
       <td>order_flag</td>
-      <td>true</td>
+      <td>false</td>
       <td>String</td>
-      <td></td>
+      <td>Options for items if they are out of stock, it will overwrite order_item_options_flags for all delivery items.<br/>
+          Available options: "SUBSTITUTE", "BACKORDER", "CRITICAL", "SKIP".
+          SUBSTITUTE: Substitute item if out of stock,<br/>
+          BACKORDER: Backorder item if out of stock and re-deliver when item is available,<br/>
+          CRITICAL: Cancel order if item is out of stock,<br/>
+          SKIP: Cancel this item only if out of stock<br/>
+      </td>
     </tr>
 
     <tr>
       <td>order_status</td>
       <td>true</td>
       <td>String</td>
-      <td></td>
+      <td>Should be "PLACED" in gerneral</td>
     </tr>
 
     <tr>
@@ -225,7 +238,7 @@ todo
       <td>client_sku</td>
       <td>true</td>
       <td>String</td>
-      <td></td>
+      <td>Product code used on the client website</td>
     </tr>
 
     <tr>
@@ -274,7 +287,7 @@ todo
       <td>order_item_options_flags</td>
       <td>true</td>
       <td>String</td>
-      <td>Available options: "SUBSTITUTE", "BACKORDER", "CRITICAL", "SKIP" <br/>
+      <td>Available options: "SUBSTITUTE", "BACKORDER", "CRITICAL", "SKIP".<br/>
           SUBSTITUTE: Substitute item if out of stock,<br/>
           BACKORDER: Backorder item if out of stock and re-deliver when item is available,<br/>
           CRITICAL: Cancel order if item is out of stock,<br/>
@@ -293,7 +306,8 @@ A sample of request parameters
   "delivery":
   {
     "customer_name": "Jane Doe",
-    "shipping_address": "979 Gerlach Villages Apt. 126 Port Annettastad",
+    "shipping_address": "204 Henderson Road, San Diego, CA 92124",
+    "customer_phone_number": "626-780-7552",
     "customer_email": "jave1670@example.com",
     "order_placed_timestamp": "2014-04-09 11:20:25 UTC",
     "desired_deliverywindow": "2014-04-12",
@@ -353,14 +367,14 @@ If there are no communications or other problems with the order, the Workflow se
   "order":
   {
     "order_status": "IN_FULFILLMENT",
-    "estimated_delivery_window": "2014-03-18"
+    "estimated_delivery_window": "2014-03-18 15:40:40 UTC, 120"
   }
 }
 ```
 
 ### Error
 
-Errors are returned as JSON objects that contain "status" and "reason" attributes. The value of the "status" attribute will always be "nok". The reason will a short english string that describes the error.
+Errors are returned as JSON objects that contain "status" and "reason" attributes. The value of the "status" attribute will always be "nok". The reason will be a short english string that describes the error.
 Here are some generic error responses that you should be aware of.
 
 <table>
@@ -375,8 +389,32 @@ Here are some generic error responses that you should be aware of.
   <tbody>
     <tr>
       <td>400</td>
-      <td>Invalid Order.</td>
-      <td>Validation failed for order data.</td>
+      <td>Bad request.</td>
+      <td>Invalid request format.</td>
+    </tr>
+
+    <tr>
+      <td>401</td>
+      <td>Unauthorized</td>
+      <td>Authentication failed.</td>
+    </tr>
+
+    <tr>
+      <td>422</td>
+      <td>Invalid order.</td>
+      <td>Data are incomplete or in the wrong format or information doesn't match.</td>
+    </tr>
+
+    <tr>
+      <td>422</td>
+      <td>Duplicated order.</td>
+      <td>A request was made with duplicated data.</td>
+    </tr>
+
+    <tr>
+      <td>422</td>
+      <td>Shipping address not allowed.</td>
+      <td>Shipping address is not in the allowable delivery area.</td>
     </tr>
   </tbody>
 </table>
@@ -384,10 +422,8 @@ Here are some generic error responses that you should be aware of.
 An example of error response
 
 ```
-HTTP/1.1 400 Bad Request
+HTTP/1.1 422 Unprocessable Entity
 <http headers>
 
 {"status":"nok", "reason": "Invalid Order."}
 ```
-
-## Other Comments
