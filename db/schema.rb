@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140315041105) do
+ActiveRecord::Schema.define(version: 20140318082933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20140315041105) do
     t.decimal  "order_total_tax"
     t.decimal  "order_total_adjustments"
     t.decimal  "order_non_apportionable_adjustments"
-    t.integer  "order_grand_total"
+    t.decimal  "order_grand_total"
     t.string   "order_flag"
     t.string   "order_status"
     t.integer  "payment_id"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20140315041105) do
     t.string   "customer_name"
     t.string   "shipping_address"
     t.string   "customer_email"
+    t.string   "customer_phone_number"
   end
 
   create_table "delivery_items", force: true do |t|
@@ -80,6 +81,8 @@ ActiveRecord::Schema.define(version: 20140315041105) do
     t.decimal  "order_item_amount"
     t.string   "order_item_options_flags"
     t.string   "shipping_weight_unit"
+    t.integer  "out_of_stok_quantity"
+    t.integer  "scaned_quantity"
   end
 
 end
