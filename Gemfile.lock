@@ -53,6 +53,7 @@ GEM
     factory_girl_rails (4.4.1)
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
+    ffaker (1.23.0)
     ffi (1.9.3)
     formtastic (2.2.1)
       actionpack (>= 3.0)
@@ -174,6 +175,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.0.0)
   factory_girl_rails
+  ffaker
   formtastic
   haml
   inherited_resources (~> 1.4.1)
