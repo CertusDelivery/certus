@@ -5,7 +5,7 @@ class DeliveriesController < ApplicationController
     begin
       #process auth, no auth, response 401(Unauthorized)
       @delivery = Delivery.new(params[:delivery].permit!)
-      @delivery.order_status = 'UNPICKED'
+      @delivery.order_status = Delivery::ORDER_STATUS[:unpicked]
       if @delivery.save
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
@@ -17,11 +17,24 @@ class DeliveriesController < ApplicationController
   end
 
   def picklist
-    @deliveries = Delivery.includes(:delivery_items).picking.limit(3)
-    @unpicked_orders_count = Delivery.where(order_status: 'UNPICKED').count
+    picking_orders
   end
 
   def unpicked_orders
-    render json: [{unpicked_count: Delivery.where(order_status: 'UNPICKED').count}]
+    render json: [{unpicked_count: unpicked_count}]
+  end
+
+  private
+
+  def unpicked_count
+    @unpicked_orders_count ||= Delivery.where(order_status: Delivery::ORDER_STATUS[:unpicked]).count
+  end
+
+  def picking_count
+    @picking_orders_count ||= Delivery.where(order_status: Delivery::ORDER_STATUS[:picking]).count
+  end
+
+  def picking_orders
+    @deliveries ||= Delivery.includes(:delivery_items).picking.limit(Delivery::MAX_PICKING_COUNT)
   end
 end

@@ -1,7 +1,19 @@
 class Delivery < ActiveRecord::Base
+
+  MAX_PICKING_COUNT = 3
+
+  ORDER_STATUS = {
+    unassigned: 'UNASSIGNED',
+    unpicked: 'UNPICKED',
+    picking: 'PICKING',
+    picked: 'PICKED'
+  }
+
   has_many :delivery_items
 
-  scope :picking, -> { where(order_status: 'PICKING') }
+  scope :fifo, -> {order(id: :asc)}
+  scope :unpicked, -> { where(order_status: ORDER_STATUS[:unpicked]) }
+  scope :picking, -> { where(order_status: ORDER_STATUS[:picking]) }
 
   validates_presence_of :shipping_address
   validates_associated :delivery_items
