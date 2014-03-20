@@ -24,6 +24,13 @@ class DeliveriesController < ApplicationController
     render json: [{unpicked_count: unpicked_count}]
   end
 
+  def load_unpicked_order
+    count = Delivery::MAX_PICKING_COUNT - picking_count
+    Delivery.fifo.unpicked.limit(count).update_all(order_status: Delivery::ORDER_STATUS[:picking])
+    picking_orders
+    render 'deliveries/picklist.json'
+  end
+
   private
 
   def unpicked_count
