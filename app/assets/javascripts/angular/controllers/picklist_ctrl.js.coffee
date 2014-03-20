@@ -1,5 +1,5 @@
 app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
-  picklist = $resource('/deliveries/picklist.json')
+  picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
   $scope.gridOptions = {
     data: 'picklist',
@@ -17,7 +17,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
     enableHighlighting: true
   }
 
-  unpicked_orders = $resource('/deliveries/unpicked_orders')
+  unpicked_orders = $resource('/api/deliveries/unpicked_orders.json')
   $scope.unpicked_orders = unpicked_orders.query()
 
   $scope.refreshUnpickedCount = ->
