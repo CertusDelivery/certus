@@ -3,10 +3,11 @@ class Delivery < ActiveRecord::Base
   MAX_PICKING_COUNT = 3
 
   PICKED_STATUS = {
-    unassigned: 'UNASSIGNED',
-    unpicked: 'UNPICKED',
-    picking: 'PICKING',
-    picked: 'PICKED'
+    unassigned:     'UNASSIGNED',
+    unpicked:       'UNPICKED',
+    picking:        'PICKING',
+    picked:         'PICKED',
+    store_staging:  'STORE_STAGING'
   }
 
   has_many :delivery_items
