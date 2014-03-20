@@ -4,11 +4,12 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
-      {field: 'picked_status', displayName: 'Picked Satus'},
+      {field: 'picking_progress', displayName: 'Picking Progress'},
       {field: 'product_name', displayName: 'Product Name'},
       {field: 'shipping_weight', displayName: 'Shipping Weight'},
       {field: 'location', displayName: 'Location'},
       {field: 'delivery_id', displayName: 'Order ID'},
+      {field: 'picked_status', displayName: 'Picked Status'},
       {field: 'picker_bin_number', displayName: 'Bin'},
       {field: 'store_sku', displayName: 'Store SKU'},
       {field: 'id', visible: false}
