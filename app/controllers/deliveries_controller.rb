@@ -3,15 +3,16 @@ class DeliveriesController < ApplicationController
 
   def create
     begin
+      #process auth, no auth, response 401(Unauthorized)
       @delivery = Delivery.new(params[:delivery].permit!)
       @delivery.order_status = 'UNPICKED'
       if @delivery.save
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
-        render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: 400
+        render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
       end
     rescue
-      render json: {:status => :nok, reason: 'Invalid Order'}, status: 400
+      render json: {:status => :nok, reason: 'Invalid Order'}, status: :bad_request
     end
   end
 
