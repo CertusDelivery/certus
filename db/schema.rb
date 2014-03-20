@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140318082933) do
+ActiveRecord::Schema.define(version: 20140320134537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,7 +25,6 @@ ActiveRecord::Schema.define(version: 20140318082933) do
     t.integer  "picked_piece_count"
     t.decimal  "total_shipping_weight"
     t.decimal  "total_payment_adjustment"
-    t.string   "bin_geocode"
     t.datetime "picked_at"
     t.datetime "left_store_at"
     t.integer  "hub_driver_id"
@@ -56,6 +55,8 @@ ActiveRecord::Schema.define(version: 20140318082933) do
     t.string   "shipping_address"
     t.string   "customer_email"
     t.string   "customer_phone_number"
+    t.string   "lat"
+    t.string   "lng"
   end
 
   create_table "delivery_items", force: true do |t|
