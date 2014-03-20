@@ -23,6 +23,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
   $scope.refreshUnpickedCount = ->
     $scope.unpicked_orders = unpicked_orders.query()
 
+  $scope.loadNewOrder = ->
+    loader = $resource('/api/deliveries/load_unpicked_order.json')
+    $scope.picklist = loader.query()
+    $scope.unpicked_orders = unpicked_orders.query()
+
   $scope.timer = ->
     today = new Date()
     $scope.time = today.toTimeString()

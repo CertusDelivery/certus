@@ -3,6 +3,8 @@
   %h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
   %p Put time of day and number of unassigned orders on server here
   %p
+    = button_tag 'Download New Order', 'ng-click' => "loadNewOrder()"
+  %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}
     |

@@ -14,6 +14,7 @@ Certus::Application.routes.draw do
       collection do
         get 'picklist'
         get 'unpicked_orders'
+        get 'load_unpicked_order'
       end
     end
   end
