@@ -27,4 +27,67 @@ describe DeliveriesController do
     end
 
   end
+
+  describe '#picklist' do
+    before do
+      3.times { |i| create_delivery }
+      2.times { |i| create_delivery(:picking) }
+    end
+
+    it 'should render picklist template when format is html' do
+      get :picklist
+      response.status.should == 200
+      response.should render_template(:picklist)
+    end
+
+    it 'should render picklist when format is json' do
+      get :picklist, format: :json
+      response.success?.should be_true
+      response.should render_template(:picklist)
+      assigns[:deliveries].size.should == 2
+    end
+  end
+
+  describe '#unpicked_orders' do
+    before do
+      3.times { |i| create_delivery }
+      2.times { |i| create_delivery(:picking) }
+    end
+
+    it 'should return unpicked_orders count as json format' do
+      get :unpicked_orders
+      response.success?.should be_true
+      data = JSON.parse(response.body)
+      data.length.should == 1
+      data.first[:unpicked_count.to_s].should == 3
+    end
+  end
+
+  describe '#load_unpicked_order' do
+    before do
+      3.times { |i| create_delivery }
+      2.times { |i| create_delivery(:picking) }
+    end
+
+    it 'should load one order into picklist' do
+      Delivery.picking.count.should == 2
+      Delivery.unpicked.count.should == 3
+      get :load_unpicked_order
+      response.should render_template('deliveries/picklist.json')
+      assigns[:deliveries].size.should == 3
+      Delivery.picking.count.should == 3
+      Delivery.unpicked.count.should == 2
+    end
+
+    it 'should not load new order into picklist when current picking orders count equal to MAX_PICKING_COUNT' do
+      create_delivery(:picking)
+      Delivery.picking.count.should == 3
+      Delivery.unpicked.count.should == 3
+      get :load_unpicked_order
+      response.should render_template('deliveries/picklist.json')
+      assigns[:deliveries].size.should == 3
+      Delivery.picking.count.should == 3
+      Delivery.unpicked.count.should == 3
+    end
+  end
 end
