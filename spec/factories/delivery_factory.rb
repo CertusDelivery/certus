@@ -22,7 +22,7 @@ FactoryGirl.define do
     placed_at { Time.now - 1.hour }
     desired_delivery_window { Time.now + 2.hour }
     customer_name { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
-    shipping_address { "#{Faker::AddressUS.building_number} #{Faker::AddressUS.street_address(true)} #{Faker::AddressUS.city} #{Faker::AddressUS.us_state} #{Faker::AddressUS.zip_code}" }
+    shipping_address { "#{Faker::AddressUS.building_number} #{Faker::AddressUS.street_address(true)} #{Faker::AddressUS.city} #{Faker::AddressUS.state} #{Faker::AddressUS.zip_code}" }
     customer_email { Faker::Internet.email }
     customer_phone_number { Faker.numerify('#########') }
 
