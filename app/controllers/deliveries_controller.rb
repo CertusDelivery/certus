@@ -17,7 +17,10 @@ class DeliveriesController < ApplicationController
   end
 
   def picklist
-    picking_orders
+    respond_to do |format|
+      format.html {}
+      format.json { picking_orders }
+    end
   end
 
   def unpicked_orders
@@ -34,11 +37,11 @@ class DeliveriesController < ApplicationController
   private
 
   def unpicked_count
-    @unpicked_orders_count ||= Delivery.where(picked_status: Delivery::PICKED_STATUS[:unpicked]).count
+    @unpicked_orders_count ||= Delivery.unpicked.count
   end
 
   def picking_count
-    @picking_orders_count ||= Delivery.where(picked_status: Delivery::PICKED_STATUS[:picking]).count
+    @picking_orders_count ||= Delivery.picking.count
   end
 
   def picking_orders
