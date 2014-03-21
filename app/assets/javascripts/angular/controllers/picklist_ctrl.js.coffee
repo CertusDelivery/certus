@@ -21,6 +21,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
   unpicked_orders = $resource('/api/deliveries/unpicked_orders.json')
   $scope.unpicked_orders = unpicked_orders.query()
 
+  $scope.focusScanner = true
+
   $scope.refreshUnpickedCount = ->
     $scope.unpicked_orders = unpicked_orders.query()
 
