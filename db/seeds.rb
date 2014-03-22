@@ -7,7 +7,7 @@ DeliveryItem.delete_all
 deliveries = []
 
 def create_delivery(picked_status = :unpicked)
-  item_count = rand(10) + 1
+  item_count = rand(1..10)
   delivery = FactoryGirl.build :delivery, picked_status, order_sku_count: item_count
   total_price = 0
   item_count.times do
