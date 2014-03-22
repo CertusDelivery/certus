@@ -8,7 +8,7 @@ FactoryGirl.define do
     picker_bin_number { Faker.numerify('#######') }
     payment_adjustment 0
     product_name { Faker::Product.product_name }
-    quantity { Faker.numerify('#') }
+    quantity { rand(1..10) }
     price { Faker.numerify('##.##') }
     tax { Faker.numerify('#.##') }
     shipping_weight_unit { %w{oz kg g liter}.sample }

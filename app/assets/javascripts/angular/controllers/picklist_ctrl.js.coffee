@@ -1,4 +1,4 @@
-app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
+app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resource, $http) ->
   picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
   $scope.gridOptions = {
@@ -46,4 +46,16 @@ app.controller('PicklistCtrl', ['$scope', '$resource', ($scope, $resource) ->
       $('#unpicked_order_count').click()
     5000
   )
+
+  $scope.pickProduct = ()->
+    $scope.errorMessage = ''
+    $http.post('/api/delivery_items/pick.json',
+       barcode: $scope.scannedBarcode
+    ).success((data, status, headers, config) ->
+      $scope.scannedBarcode = ''
+    ).error((data, status) ->
+      if data.status is 'nok'
+        $scope.scannedBarcode = ''
+        $scope.errorMessage = data.message
+    )
 ])

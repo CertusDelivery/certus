@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DeliveryItem do
   before do
-    @delivery_item = FactoryGirl.build(:delivery_item)
+    @delivery_item = create(:delivery_item)
   end
 
   describe "#order_to_delivery_convert" do
@@ -15,5 +15,15 @@ describe DeliveryItem do
       @delivery_item.errors.messages[:client_sku].first.should == "order_grand_total doesn't match payment_amount"
     end
 
+  end
+
+  describe "#pick!" do
+    it "should add 1 to picked quantity" do
+      expect{@delivery_item.pick!}.to change(@delivery_item, :picked_quantity).by(1)
+    end
+
+    it "should set picked status to PICKED if fully picked" do
+      expect{@delivery_item.pick!(@delivery_item.quantity)}.to change(@delivery_item, :picked_status).to(DeliveryItem::PICKED_STATUS[:picked])
+    end
   end
 end

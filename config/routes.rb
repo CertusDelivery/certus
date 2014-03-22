@@ -17,6 +17,12 @@ Certus::Application.routes.draw do
         get 'load_unpicked_order'
       end
     end
+    
+    resources :delivery_items, only: [ :show ] do
+      collection do
+        post 'pick'
+      end
+    end
   end
 
   # Example resource route with options:
