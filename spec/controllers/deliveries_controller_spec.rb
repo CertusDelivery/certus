@@ -64,21 +64,21 @@ describe DeliveriesController do
   describe '#load_unpicked_order' do
     before do
       3.times { |i| create_delivery }
-      2.times { |i| create_delivery(:picking) }
+      1.times { |i| create_delivery(:picking) }
     end
 
     it 'should load one order into picklist' do
-      Delivery.picking.count.should == 2
+      Delivery.picking.count.should == 1
       Delivery.unpicked.count.should == 3
       get :load_unpicked_order
       response.should render_template('deliveries/picklist.json')
-      assigns[:deliveries].size.should == 3
-      Delivery.picking.count.should == 3
+      assigns[:deliveries].size.should == 2
+      Delivery.picking.count.should == 2
       Delivery.unpicked.count.should == 2
     end
 
     it 'should not load new order into picklist when current picking orders count equal to MAX_PICKING_COUNT' do
-      create_delivery(:picking)
+      2.times { |i| create_delivery(:picking) }
       Delivery.picking.count.should == 3
       Delivery.unpicked.count.should == 3
       get :load_unpicked_order
