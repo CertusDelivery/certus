@@ -10,7 +10,7 @@
     |
     Unpicked orders:
     %span#unpicked_order_count{'ng-click' => "refreshUnpickedCount()"}
-      {{unpicked_orders[0].unpicked_count}}
+      {{unpicked_count}}
   %form{ "ng-submit" => "pickProduct()"}
     = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "ng-change" => "scanBarcode()", "focus-me" => "focusScanner", placeholder: 'Item barcode'
     = submit_tag 'Submit Scanner Input'

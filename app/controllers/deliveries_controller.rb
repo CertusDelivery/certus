@@ -24,7 +24,7 @@ class DeliveriesController < ApplicationController
   end
 
   def unpicked_orders
-    render json: [{unpicked_count: unpicked_count}]
+    render text: unpicked_count
   end
 
   def load_unpicked_order

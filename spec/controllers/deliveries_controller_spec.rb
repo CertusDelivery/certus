@@ -54,12 +54,10 @@ describe DeliveriesController do
       2.times { |i| create_delivery(:picking) }
     end
 
-    it 'should return unpicked_orders count as json format' do
+    it 'should return unpicked_orders count' do
       get :unpicked_orders
       response.success?.should be_true
-      data = JSON.parse(response.body)
-      data.length.should == 1
-      data.first[:unpicked_count.to_s].should == 3
+      response.body.to_i.should == 3
     end
   end
 

@@ -18,24 +18,23 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     enableHighlighting: true
   }
 
-  unpicked_orders = $resource('/api/deliveries/unpicked_orders.json')
-  $scope.unpicked_orders = unpicked_orders.query()
-
-  $scope.focusScanner = true
-
   $scope.refreshUnpickedCount = ->
-    $scope.unpicked_orders = unpicked_orders.query()
+    $http.get('/api/deliveries/unpicked_orders').success( (data) ->
+      $scope.unpicked_count = data
+    )
 
   $scope.loadNewOrder = ->
     loader = $resource('/api/deliveries/load_unpicked_order.json')
     $scope.picklist = loader.query()
-    $scope.unpicked_orders = unpicked_orders.query()
+    $scope.refreshUnpickedCount()
 
   $scope.timer = ->
     today = new Date()
     $scope.time = today.toTimeString()
 
-  $scope.time = $scope.timer()
+  $scope.focusScanner = true
+  $scope.refreshUnpickedCount()
+  $scope.timer()
   setInterval(
     ->
       $('#current_time').click()
