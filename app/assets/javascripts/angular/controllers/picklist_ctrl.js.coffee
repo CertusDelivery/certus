@@ -8,7 +8,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'product_name', displayName: 'Product Name'},
       {field: 'shipping_weight', displayName: 'Shipping Weight'},
       {field: 'location', displayName: 'Location'},
-      {field: 'delivery_id', displayName: 'Order ID'},
+      {field: 'delivery_id', displayName: 'Delivery ID'},
       {field: 'picked_status', displayName: 'Picked Status'},
       {field: 'picker_bin_number', displayName: 'Bin'},
       {field: 'store_sku', displayName: 'Store SKU'},
