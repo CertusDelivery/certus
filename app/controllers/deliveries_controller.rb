@@ -31,6 +31,7 @@ class DeliveriesController < ApplicationController
     # One Time One Order
     if Delivery::MAX_PICKING_COUNT > picking_count
       Delivery.fifo.unpicked.limit(1).update_all(picked_status: Delivery::PICKED_STATUS[:picking])
+    end
     picking_orders
     render 'deliveries/picklist.json'
   end
