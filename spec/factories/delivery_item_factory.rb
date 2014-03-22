@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :delivery_item do
+    picked_status 'UNPICKED'
     picked_quantity 0
     store_sku { Faker.numerify('###############') }
     client_sku { store_sku }
