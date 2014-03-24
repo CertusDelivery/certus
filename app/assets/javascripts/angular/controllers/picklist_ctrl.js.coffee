@@ -2,6 +2,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
+  $scope.mySelections = []
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
@@ -15,10 +16,15 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'store_sku', displayName: 'Store SKU'},
       {field: 'id', visible: false}
     ],
+    selectedItems: $scope.mySelections,
     multiSelect: false,
     enableSorting: false,
     enableHighlighting: true
   }
+
+  $scope.$on('ngGridEventData', ->
+    $scope.gridOptions.selectRow(0, true)
+  )
 
   $scope.refreshUnpickedCount = ->
     $http.get('/api/deliveries/unpicked_orders').success( (data) ->
@@ -28,7 +34,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.loadNewOrder = ->
     loader = $resource('/api/deliveries/load_unpicked_order.json')
     $scope.picklist = loader.query()
-    $scope.refreshUnpickedCount()
 
   $scope.loadOrdersByLocation = ->
     loader = $resource('/api/deliveries/sort_picking_orders.json', {direction: $scope.location_sort})
@@ -37,7 +42,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     else
       $scope.location_sort = 'asc'
     $scope.picklist = loader.query()
-    $scope.refreshUnpickedCount()
 
 
   $scope.timer = ->
