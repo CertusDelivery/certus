@@ -62,12 +62,17 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     5000
   )
 
-  $scope.pickProduct = ()->
+  $scope.pickProduct = ->
+    current_product = $scope.mySelections[0]
     $scope.errorMessage = ''
     $http.post('/api/delivery_items/pick.json',
-       barcode: $scope.scannedBarcode
+       barcode: $scope.scannedBarcode,
+       delivery_id: current_product.delivery_id
     ).success((data, status, headers, config) ->
       $scope.scannedBarcode = ''
+      $scope.notice = data.message if data.message
+      if data.remove_completed_delivery
+        $scope.picklist = picklist.query()
     ).error((data, status) ->
       if data.status is 'nok'
         $scope.scannedBarcode = ''

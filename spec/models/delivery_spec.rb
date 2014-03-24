@@ -61,4 +61,42 @@ describe Delivery do
 
   end
 
+  describe "all_picked?" do
+    it "should return false when the delivery has not been complete picked" do
+      expect(@delivery.delivery_items.all_picked?).to be_false
+    end
+
+    it "should return true when the delivery has been complete picked" do
+      @delivery.delivery_items.each {|item| item.pick!(item.quantity)}
+      expect(@delivery.delivery_items.all_picked?).to be_true
+    end
+  end
+
+  describe "? methods" do
+    it "should respond to ? methods" do
+      Delivery::PICKED_STATUS.each_key do |k|
+        expect(@delivery.respond_to?("#{k}?")).to be_true
+      end
+    end
+  end
+
+  describe "#can_be_complete?" do
+    it "should return false when the delivery has not been complete picked" do
+      expect(@delivery.can_be_complete?).to be_false
+    end
+
+    it "should return true when the delivery has been complete picked" do
+      @delivery.delivery_items.each {|item| item.pick!(item.quantity)}
+      expect(@delivery.can_be_complete?).to be_true
+    end
+  end
+
+  describe "#complete!" do
+    it "should complete the delivery when the delivery can be complete" do
+      @delivery.delivery_items.each {|item| item.pick!(item.quantity)}
+      expect(@delivery.can_be_complete?).to be_true
+      @delivery.complete!
+      expect(@delivery.store_staging?).to be_true
+    end
+  end
 end

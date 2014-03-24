@@ -23,16 +23,32 @@ class DeliveryItem < ActiveRecord::Base
     picked:   'PICKED'
   }
   # TODO Story#67779030
-  SPECIFIC_BARCODES = { out_of_stock: "888888888888888" }
+  SPECIFIC_BARCODES = {
+    out_of_stock: "OUT_OF_STOCK",
+    remove_completed_delivery: 'REMOVE_COMPLETED_DELIVERY'
+  }
 
   # class methods .............................................................
-  def self.specific_barcode?(barcode)
-    SPECIFIC_BARCODES.has_value?(barcode)
+
+  class << self
+    def specific_barcode?(barcode)
+      SPECIFIC_BARCODES.has_value?(barcode)
+    end
+
+    SPECIFIC_BARCODES.each do |k, v|
+      define_method "#{k}?" do |barcode|
+        barcode == v
+      end
+    end
   end
 
   # public instance methods ...................................................
   def pick!(quantity = 1)
     self.update_attributes({ picked_quantity: picked_quantity + quantity })
+  end
+
+  def picked?
+    self.picked_status == PICKED_STATUS[:picked]
   end
 
   # protected instance methods ................................................

@@ -10,7 +10,13 @@ class Delivery < ActiveRecord::Base
     store_staging:  'STORE_STAGING'
   }
 
-  has_many :delivery_items
+  has_many :delivery_items do
+    def all_picked?
+      collect do |item|
+        return false unless item.picked?
+      end
+    end
+  end
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
@@ -29,6 +35,25 @@ class Delivery < ActiveRecord::Base
   validate :order_to_delivery_convert
 
   accepts_nested_attributes_for :delivery_items
+
+
+  # public instance methods ...................................................
+  PICKED_STATUS.each do |k, v|
+    define_method "#{k}?" do
+      picked_status == v
+    end
+  end
+
+  def can_be_complete?
+    delivery_items.all_picked?
+  end
+
+  def complete!
+    self.update_attributes({ picked_status: PICKED_STATUS[:store_staging]}) if can_be_complete?
+  end
+
+  # protected instance methods ................................................
+  protected
 
   def order_to_delivery_convert
     if order_grand_total != payment_amount

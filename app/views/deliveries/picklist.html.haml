@@ -14,8 +14,11 @@
   %form{ "ng-submit" => "pickProduct()"}
     = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "ng-change" => "scanBarcode()", "focus-me" => "focusScanner", placeholder: 'Item barcode'
     = submit_tag 'Submit Scanner Input'
-    %div{style: "background: yellow; display: inline;"}
-      {{errorMessage}}
+    .flash
+      .error
+        {{errorMessage}}
+      .notice
+        {{notice}}
 
   %p
   %center

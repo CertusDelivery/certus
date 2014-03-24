@@ -26,4 +26,26 @@ describe DeliveryItem do
       expect{@delivery_item.pick!(@delivery_item.quantity)}.to change(@delivery_item, :picked_status).to(DeliveryItem::PICKED_STATUS[:picked])
     end
   end
+
+  describe "specific_barcode?" do
+    it 'should return true when pass a specific barcode' do
+      DeliveryItem::SPECIFIC_BARCODES.each_value do |v|
+        expect(DeliveryItem.specific_barcode?(v)).to be_true
+      end
+    end
+
+    it 'should respond to ? methods' do
+      DeliveryItem::SPECIFIC_BARCODES.each_key do |k|
+        expect(DeliveryItem.respond_to?("#{k}?".to_sym)).to be_true
+      end
+    end
+  end
+
+  describe 'picked?' do
+    it 'should return true when the product has been picked' do
+      @delivery_item.pick!(@delivery_item.quantity)
+      expect(@delivery_item.picked?).to be_true
+    end
+  end
+
 end
