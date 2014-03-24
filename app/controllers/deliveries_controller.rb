@@ -19,7 +19,7 @@ class DeliveriesController < ApplicationController
   def picklist
     respond_to do |format|
       format.html {}
-      format.json { picking_orders }
+      format.json { picking_delivery_items }
     end
   end
 
@@ -32,7 +32,17 @@ class DeliveriesController < ApplicationController
     if Delivery::MAX_PICKING_COUNT > picking_count
       Delivery.fifo.unpicked.limit(1).update_all(picked_status: Delivery::PICKED_STATUS[:picking])
     end
-    picking_orders
+    picking_delivery_items
+    render 'deliveries/picklist.json'
+  end
+
+  def sort_picking_orders
+    direction = params[:direction] ==  'asc' ? 'asc' :'desc'
+    @delivery_items = if direction =='asc'
+        sort_picking_orders_by_location
+      else
+        sort_picking_orders_by_location.reverse!
+    end
     render 'deliveries/picklist.json'
   end
 
@@ -49,4 +59,26 @@ class DeliveriesController < ApplicationController
   def picking_orders
     @deliveries ||= Delivery.includes(:delivery_items).picking.limit(Delivery::MAX_PICKING_COUNT)
   end
+
+  def picking_delivery_items
+    @delivery_items = picking_orders.map(&:delivery_items).flatten
+  end
+
+  def sort_picking_orders_by_location
+    @delivery_items = picking_orders.map(&:delivery_items).flatten.sort! do |delivery_item_a, delivery_item_b|
+      if delivery_item_a.location_aisle_num != delivery_item_b.location_aisle_num #location_aisle_num
+        delivery_item_a.location_aisle_num <=> delivery_item_b.location_aisle_num
+      elsif delivery_item_a.location_direction != delivery_item_b.location_direction #location_direction
+        delivery_item_a.location_direction <=> delivery_item_b.location_direction
+      elsif delivery_item_a.location_front != delivery_item_b.location_front #location_front
+        delivery_item_a.location_front <=> delivery_item_b.location_front
+      elsif delivery_item_a.location_shelf != delivery_item_b.location_shelf #location_shelf
+        delivery_item_a.location_shelf <=> delivery_item_b.location_shelf
+      else
+        0
+      end
+    end
+    @delivery_items
+  end
+
 end

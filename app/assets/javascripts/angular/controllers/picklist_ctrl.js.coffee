@@ -1,6 +1,7 @@
 app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resource, $http) ->
   picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
+  $scope.location_sort = 'asc'
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
@@ -15,6 +16,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'id', visible: false}
     ],
     multiSelect: false,
+    enableSorting: false,
     enableHighlighting: true
   }
 
@@ -27,6 +29,16 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     loader = $resource('/api/deliveries/load_unpicked_order.json')
     $scope.picklist = loader.query()
     $scope.refreshUnpickedCount()
+
+  $scope.loadOrdersByLocation = ->
+    loader = $resource('/api/deliveries/sort_picking_orders.json', {direction: $scope.location_sort})
+    if $scope.location_sort == 'asc'
+      $scope.location_sort = 'desc'
+    else
+      $scope.location_sort = 'asc'
+    $scope.picklist = loader.query()
+    $scope.refreshUnpickedCount()
+
 
   $scope.timer = ->
     today = new Date()

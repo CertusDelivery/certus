@@ -56,7 +56,7 @@ class DeliveryItem < ActiveRecord::Base
       reg_location = /\s*(?<aisle_num>\d{1,3})(?<direction>(n|s|e|w))?\s*-\s*(?<front>\d{1,3}*)?\s*-\s*(?<shelf>\d{1,3}*)?\s*/i
       location_arr = reg_location.match(location)
       self.location_aisle_num = location_arr[:aisle_num].to_i
-      self.location_direction = location_arr[:direction]
+      self.location_direction = location_arr[:direction].to_s.upcase
       self.location_front = location_arr[:front].to_i
       self.location_shelf = location_arr[:shelf].to_i
     rescue

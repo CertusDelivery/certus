@@ -1,4 +1,4 @@
-json.array!(@deliveries.map(&:delivery_items).flatten) do |item|
+json.array!(@delivery_items) do |item|
   json.(item,
     :id,
     :picked_status,
