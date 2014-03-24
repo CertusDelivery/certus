@@ -1,7 +1,9 @@
 class DeliveryItem < ActiveRecord::Base
   # relationships .............................................................
   belongs_to :delivery
-
+  #location rebuild
+  attr_accessor :location_aisle_num, :location_direction, :location_front, :location_shelf
+  after_find :location_rebuild
   # validations ...............................................................
   validates_presence_of :client_sku, :quantity, :price
   validates_numericality_of :price, greater_than: 0
@@ -47,5 +49,17 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   # private instance methods ..................................................
-
+  private
+  
+  def location_rebuild
+    begin
+      reg_location = /\s*(?<aisle_num>\d{1,3})(?<direction>(n|s|e|w))?\s*-\s*(?<front>\d{1,3}*)?\s*-\s*(?<shelf>\d{1,3}*)?\s*/i
+      location_arr = reg_location.match(location)
+      self.location_aisle_num = location_arr[:aisle_num].to_i
+      self.location_direction = location_arr[:direction]
+      self.location_front = location_arr[:front].to_i
+      self.location_shelf = location_arr[:shelf].to_i
+    rescue
+    end
+  end
 end
