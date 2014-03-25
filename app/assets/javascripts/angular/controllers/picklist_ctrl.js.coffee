@@ -52,6 +52,14 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
        barcode: $scope.scannedBarcode
     ).success((data, status, headers, config) ->
       $scope.scannedBarcode = ''
+      angular.forEach $scope.picklist, (row, index) ->
+        if row.id == data.id
+          $scope.picklist[index].picking_progress = data.delivery_item.picking_progress
+          $scope.picklist[index].picked_status = data.delivery_item.picked_status
+          $scope.gridOptions.selectItem(index, true)
+          $('.ngGrid').find('.selected').fadeTo('fast',0).fadeTo('fast',1)
+          if data.delivery_item.picked_status is 'PICKED'
+            $scope.gridOptions.selectItem(index+1, true)
     ).error((data, status) ->
       if data.status is 'nok'
         $scope.scannedBarcode = ''

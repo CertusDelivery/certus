@@ -33,6 +33,10 @@ class DeliveryItem < ActiveRecord::Base
     self.update_attributes({ picked_quantity: picked_quantity + quantity })
   end
 
+  def picking_progress
+    [quantity, picked_quantity, out_of_stock_quantity, scanned_quantity].join('/')
+  end
+
   # protected instance methods ................................................
   protected
 

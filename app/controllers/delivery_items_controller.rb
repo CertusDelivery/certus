@@ -4,11 +4,14 @@ class DeliveryItemsController < ApplicationController
 
   def pick
     if @delivery_item && @delivery_item.pick!(params[:quantity] || 1)
-      # TODO Story#67779306
-      render json: { id: @delivery_item.id }
+      render 'pick'
     else
-      render json: { status: 'nok', message: "You scanned the wrong item." }, status: :unprocessable_entity 
+      render json: { status: 'nok', message: "You scanned the wrong item." }, status: :unprocessable_entity
     end
+  end
+  
+  def show
+    @delivery_item = DeliveryItem.find(params[:id])
   end
 
   protected
