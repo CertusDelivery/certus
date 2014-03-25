@@ -9,6 +9,7 @@ FactoryGirl.define do
     lng { Faker::Geolocation.lng }
     picked_at { Time.now }
     order_id { Faker.numerify('#########') }
+    client_id { 1 }
     order_piece_count { 2 }
     order_total_price { Faker.numerify('###.##') }
     order_total_tax { Faker.numerify('#.##') }

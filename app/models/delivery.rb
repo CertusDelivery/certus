@@ -25,8 +25,8 @@ class Delivery < ActiveRecord::Base
   validates_presence_of :customer_name, :shipping_address, :customer_email
   validates_format_of :customer_email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'customer email must be valid'
   #order
-  validates_presence_of :order_id, :placed_at, :order_sku_count, :order_piece_count, :order_total_price
-  validates_uniqueness_of :order_id, allow_nil: false
+  validates_presence_of :order_id, :placed_at, :order_sku_count, :order_piece_count, :order_total_price, :client_id
+  validates_uniqueness_of :order_id, allow_nil: false, scope: [:client_id]
   validates_numericality_of :order_piece_count, greater_than: 0
   #payment
   validates_presence_of :payment_id, :payment_amount, :payment_card_token

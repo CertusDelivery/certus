@@ -7,7 +7,8 @@ class DeliveryItem < ActiveRecord::Base
   # validations ...............................................................
   validates_presence_of :client_sku, :quantity, :price
   validates_numericality_of :price, greater_than: 0
-  validate :order_to_delivery_convert
+  #TODO
+  #validate :order_to_delivery_convert
 
   # callbacks .................................................................
   before_save :update_status_if_all_picked

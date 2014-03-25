@@ -3,6 +3,7 @@ def create_delivery_params
                                   shipping_address: Faker::AddressUS.street_address(true),
                                   customer_email: Faker::Internet.email,
                                   order_id: Faker.numerify('#########'),
+                                  client_id: 1,
                                   order_piece_count:3,
                                   payment_id:Faker.numerify('#####'),
                                   payment_card_token:Faker::Lorem.characters(40),

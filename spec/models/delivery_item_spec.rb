@@ -7,13 +7,13 @@ describe DeliveryItem do
 
   describe "#order_to_delivery_convert" do
 
-    it "should client_sku match store_sku" do
-      @delivery_item.client_sku = '2848393'
-      @delivery_item.store_sku = '1234578997'
-      @delivery_item.save
-      @delivery_item.should have(1).error_on(:client_sku)
-      @delivery_item.errors.messages[:client_sku].first.should == "client_sku doesn't match store_sku"
-    end
+    #it "should client_sku match store_sku" do
+    #  @delivery_item.client_sku = '2848393'
+    #  @delivery_item.store_sku = '1234578997'
+    #  @delivery_item.save
+    #  @delivery_item.should have(1).error_on(:client_sku)
+    #  @delivery_item.errors.messages[:client_sku].first.should == "client_sku doesn't match store_sku"
+    #end
 
   end
 
