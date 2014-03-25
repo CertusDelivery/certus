@@ -10,7 +10,13 @@ class Delivery < ActiveRecord::Base
     store_staging:  'STORE_STAGING'
   }
 
-  has_many :delivery_items
+  has_many :delivery_items do
+    def all_picked?
+      collect do |item|
+        return false unless item.picked?
+      end
+    end
+  end
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
@@ -19,8 +25,8 @@ class Delivery < ActiveRecord::Base
   validates_presence_of :customer_name, :shipping_address, :customer_email
   validates_format_of :customer_email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'customer email must be valid'
   #order
-  validates_presence_of :order_id, :placed_at, :order_sku_count, :order_piece_count, :order_total_price
-  validates_uniqueness_of :order_id, allow_nil: false
+  validates_presence_of :order_id, :placed_at, :order_sku_count, :order_piece_count, :order_total_price, :client_id
+  validates_uniqueness_of :order_id, allow_nil: false, scope: [:client_id]
   validates_numericality_of :order_piece_count, greater_than: 0
   #payment
   validates_presence_of :payment_id, :payment_amount, :payment_card_token
@@ -29,6 +35,41 @@ class Delivery < ActiveRecord::Base
   validate :order_to_delivery_convert
 
   accepts_nested_attributes_for :delivery_items
+
+  # class methods .............................................................
+
+  class << self
+    def complete_all
+      picked_orders = Delivery.picking.select{|d| d.can_be_complete? }
+      picked_orders.each(&:complete!)
+      message = case picked_orders.size 
+      when 0
+        "No order have been completed picked."
+      when 1
+        "1 order have been removed from the list."
+      else
+        "#{picked_orders.size} orders have been removed from the list."
+      end
+    end
+  end
+
+  # public instance methods ...................................................
+  PICKED_STATUS.each do |k, v|
+    define_method "#{k}?" do
+      picked_status == v
+    end
+  end
+
+  def can_be_complete?
+    delivery_items.all_picked?
+  end
+
+  def complete!
+    self.update_attributes({ picked_status: PICKED_STATUS[:store_staging]}) if can_be_complete?
+  end
+
+  # protected instance methods ................................................
+  protected
 
   def order_to_delivery_convert
     if order_grand_total != payment_amount

@@ -30,8 +30,8 @@ describe DeliveriesController do
 
   describe '#picklist' do
     before do
-      3.times { |i| create_delivery }
-      2.times { |i| create_delivery(:picking) }
+      3.times { create_delivery }
+      2.times { create_delivery(:picking) }
     end
 
     it 'should render picklist template when format is html' do
@@ -50,8 +50,8 @@ describe DeliveriesController do
 
   describe '#unpicked_orders' do
     before do
-      3.times { |i| create_delivery }
-      2.times { |i| create_delivery(:picking) }
+      3.times { create_delivery }
+      2.times { create_delivery(:picking) }
     end
 
     it 'should return unpicked_orders count' do
@@ -63,8 +63,8 @@ describe DeliveriesController do
 
   describe '#load_unpicked_order' do
     before do
-      3.times { |i| create_delivery }
-      1.times { |i| create_delivery(:picking) }
+      3.times { create_delivery }
+      1.times { create_delivery(:picking) }
     end
 
     it 'should load one order into picklist' do
@@ -86,6 +86,23 @@ describe DeliveriesController do
       assigns[:deliveries].size.should == 3
       Delivery.picking.count.should == 3
       Delivery.unpicked.count.should == 3
+    end
+  end
+
+  describe '#remove_picked_orders' do
+    before do
+      2.times { create_delivery(:picking) }
+      3.times { create_delivery }
+      Delivery.picking.each do |d|
+        d.delivery_items.each{|item| item.pick!(item.quantity)}
+      end
+    end
+
+    it 'should return json with message "2 orders have been removed from the list."' do
+      delete :remove_picked_orders
+      expect(response.success?).to be_true
+      data = JSON.parse(response.body)
+      expect(data["message"]).to eq("2 orders have been removed from the list.")
     end
   end
 end

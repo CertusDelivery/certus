@@ -75,7 +75,7 @@ todo
 
     <tr>
       <td>customer_phone_number</td>
-      <td>true</td>
+      <td>false</td>
       <td>String</td>
       <td>Customer's phone number</td>
     </tr>
@@ -90,14 +90,14 @@ todo
     <tr>
       <td>placed_at</td>
       <td>true</td>
-      <td>String</td>
+      <td>Datetime</td>
       <td>Order placed timestamp</td>
     </tr>
 
     <tr>
       <td>desired_delivery_window</td>
-      <td>true</td>
-      <td>String</td>
+      <td>false</td>
+      <td>Datetime</td>
       <td>Desired delivery time</td>
     </tr>
 
@@ -139,35 +139,35 @@ todo
     <tr>
       <td>order_total_price</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Order totals:	price</td>
     </tr>
 
     <tr>
       <td>order_total_tax</td>
-      <td>true</td>
-      <td>Float</td>
+      <td>false</td>
+      <td>Decimal</td>
       <td>Order totals:	tax</td>
     </tr>
 
     <tr>
       <td>order_total_adjustments</td>
       <td>false</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Order totals:	adjustments, defaults to 0.0</td>
     </tr>
 
     <tr>
       <td>order_non_apportionable_adjustments</td>
       <td>false</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Order totals:	Non apportionable adjustments, defaults to 0.0</td>
     </tr>
 
     <tr>
       <td>order_grand_total</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Order totals: Grand total</td>
     </tr>
 
@@ -188,7 +188,7 @@ todo
     <tr>
       <td>payment_amount</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Client payment amount</td>
     </tr>
 
@@ -244,7 +244,7 @@ todo
     <tr>
       <td>quantity</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Integer</td>
       <td>Quantity for the products in the individual order item</td>
     </tr>
 
@@ -258,28 +258,28 @@ todo
     <tr>
       <td>price</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Price per unit</td>
     </tr>
 
     <tr>
       <td>tax</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Tax per unit</td>
     </tr>
 
     <tr>
       <td>other_adjustments</td>
       <td>false</td>
-      <td>Float</td>
+      <td>Text</td>
       <td>Adjustment for the individual order item, defaults to 0.0</td>
     </tr>
 
     <tr>
       <td>order_item_amount</td>
       <td>true</td>
-      <td>Float</td>
+      <td>Decimal</td>
       <td>Amount for the individual order item</td>
     </tr>
 

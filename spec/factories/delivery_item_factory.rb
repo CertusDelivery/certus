@@ -10,7 +10,7 @@ FactoryGirl.define do
     payment_adjustment 0
     product_name { Faker::Product.product_name }
     quantity { rand(1..10) }
-    price { Faker.numerify('##.##') }
+    price { Faker.numerify('##.#1') }
     tax { Faker.numerify('#.##') }
     shipping_weight_unit { %w{oz kg g liter}.sample }
     out_of_stock_quantity 0
