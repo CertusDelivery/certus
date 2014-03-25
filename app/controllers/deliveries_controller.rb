@@ -36,6 +36,11 @@ class DeliveriesController < ApplicationController
     render 'deliveries/picklist.json'
   end
 
+  def remove_picked_orders
+    message = Delivery.complete_all
+    render json: { status: 'ok', message: message }
+  end
+
   def sort_picking_orders
     direction = params[:direction] ==  'asc' ? 'asc' :'desc'
     @delivery_items = if direction =='asc'

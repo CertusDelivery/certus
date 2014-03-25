@@ -99,4 +99,40 @@ describe Delivery do
       expect(@delivery.store_staging?).to be_true
     end
   end
+
+  describe ".complete_all" do
+    context 'when no order has been completed picked' do
+      it 'should return message "No order have been completed picked."' do
+        expect(Delivery.complete_all).to eq("No order have been completed picked.")
+      end
+    end
+
+    context 'when one order has been completed picked' do
+      before do
+        @delivery = create_delivery(:picking)
+        @delivery.delivery_items.each {|item| item.pick!(item.quantity)}
+      end
+
+      it 'should return message "1 order have been removed from the list."' do
+        expect(Delivery.complete_all).to eq("1 order have been removed from the list.")
+      end
+    end
+
+
+
+    context 'when two order has been completed picked' do
+      before do
+        deliverie1 = create_delivery(:picking)
+        deliverie2 = create_delivery(:picking)
+        deliverie3 = create_delivery(:picking)
+        [deliverie1, deliverie2].each do |d|
+          d.delivery_items.each {|item| item.pick!(item.quantity)}
+        end
+      end
+      
+      it 'should return message "2 orders have been removed from the list."' do
+        expect(Delivery.complete_all).to eq("2 orders have been removed from the list.")
+      end
+    end
+  end
 end

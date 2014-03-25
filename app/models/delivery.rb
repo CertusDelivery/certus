@@ -36,6 +36,22 @@ class Delivery < ActiveRecord::Base
 
   accepts_nested_attributes_for :delivery_items
 
+  # class methods .............................................................
+
+  class << self
+    def complete_all
+      picked_orders = Delivery.picking.select{|d| d.can_be_complete? }
+      picked_orders.each(&:complete!)
+      message = case picked_orders.size 
+      when 0
+        "No order have been completed picked."
+      when 1
+        "1 order have been removed from the list."
+      else
+        "#{picked_orders.size} orders have been removed from the list."
+      end
+    end
+  end
 
   # public instance methods ...................................................
   PICKED_STATUS.each do |k, v|

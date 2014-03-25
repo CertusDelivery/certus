@@ -1,9 +1,10 @@
 
 %div{'ng-controller' => 'PicklistCtrl'}
-  %h Put buttons or links to options here: Download New Order, Remove Picked Orders
+  %h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
   %p Put time of day and number of unassigned orders on server here
   %p
     = button_tag 'Download New Order', 'ng-click' => "loadNewOrder()"
+    = button_tag 'Remove Picked Orders', 'ng-click' => "removePickedOrders()"
     = button_tag 'Sort By Location', 'ng-click' => "loadOrdersByLocation()"
   %p
     %span#current_time{'ng-click' => "timer()"}
