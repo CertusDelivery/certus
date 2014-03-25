@@ -11,6 +11,7 @@ class DeliveryItem < ActiveRecord::Base
   #validate :order_to_delivery_convert
 
   # callbacks .................................................................
+  before_create :initial_picked_status
   before_save :update_status_if_all_picked
 
   # scopes ....................................................................
@@ -63,6 +64,10 @@ class DeliveryItem < ActiveRecord::Base
     if client_sku != store_sku
       self.errors.add(:client_sku,"client_sku doesn't match store_sku")
     end
+  end
+
+  def initial_picked_status
+    picked_status ||= PICKED_STATUS[:unpicked]
   end
 
   def update_status_if_all_picked
