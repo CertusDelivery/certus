@@ -11,7 +11,7 @@ describe DeliveryItemsController do
     end
 
     it "should pick the right item with valid barcode" do
-      post :pick, { barcode: @delivery_item.store_sku}
+      post :pick, { barcode: @delivery_item.store_sku, format: :json }
       response.status.should eq 200
     end
 
