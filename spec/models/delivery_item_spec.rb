@@ -48,4 +48,37 @@ describe DeliveryItem do
     end
   end
 
+  describe '#location_rebuild' do
+    it 'should return correct field value for location' do
+      @delivery_item = create(:delivery_item, :location => '01W--1')
+      item = DeliveryItem.find_by_location('01W--1')
+      item.location_aisle_num.should == 1
+      item.location_direction.should == 'W'
+      item.location_front.should == 0
+      item.location_shelf.should == 1
+
+      @delivery_item = create(:delivery_item, :location => '2--13')
+      item = DeliveryItem.find_by_location('2--13')
+      item.location_aisle_num.should == 2
+      item.location_direction.should == ''
+      item.location_front.should == 0
+      item.location_shelf.should == 13
+
+      @delivery_item = create(:delivery_item, :location => '4w-11-')
+      item = DeliveryItem.find_by_location('4w-11-')
+      item.location_aisle_num.should == 4
+      item.location_direction.should == 'W'
+      item.location_front.should == 11
+      item.location_shelf.should == 0
+
+      @delivery_item = create(:delivery_item, :location => '5e-  23  -09')
+      item = DeliveryItem.find_by_location('5e-  23  -09')
+      item.location_aisle_num.should == 5
+      item.location_direction.should == 'E'
+      item.location_front.should == 23
+      item.location_shelf.should == 9
+
+    end
+  end
+
 end
