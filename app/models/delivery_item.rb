@@ -11,7 +11,7 @@ class DeliveryItem < ActiveRecord::Base
   #validate :order_to_delivery_convert
 
   # callbacks .................................................................
-  before_create :initial_picked_status
+  before_create :initial_picked_status, :init_random_location_for_test
   before_save :update_status_if_all_picked
 
   # scopes ....................................................................
@@ -73,6 +73,15 @@ class DeliveryItem < ActiveRecord::Base
   def update_status_if_all_picked
     self.picked_status = PICKED_STATUS[:picked] if quantity == picked_quantity
   end
+
+  def init_random_location_for_test
+    aisle_num = %w{01 12 03 04}
+    direction = ["N", "S", "E", "W", ""]
+    front     = %w{10 20 66 90}
+    shelf     = %w{1 2 3 4 5 6 7 8 9}
+    self.location= "#{aisle_num}#{direction}-#{front}-#{shelf}" unless self.location
+  end
+
 
   # private instance methods ..................................................
   private
