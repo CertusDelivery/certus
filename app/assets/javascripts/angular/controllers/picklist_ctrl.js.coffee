@@ -36,6 +36,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     $scope.errorMessage = ''
     loader = $resource('/api/deliveries/load_unpicked_order.json')
     $scope.picklist = loader.query()
+    $scope.refreshUnpickedCount()
 
   $scope.loadOrdersByLocation = ->
     loader = $resource('/api/deliveries/sort_picking_orders.json', {direction: $scope.location_sort})

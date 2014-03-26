@@ -15,6 +15,7 @@ class Delivery < ActiveRecord::Base
       collect do |item|
         return false unless item.picked?
       end
+      true
     end
   end
 
