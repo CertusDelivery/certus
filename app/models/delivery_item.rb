@@ -67,7 +67,7 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def initial_picked_status
-    picked_status ||= PICKED_STATUS[:unpicked]
+    self.picked_status = PICKED_STATUS[:unpicked]
   end
 
   def update_status_if_all_picked
