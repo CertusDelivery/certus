@@ -75,10 +75,10 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def init_random_location_for_test
-    aisle_num = %w{01 12 03 04}
-    direction = ["N", "S", "E", "W", ""]
-    front     = %w{10 20 66 90}
-    shelf     = %w{1 2 3 4 5 6 7 8 9}
+    aisle_num = %w{01 12 03 04}.sample
+    direction = ["N", "S", "E", "W", ""].sample
+    front     = %w{10 20 66 90}.sample
+    shelf     = %w{1 2 3 4 5 6 7 8 9}.sample
     self.location= "#{aisle_num}#{direction}-#{front}-#{shelf}" unless self.location
   end
 
