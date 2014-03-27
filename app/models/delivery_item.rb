@@ -57,6 +57,12 @@ class DeliveryItem < ActiveRecord::Base
     self.picked_status == PICKED_STATUS[:picked]
   end
 
+  def out_of_stock!
+    out_of_stock = quantity - picked_quantity
+    self.update_attributes(out_of_stock_quantity: out_of_stock)
+  end
+  alias :update_out_of_stock_quantity :out_of_stock!
+
   # protected instance methods ................................................
   protected
 
@@ -71,7 +77,7 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def update_status_if_all_picked
-    self.picked_status = PICKED_STATUS[:picked] if quantity == picked_quantity
+    self.picked_status = PICKED_STATUS[:picked] if quantity == (picked_quantity + out_of_stock_quantity)
   end
 
   def init_random_location_for_test

@@ -27,9 +27,16 @@ class DeliveryItemsController < ApplicationController
 
   def handle_specific_barcode(barcode)
     if DeliveryItem.out_of_stock?(barcode)
-      #TODO Story#67779030
+      if delivery_item.nil?
+        render json: {status: 'nok', message: "Please select a product first." }, status: :unprocessable_entity 
+      elsif delivery_item
+        delivery_item.out_of_stock!
+        render 'delivery_items/pick.json'
+      end
     elsif DeliveryItem.remove_completed_delivery?(barcode)
-      if delivery.can_be_complete?
+      if delivery.nil?
+        render json: {status: 'nok', message: "Please select a product first." }, status: :unprocessable_entity 
+      elsif delivery.can_be_complete?
         delivery.complete!
         render json: {delivery_id: delivery.id, message: 'Delivery successfully picked.', status: "ok", remove_completed_delivery: true}
       else
@@ -40,6 +47,10 @@ class DeliveryItemsController < ApplicationController
 
   def delivery
     @delivery ||= (Delivery.find(params[:delivery_id]) if params[:delivery_id].present?)
+  end
+
+  def delivery_item
+    @delivery_item ||= (DeliveryItem.find(params[:id]) if params[:id].present?)
   end
 
 end

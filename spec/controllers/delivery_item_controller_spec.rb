@@ -28,6 +28,22 @@ describe DeliveryItemsController do
       response.status.should eq 422
       response.body.should eq({ status: 'nok', message: 'You scanned the wrong item.'}.to_json)
     end
-  end
 
+    context 'when the barcode is a specific barcode' do
+      it 'should update out_of_stock_quantity when barcode is "OUT_OF_STOCK"' do 
+        post :pick, { barcode: "OUT_OF_STOCK", id: @delivery_item.id, delivery_id: @delivery.id, format: :json }
+        response.status.should eq 200
+        expect(assigns[:delivery_item].out_of_stock_quantity).to eq(@delivery_item.quantity)
+        expect(assigns[:delivery_item].picked_status).to eq(DeliveryItem::PICKED_STATUS[:picked])
+      end
+
+      it 'should update delivery status to STORE_STAGING when barcode is "REMOVE_COMPLETED_DELIVERY"' do 
+        @delivery.delivery_items.each{|item| item.pick!(item.quantity)}
+        post :pick, { barcode: "REMOVE_COMPLETED_DELIVERY", id: @delivery_item.id, delivery_id: @delivery.id, format: :json }
+        data = JSON.parse(response.body)
+        expect(data["remove_completed_delivery"]).to be_true
+        expect(data["status"]).to eq('ok')
+      end
+    end
+  end
 end

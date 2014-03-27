@@ -65,12 +65,18 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     5000
   )
 
-  $scope.pickProduct = ->
+  # operation_code: 1 -> normal, 2 -> out of stock
+  $scope.pickProduct = (operation_code) ->
     $scope.notice = ''
     $scope.errorMessage = ''
+    barcode = $scope.scannedBarcode
+    barcode = "OUT_OF_STOCK" if operation_code == 2
+    return false unless barcode
     $http.post('/api/delivery_items/pick.json',
        barcode: $scope.scannedBarcode,
-       delivery_id: $scope.mySelections[0].delivery_id
+       id: $scope.mySelections[0].id,
+       delivery_id: $scope.mySelections[0].delivery_id,
+       operation_code: operation_code
     ).success((data) ->
       $scope.scannedBarcode = ''
       $scope.notice = data.message if data.message
@@ -90,6 +96,10 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
         $scope.scannedBarcode = ''
         $scope.errorMessage = data.message
     )
+
+  $scope.markAsOutOfStock = ->
+    $scope.pickProduct(2)
+
 
   $scope.removePickedOrders = ->
     $scope.notice = ''

@@ -81,4 +81,13 @@ describe DeliveryItem do
     end
   end
 
+  describe '#out_of_stock!' do
+    it 'should update out_of_stock_quantity and out_of_stock_quantity should equal to (quantity - picked_quantity)' do
+      delivery_item = create(:delivery_item, quantity: 4, picked_quantity: 1, out_of_stock_quantity: 0)
+      delivery_item.out_of_stock!
+      expect(delivery_item.out_of_stock_quantity).to eq(3)
+    end
+  end
+
+
 end
