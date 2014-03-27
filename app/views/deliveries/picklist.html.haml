@@ -28,4 +28,13 @@
     %big Products To Be Picked
   %p
   %hr
+  .current_product
+    %label Product Name:
+    %span {{mySelections[0].product_name}}
+    |
+    %label Picking Progress:
+    %span {{mySelections[0].picking_progress}}
+    |
+    %label Store SKU:
+    %span {{mySelections[0].store_sku}}
   .gridStyle{"ng-grid" => "gridOptions"}
