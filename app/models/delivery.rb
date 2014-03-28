@@ -41,7 +41,7 @@ class Delivery < ActiveRecord::Base
 
   class << self
     def complete_all
-      picked_orders = Delivery.picking.select{|d| d.can_be_complete? }
+      picked_orders = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
       picked_orders.each(&:complete!)
       message = case picked_orders.size 
       when 0
