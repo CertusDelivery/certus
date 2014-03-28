@@ -24,6 +24,9 @@ Certus::Application.routes.draw do
       collection do
         post 'pick'
       end
+      member do
+        post 'substitute'
+      end
     end
   end
 

@@ -1,6 +1,6 @@
 class DeliveryItemsController < ApplicationController
   before_filter :check_barcode, only: :pick
-  protect_from_forgery except: :pick
+  protect_from_forgery except: [:pick, :substitute]
 
   def pick
     if @delivery_item && @delivery_item.pick!(params[:quantity] || 1)
@@ -12,6 +12,12 @@ class DeliveryItemsController < ApplicationController
   
   def show
     @delivery_item = DeliveryItem.find(params[:id])
+  end
+  
+  def substitute
+    delivery_item = DeliveryItem.find(params[:id])
+    #product = Product.find(params[:product_id])
+    render json: { message: "Not implemented yet" }
   end
 
   protected
