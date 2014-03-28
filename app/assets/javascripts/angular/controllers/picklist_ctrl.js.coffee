@@ -3,13 +3,14 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
   $scope.mySelections = []
+  cellEditableTemplate = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\" ng-change=\"updateEntity(row.entity)\" />"
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
       {field: 'picking_progress', displayName: 'Qty', width: '10%'},
       {field: 'product_name', displayName: 'Product', width: '40%'},
       {field: 'shipping_weight', visible: false},
-      {field: 'location', displayName: 'Location', width: '15%'},
+      {field: 'location', displayName: 'Location', enableCellEdit: true, editableCellTemplate: cellEditableTemplate, width: '15%'},
       {field: 'delivery_id', displayName: 'ID', width: '10%'},
       {field: 'picked_status', displayName: 'Status', width: '10%'},
       {field: 'store_sku', displayName: 'SKU', width: '15%'},
@@ -108,4 +109,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       $scope.notice = data.message if data.message
       $scope.picklist = picklist.query()
     )
+
+  $scope.updateEntity = (row) ->
+    #update, note
+    #$scope.focusScanner = true
+    #alert "Pending... value = " + row.location
+    return
+
 ])
