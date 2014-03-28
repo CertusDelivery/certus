@@ -18,12 +18,22 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     ],
     selectedItems: $scope.mySelections,
     multiSelect: false,
-    enableHighlighting: true
+    enableHighlighting: true,
+    sortInfo: { fields: ['product_name'], directions: ['asc']}
   }
 
   $scope.$on('ngGridEventData', ->
     $scope.gridOptions.selectRow(0, true)
   )
+
+  $scope.clearSortingData = ->
+    if ($scope.gridOptions)
+      $scope.gridOptions.ngGrid.config.sortInfo = { fields:[], directions: [] }
+      angular.forEach($scope.gridOptions.ngGrid.lastSortedColumns, (c) ->
+        c.sortPriority = null
+        c.sortDirection = ""
+      )
+      $scope.gridOptions.ngGrid.lastSortedColumns = []
 
   $scope.refreshUnpickedCount = ->
     $http.get('/api/deliveries/unpicked_orders').success( (data) ->
@@ -38,6 +48,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     $scope.refreshUnpickedCount()
 
   $scope.loadOrdersByLocation = ->
+    $scope.clearSortingData()
     loader = $resource('/api/deliveries/sort_picking_orders.json', {direction: $scope.location_sort})
     if $scope.location_sort == 'asc'
       $scope.location_sort = 'desc'
