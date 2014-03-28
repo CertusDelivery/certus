@@ -6,14 +6,13 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
-      {field: 'picking_progress', displayName: 'Picking Progress'},
-      {field: 'product_name', displayName: 'Product Name'},
-      {field: 'shipping_weight', displayName: 'Shipping Weight'},
-      {field: 'location', displayName: 'Location'},
-      {field: 'delivery_id', displayName: 'Delivery ID'},
-      {field: 'picked_status', displayName: 'Picked Status'},
-      {field: 'picker_bin_number', displayName: 'Bin'},
-      {field: 'store_sku', displayName: 'Store SKU'},
+      {field: 'picking_progress', displayName: 'Qty', width: '10%'},
+      {field: 'product_name', displayName: 'Product', width: '40%'},
+      {field: 'shipping_weight', visible: false},
+      {field: 'location', displayName: 'Location', width: '15%'},
+      {field: 'delivery_id', displayName: 'ID', width: '10%'},
+      {field: 'picked_status', displayName: 'Status', width: '10%'},
+      {field: 'store_sku', displayName: 'SKU', width: '15%'},
       {field: 'id', visible: false}
     ],
     selectedItems: $scope.mySelections,
