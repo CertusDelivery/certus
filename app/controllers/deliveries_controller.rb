@@ -51,6 +51,11 @@ class DeliveriesController < ApplicationController
     render 'deliveries/picklist.json'
   end
 
+  def picking_print
+    picking_delivery_items
+   render 'deliveries/picking_print', :layout => false
+  end
+
   private
 
   def unpicked_count
