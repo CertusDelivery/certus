@@ -10,7 +10,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'picking_progress', displayName: 'Qty', width: '10%'},
       {field: 'product_name', displayName: 'Product', width: '40%'},
       {field: 'shipping_weight', visible: false},
-      {field: 'location', displayName: 'Location', enableCellEdit: true, editableCellTemplate: cellEditableTemplate, width: '15%'},
+      {field: 'location', displayName: 'Location', sortable: false, enableCellEdit: true, editableCellTemplate: cellEditableTemplate, width: '15%'},
       {field: 'delivery_id', displayName: 'ID', width: '10%'},
       {field: 'picked_status', displayName: 'Status', width: '10%'},
       {field: 'store_sku', displayName: 'SKU', width: '15%'},
@@ -18,7 +18,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     ],
     selectedItems: $scope.mySelections,
     multiSelect: false,
-    enableSorting: false,
     enableHighlighting: true
   }
 
