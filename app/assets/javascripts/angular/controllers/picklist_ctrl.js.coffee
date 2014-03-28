@@ -73,7 +73,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     barcode = "OUT_OF_STOCK" if operation_code == 2
     return false unless barcode
     $http.post('/api/delivery_items/pick.json',
-       barcode: $scope.scannedBarcode,
+       barcode: barcode,
        id: $scope.mySelections[0].id,
        delivery_id: $scope.mySelections[0].delivery_id,
        operation_code: operation_code
