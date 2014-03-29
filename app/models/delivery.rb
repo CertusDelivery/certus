@@ -80,11 +80,7 @@ class Delivery < ActiveRecord::Base
       self.errors.add(:order_sku_count,"sku_count doesn't match number of order_items")
     end
     #Total Price must equal the sum of all order_item. price values
-    delivery_items_total_price = 0
-    delivery_items.each { |item|
-      delivery_items_total_price += item.price
-    }
-    if order_total_price != delivery_items_total_price
+    if order_total_price != delivery_items.sum(:price)
       self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")
     end
   end
