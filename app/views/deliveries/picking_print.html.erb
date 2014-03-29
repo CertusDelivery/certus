@@ -20,10 +20,11 @@
 </head>
 <body>
  <div class="no-print" style="text-align: right;padding: 10px;">
+   <%= link_to "Send to Mail", picking_print_deliveries_url(:email => 1) %>
    <button onclick="window.print();">Print</button>
  </div>
  <div id="print_page" style="width: 550px; margin: 0 auto;">
-   <% @deliveries.each do |delivery| %>
+   <% deliveries.each do |delivery| %>
      <%= render :partial => "print_delivery",:locals => {:delivery => delivery} %>
      <div style="page-break-after:always;border-bottom: 1px #cccccc dotted;"></div>
    <% end %>
