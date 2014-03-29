@@ -23,7 +23,12 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   }
 
   $scope.$on('ngGridEventData', ->
-    $scope.gridOptions.selectRow(0, true)
+    found = false
+    angular.forEach $scope.picklist, (row, index) ->
+      return if found
+      if row.picked_status == 'UNPICKED'
+        $scope.gridOptions.selectRow(index, true)
+        found = true
   )
 
   $scope.clearSortingData = ->
@@ -99,11 +104,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       else
         angular.forEach $scope.picklist, (row, index) ->
           if row.id == data.id
-            $scope.picklist[index].picking_progress = data.delivery_item.picking_progress
-            $scope.picklist[index].picked_status = data.delivery_item.picked_status
+            angular.forEach data, (v, k) ->
+              row[k] = v
             $scope.gridOptions.selectItem(index, true)
             $('.ngGrid').find('.selected').fadeTo('fast',0).fadeTo('fast',1)
-            if data.delivery_item.picked_status is 'PICKED'
+            if data.picked_status is 'PICKED'
               $scope.gridOptions.selectItem(index+1, true)
     ).error((data) ->
       if data.status is 'nok'
