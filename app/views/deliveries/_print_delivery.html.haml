@@ -1,0 +1,51 @@
+#header
+  %h1{:style=>"text-align: center;margin-top: 20px"}
+    Delivery List
+  %table{:style=>"font-weight:bold;width: 100%; margin-top: 20px;"}
+    %tr
+      %td #{delivery.customer_name}
+      %td  Order Date: #{delivery.placed_at.strftime("%F %T")}
+    %tr
+      %td{'rowspan'=>"2"} #{delivery.shipping_address}
+      %td Acct # : 002255
+    %tr
+      %td Delivery Date: #{delivery.desired_delivery_window.strftime("%F %T") }
+
+#order_content
+  %div{:style=>"margin: 20px 0;text-align:center"}
+    Order#
+    %em
+      #{delivery.order_id}
+  %table{:style=>"width: 100%;"}
+    %tr
+      %th Qty
+      %th Product Name
+      %th Price
+      %th Tax
+      %th Other
+      %th Amount
+    - delivery.delivery_items.each do |delivery_item|
+      %tr
+        %td #{delivery_item.quantity}
+        %td #{delivery_item.product_name}
+        %td #{delivery_item.price}
+        %td #{delivery_item.tax}
+        %td #{delivery_item.other_adjustments}
+        %td #{delivery_item.order_item_amount}
+
+  %table{:style=>"width: 100%; margin-top: 20px; margin-bottom: 20px;"}
+    %tr
+      %td Subtotal
+      %td #{delivery.order_total_price}
+    %tr
+      %td Delivery Fee
+      %td 0.00
+    %tr
+      %td Other Adjustments
+      %td #{delivery.order_total_adjustments}
+    %tr
+      %td{colspan: '2', :style=>"font-weight:bolder;text-align:center;font-size:150%;" } Total  #{delivery.order_total_price}
+
+  %p{:align =>'center', :style =>"margin-bottom:50px;"}
+    Thank you for your order. <br />  It is always our pleasure to serve you.
+

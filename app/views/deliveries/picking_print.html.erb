@@ -12,7 +12,7 @@
      margin:10px auto;
     }
     #print_page table,#print_page tr td, #print_page tr th{
-      border: 1px #cccccc dotted;
+      text-align: left;
       border-collapse: collapse;
     }
     -->
@@ -22,65 +22,12 @@
  <div class="no-print" style="text-align: right;padding: 10px;">
    <button onclick="window.print();">Print</button>
  </div>
-  <div id="print_page">
-    <div id ="header">
-      <h1 style="text-align: center;margin-top: 20px">Delivery List</h1>
-      <table style="font-weight:bold;width: 100%; margin-top: 20px;">
-        <tr>
-          <td>Mr. John Smith </td><td> Order Date:     3/26/2014</td>
-        </tr>
-        <tr>
-          <td>123 Main Street  </td><td>  Acct # : 002255</td>
-        </tr>
-        <tr>
-          <td> Weston, CT 06883   </td><td> Delivery Date: 3/26/2014</td>
-        </tr>
-      </table>
-    </div>
-
-    <div id="order_content">
-      <p align="center" style="margin: 20px 0;">Order# <em>12300621 </em></p>
-
-      <table style="width: 100%;">
-        <tr>
-          <th width="18">Qty</th>
-          <th width="118">Product Name</th>
-          <th width="36">Price</th>
-          <th width="36">Tax</th>
-          <th width="36">Other</th>
-          <th width="38"">Amount</th>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Oreo Crispy Crème 12.20 oz </td>
-          <td>2.50</td>
-          <td><p>1.50</p></td>
-          <td>2</td>
-          <td>5.00</td>
-        </tr>
-      </table>
-    </div>
-  <div>
-    <table style="width: 100%; margin-top: 20px; margin-bottom: 20px;">
-      <tr>
-        <td style="width:150px;">Subtotal </td><td>21.99</td>
-      </tr>
-      <tr>
-        <td>Delivery Fee   </td><td> 0.00</td>
-      </tr>
-      <tr>
-        <td> Other  Adjustments    </td><td> 0.00</td>
-      </tr>
-      <tr>
-        <th colspan="2">Total $24.49 </th>
-      </tr>
-    </table>
-
-    <p align="center">Thank you for your order.  <br />
-      It is always our pleasure to serve you.</p>
-  </div>
-
-  </div>
+ <div id="print_page" style="width: 550px; margin: 0 auto;">
+   <% @deliveries.each do |delivery| %>
+     <%= render :partial => "print_delivery",:locals => {:delivery => delivery} %>
+     <div style="page-break-after:always;border-bottom: 1px #cccccc dotted;"></div>
+   <% end %>
+ </div>
 
 </body>
 </html>
