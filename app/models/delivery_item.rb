@@ -13,6 +13,8 @@ class DeliveryItem < ActiveRecord::Base
   # callbacks .................................................................
   before_create :initial_picked_status, :init_random_location_for_test
   before_save :update_status_if_all_picked
+  # TODO
+  # before_save :calculate_amount
 
   # scopes ....................................................................
   scope :in_picking_list, -> { includes(:delivery).where("deliveries.picked_status = '#{Delivery::PICKED_STATUS[:picking]}'").references(:delivery) }
@@ -42,6 +44,11 @@ class DeliveryItem < ActiveRecord::Base
         barcode == v
       end
     end
+
+    def substitute(original_item, product_params)
+      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id})
+      self.create(item_params.permit!)
+    end
   end
 
   # public instance methods ...................................................
@@ -62,6 +69,15 @@ class DeliveryItem < ActiveRecord::Base
     self.update_attributes(out_of_stock_quantity: out_of_stock)
   end
   alias :update_out_of_stock_quantity :out_of_stock!
+  
+  def replace!
+    self.update_attributes({ is_replaced: true })
+  end
+
+  def substitute_for(other)
+    self.update_attributes({ quantity: quantity + other.out_of_stock_quantity, picked_status: PICKED_STATUS[:unpicked] })
+    self.pick!
+  end
 
   # protected instance methods ................................................
   protected
@@ -87,7 +103,11 @@ class DeliveryItem < ActiveRecord::Base
     shelf     = %w{1 2 3 4 5 6 7 8 9}.sample
     self.location= "#{aisle_num}#{direction}-#{front}-#{shelf}" unless self.location
   end
-
+  
+  # FIXME
+  def calculate_amount
+    self.order_item_amount = (price + tax) * quantity + other_adjustments
+  end
 
   # private instance methods ..................................................
   private

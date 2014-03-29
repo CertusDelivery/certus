@@ -15,5 +15,6 @@ FactoryGirl.define do
     shipping_weight_unit { %w{oz kg g liter}.sample }
     out_of_stock_quantity 0
     scanned_quantity 0
+    other_adjustments 0
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140324024751) do
+ActiveRecord::Schema.define(version: 20140329090910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20140324024751) do
     t.string   "shipping_weight_unit"
     t.integer  "out_of_stock_quantity",    default: 0
     t.integer  "scanned_quantity",         default: 0
+    t.boolean  "is_replaced",              default: false
   end
 
 end

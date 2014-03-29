@@ -15,9 +15,14 @@ class DeliveryItemsController < ApplicationController
   end
   
   def substitute
-    delivery_item = DeliveryItem.find(params[:id])
-    #product = Product.find(params[:product_id])
-    render json: { message: "Not implemented yet" }
+    original_item = DeliveryItem.find(params[:id])
+    original_item.replace!
+    if @delivery_item = original_item.delivery.delivery_items.find_by_client_sku(params[:product][:client_sku])
+      @delivery_item.substitute_for(original_item)
+    else
+      @delivery_item = DeliveryItem.substitute(original_item, params[:product])
+    end
+    render json: { message: "Substituted, please refresh your browser, picklist update will be implemented later." }
   end
 
   protected

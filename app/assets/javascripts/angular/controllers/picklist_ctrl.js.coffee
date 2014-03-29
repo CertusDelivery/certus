@@ -86,7 +86,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     $scope.errorMessage = ''
     barcode = $scope.scannedBarcode
     deliveryItem = $scope.mySelections[0]
-    if deliveryItem.picking_progress.split('/')[2] isnt '0'
+    if deliveryItem.picking_progress.split('/')[2] isnt '0' and deliveryItem.store_sku isnt barcode and deliveryItem.is_replaced is false
       $scope.substituteProduct(deliveryItem.id, deliveryItem.product_name, barcode)
       return
     barcode = "OUT_OF_STOCK" if operation_code == 2
@@ -119,15 +119,16 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.markAsOutOfStock = ->
     $scope.pickProduct(2)
 
-  $scope.substituteProduct = (deliveryItemID, deliveryItemName, productBarcode) ->
-    # product = $source('').query()
+  $scope.substituteProduct = (deliveryItemID, deliveryItemName, substituteBarcode) ->
+    # product = $source('url/substituteBarcode').query()
     # mock here
-    product = { id: 1, name: "Alternative Product" }
-    ensureMsg = 'Are you sure to substitude ' + product.name + ' for ' + deliveryItemName + '?'
+    product = { product_name: "Alternative Product", client_sku: '1010101010101010', store_sku: '1010101010101010', price: 50.0,   tax: 4.0, other_adjustments: 0 }
+    ensureMsg = 'Do you want to substitude ' + product.product_name + ' for ' + deliveryItemName + '?'
     if confirm ensureMsg
       $http.post('api/delivery_items/'+deliveryItemID+'/substitute.json',
-        produt_id: product.id
+        product: product
       ).success((data) ->
+        # TODO
         alert(data.message)
       )
 
