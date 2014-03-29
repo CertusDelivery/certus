@@ -1,0 +1,22 @@
+%p
+  %center
+    Product List
+%p
+%hr
+%center.products-list
+  %table
+    %thead
+      %tr
+        %th Name
+        %th Store SKU
+        %th Location
+        %th Price
+    %tbody
+      - @products.each do |product|
+        %tr
+          %td= product.name
+          %td= product.store_sku
+          %td= product.location
+          %td= product.price
+%p
+%hr

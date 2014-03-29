@@ -19,14 +19,24 @@ def create_delivery(picked_status = :unpicked)
   delivery.save!
 end
 
-100.times { |item|
-  puts "Create unpicked delivery #{item+1}"
+100.times do
   create_delivery
-}
+end
+puts "Created 100 unpicked deliveries."
 
-2.times { |item|
-  puts "Create picking delivery #{item+1}"
+2.times do
   create_delivery :picking
-}
+end
+puts "Created 2 picking deliveries."
+
+200.times do
+  FactoryGirl.create(:product)
+end
+puts "Created 200 non-food products."
+
+100.times do
+  FactoryGirl.create(:product, :food)
+end
+puts "Created 100 food products."
 
 

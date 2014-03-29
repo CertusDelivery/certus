@@ -29,6 +29,12 @@ Certus::Application.routes.draw do
         post 'substitute'
       end
     end
+
+    resources :products, only: [:index, :show] do
+      collection do
+        get :search
+      end
+    end
   end
 
   # Example resource route with options:
