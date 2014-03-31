@@ -4,6 +4,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.location_sort = 'asc'
   $scope.mySelections = []
   cellEditableTemplate = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\" ng-change=\"updateEntity(row.entity)\" />"
+  cellTemplatePicked = '<div ng-class="{hidden: row.getProperty(col.field) == \'PICKED\' ? false : true }" class="picked">✓</div>'
+
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
@@ -12,7 +14,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'shipping_weight', visible: false},
       {field: 'location', displayName: 'Location', sortable: false, enableCellEdit: true, editableCellTemplate: cellEditableTemplate, width: '15%'},
       {field: 'delivery_id', displayName: 'ID', width: '10%'},
-      {field: 'picked_status', displayName: 'Status', width: '10%'},
+      {field: 'picked_status', displayName: 'Picked', width: '10%', cellTemplate: cellTemplatePicked},
       {field: 'store_sku', displayName: 'SKU', width: '15%'},
       {field: 'id', visible: false}
     ],
