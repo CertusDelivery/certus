@@ -97,7 +97,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     deliveryItem = $scope.mySelections[0]
     if deliveryItem.picking_progress.split('/')[2] isnt '0' and deliveryItem.store_sku isnt barcode and deliveryItem.is_replaced is false
       $scope.substituteProduct(deliveryItem.id, deliveryItem.product_name, barcode)
-      return
+      deliveryItem.is_replaced = true
+      return false
     barcode = "OUT_OF_STOCK" if operation_code == 2
     return false unless barcode
     $http.post('/api/delivery_items/pick.json',
@@ -137,8 +138,19 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       $http.post('api/delivery_items/'+deliveryItemID+'/substitute.json',
         product: product
       ).success((data) ->
-        # TODO
-        alert(data.message)
+        $scope.scannedBarcode = ''
+        needInsertFlag = true
+        angular.forEach $scope.picklist, (row, index) ->
+          if row.id == data.id
+            needInsertFlag = false
+            angular.forEach data, (v, k) ->
+              row[k] = v
+            $scope.gridOptions.selectItem(index, true)
+        if needInsertFlag
+          index = $scope.picklist.push data
+          setTimeout( ->
+            $scope.gridOptions.selectItem(index-1, true)
+          , 0)
       )
 
 

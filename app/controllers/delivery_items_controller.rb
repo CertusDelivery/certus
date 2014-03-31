@@ -27,7 +27,7 @@ class DeliveryItemsController < ApplicationController
     else
       @delivery_item = DeliveryItem.substitute(original_item, params[:product])
     end
-    render json: { message: "Substituted, please refresh your browser, picklist update will be implemented later." }
+    render 'show'
   end
 
   protected
