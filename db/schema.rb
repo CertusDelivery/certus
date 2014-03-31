@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140329090910) do
+ActiveRecord::Schema.define(version: 20140331161511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,8 +88,8 @@ ActiveRecord::Schema.define(version: 20140329090910) do
   end
 
   create_table "products", force: true do |t|
-    t.string   "name",                 null: false
-    t.string   "store_sku",            null: false
+    t.string   "name",                                      null: false
+    t.string   "store_sku",                                 null: false
     t.string   "location"
     t.decimal  "shipping_weight"
     t.string   "shipping_weight_unit"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20140329090910) do
     t.decimal  "tax_rate"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "stock_status",         default: "IN_STOCK"
   end
 
 end
