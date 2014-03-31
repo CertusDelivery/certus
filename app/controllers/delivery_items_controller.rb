@@ -13,6 +13,11 @@ class DeliveryItemsController < ApplicationController
   def show
     @delivery_item = DeliveryItem.find(params[:id])
   end
+
+  def update_location
+    status = delivery_item.update_location(params[:location])
+    render json: { status: status, location: delivery_item.location }
+  end
   
   def substitute
     original_item = DeliveryItem.find(params[:id])

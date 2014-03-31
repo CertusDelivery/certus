@@ -87,6 +87,19 @@ class DeliveryItem < ActiveRecord::Base
     self.picked_quantity * self.price
   end
 
+  def update_location(item_location)
+    status = true
+    reg_location = /\s*(?<aisle_num>\d{1,3})(?<direction>(n|s|e|w))?\s*-\s*(?<front>\d{1,3}*)?\s*-\s*(?<shelf>\d{1,3}*)?\s*/i
+    location_arr = reg_location.match(item_location)
+    status = false if location_arr.nil?
+    if status
+      self.location = item_location
+      self.save!
+    end
+    status
+  end
+
+
   # protected instance methods ................................................
   protected
 
@@ -122,6 +135,10 @@ class DeliveryItem < ActiveRecord::Base
 
   def location_rebuild
     begin
+      self.location_aisle_num = 0
+      self.location_direction = ''
+      self.location_front = 0
+      self.location_shelf = 0
       reg_location = /\s*(?<aisle_num>\d{1,3})(?<direction>(n|s|e|w))?\s*-\s*(?<front>\d{1,3}*)?\s*-\s*(?<shelf>\d{1,3}*)?\s*/i
       location_arr = reg_location.match(location)
       self.location_aisle_num = location_arr[:aisle_num].to_i

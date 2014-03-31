@@ -27,6 +27,7 @@ Certus::Application.routes.draw do
         post 'pick'
       end
       member do
+        post 'update_location'
         post 'substitute'
       end
     end
