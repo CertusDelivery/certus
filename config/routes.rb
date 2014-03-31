@@ -18,6 +18,7 @@ Certus::Application.routes.draw do
         get 'sort_picking_orders'
         delete 'remove_picked_orders'
         get 'picking_print'
+        get 'print_packing_list'
       end
     end
     

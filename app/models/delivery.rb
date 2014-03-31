@@ -43,7 +43,7 @@ class Delivery < ActiveRecord::Base
     def complete_all
       picked_orders = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
       picked_orders.each(&:complete!)
-      message = case picked_orders.size 
+      message = case picked_orders.size
       when 0
         "No order have been completed picked."
       when 1
@@ -69,6 +69,10 @@ class Delivery < ActiveRecord::Base
     self.update_attributes({ picked_status: PICKED_STATUS[:store_staging]}) if can_be_complete?
   end
 
+  def picked_total_price
+    delivery_items.inject(0) { |sum, item| sum += item.picked_total_price }
+  end
+
   # protected instance methods ................................................
   protected
 
@@ -82,7 +86,7 @@ class Delivery < ActiveRecord::Base
     #Total Price must equal the sum of all order_item. price values
     delivery_items_total_price = 0
     delivery_items.each { |item|
-      delivery_items_total_price += item.price
+      delivery_items_total_price += item.total_price
     }
     if order_total_price != delivery_items_total_price
       self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")

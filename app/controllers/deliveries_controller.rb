@@ -59,6 +59,11 @@ class DeliveriesController < ApplicationController
    render 'deliveries/picking_print', :layout => false, :locals => {:deliveries => @deliveries}
   end
 
+  def print_packing_list
+    @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+    render 'deliveries/print_packing_list', :layout => false
+  end
+  
   private
 
   def unpicked_count

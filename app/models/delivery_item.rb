@@ -69,7 +69,7 @@ class DeliveryItem < ActiveRecord::Base
     self.update_attributes(out_of_stock_quantity: out_of_stock)
   end
   alias :update_out_of_stock_quantity :out_of_stock!
-  
+
   def replace!
     self.update_attributes({ is_replaced: true })
   end
@@ -77,6 +77,14 @@ class DeliveryItem < ActiveRecord::Base
   def substitute_for(other)
     self.update_attributes({ quantity: quantity + other.out_of_stock_quantity, picked_status: PICKED_STATUS[:unpicked] })
     self.pick!
+  end
+
+  def total_price
+    self.quantity * self.price
+  end
+
+  def picked_total_price
+    self.picked_quantity * self.price
   end
 
   # protected instance methods ................................................
@@ -103,7 +111,7 @@ class DeliveryItem < ActiveRecord::Base
     shelf     = %w{1 2 3 4 5 6 7 8 9}.sample
     self.location= "#{aisle_num}#{direction}-#{front}-#{shelf}" unless self.location
   end
-  
+
   # FIXME
   def calculate_amount
     self.order_item_amount = (price + tax) * quantity + other_adjustments
@@ -111,7 +119,7 @@ class DeliveryItem < ActiveRecord::Base
 
   # private instance methods ..................................................
   private
-  
+
   def location_rebuild
     begin
       reg_location = /\s*(?<aisle_num>\d{1,3})(?<direction>(n|s|e|w))?\s*-\s*(?<front>\d{1,3}*)?\s*-\s*(?<shelf>\d{1,3}*)?\s*/i
