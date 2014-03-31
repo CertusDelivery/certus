@@ -1,8 +1,8 @@
 class UserMailer < ActionMailer::Base
-  default from: "test@from.com"
+  default from: "deliveries@certusdelivery.com"
 
   def delivery_mail(deliveries)
     @deliveries = deliveries
-    mail(:to => "test@from.com", :subject => 'delivery picking list')
+    mail(:to => "deliveries@certusdelivery.com", :subject => 'delivery picking list')
   end
 end

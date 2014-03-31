@@ -52,11 +52,11 @@ class DeliveriesController < ApplicationController
   end
 
   def picking_print
-    @deliveries = Delivery.includes(:delivery_items).where({:picked_status=> Delivery::PICKED_STATUS[:picked]}).order("id desc")
-   if params[:email].to_i == 1
+    @deliveries = Delivery.includes(:delivery_items).where({:picked_status=> Delivery::PICKED_STATUS[:store_staging]}).order("id desc")
+    if params[:email].to_i == 1
      UserMailer.delivery_mail(@deliveries).deliver
-   end
-   render 'deliveries/picking_print', :layout => false, :locals => {:deliveries => @deliveries}
+    end
+    render 'deliveries/picking_print', :layout => false, :locals => {:deliveries => @deliveries}
   end
 
   def print_packing_list
