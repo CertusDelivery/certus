@@ -52,7 +52,10 @@ class DeliveriesController < ApplicationController
   end
 
   def picking_print
-    @deliveries = Delivery.includes(:delivery_items).where({:picked_status=> Delivery::PICKED_STATUS[:store_staging]}).order("id desc")
+    @deliveries = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
+    if @deliveries.size == 0
+      @deliveries = [Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc').first]
+    end
     if params[:email].to_i == 1
      UserMailer.delivery_mail(@deliveries).deliver
     end
