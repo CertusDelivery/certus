@@ -37,6 +37,9 @@ class Delivery < ActiveRecord::Base
 
   accepts_nested_attributes_for :delivery_items
 
+  # callbacks .................................................................
+  before_create :initial_delivery_window
+
   # class methods .............................................................
 
   class << self
@@ -75,6 +78,10 @@ class Delivery < ActiveRecord::Base
 
   # protected instance methods ................................................
   protected
+
+  def initial_delivery_window
+    self.desired_delivery_window = DateTime.current + 6.hours unless self.desired_delivery_window
+  end
 
   def order_to_delivery_convert
     if order_grand_total != payment_amount
