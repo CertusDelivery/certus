@@ -3,6 +3,6 @@ class UserMailer < ActionMailer::Base
 
   def delivery_mail(deliveries)
     @deliveries = deliveries
-    mail(:to => "deliveries@certusdelivery.com", :subject => 'delivery picking list')
+    mail(:to => "deliveries@certusdelivery.com", :subject => 'Delivery Picking List')
   end
 end
