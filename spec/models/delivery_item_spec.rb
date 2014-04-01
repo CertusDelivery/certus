@@ -103,4 +103,44 @@ describe DeliveryItem do
     end
   end
 
+  describe '.substitute' do
+    before do
+      @original_item = create(:delivery_item, quantity: 5, picked_quantity: 2, picked_status: DeliveryItem::PICKED_STATUS[:picked], out_of_stock_quantity: 3)
+      @product_params = ActionController::Parameters.new(product_name: "Alternative Product", client_sku: '1010101010101010', store_sku: '1010101010101010', price: 50.0, tax: 4.0, other_adjustments: 0) 
+    end
+
+    it 'should create a new delivery item' do
+      expect{ DeliveryItem.substitute(@original_item, @product_params) }.to change(DeliveryItem, :count).by(1)
+    end
+
+    it 'should create substitute item with right quantities' do
+      substitute_item = DeliveryItem.substitute(@original_item, @product_params)
+      
+      expect(substitute_item.quantity).to eq(@original_item.out_of_stock_quantity)
+      expect(substitute_item.picked_quantity).to eq(1)
+    end
+  end
+
+  describe '#substitute_for' do
+    before do
+      @original_item =  create(:delivery_item, quantity: 5, picked_quantity: 2, picked_status: DeliveryItem::PICKED_STATUS[:picked], out_of_stock_quantity: 3)
+      @substitue_item = create(:delivery_item)
+    end
+
+    it 'should add out-of-stock quantity to substitute' do
+      expect{ @substitue_item.substitute_for(@original_item)}.to change(@substitue_item, :quantity).by(@original_item.out_of_stock_quantity)
+    end
+
+    it 'should automatically add one to the picked quantity of substitute' do
+      expect{ @substitue_item.substitute_for(@original_item)}.to change(@substitue_item, :picked_quantity).by(1)
+    end
+  end
+
+  describe '#replace!' do
+    it 'should mark one item as replaced' do
+      delivery_item = create(:delivery_item)
+      expect{ delivery_item.replace! }.to change(delivery_item, :is_replaced).from(false).to(true)
+    end
+  end
+
 end

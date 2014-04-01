@@ -9,9 +9,9 @@ class ProductsController < ApplicationController
   def search
     @product = Product.where(store_sku: params[:store_sku]).first if params[:store_sku].present?
     if @product
-      render json: @product
+      render :search
     else
-      render json: {satus: 'nok', message: "Not Found."}, status: :not_found
+      render json: { status: 'nok', message: "Not Found."}, status: :not_found
     end
   end
 end

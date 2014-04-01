@@ -34,7 +34,7 @@ Certus::Application.routes.draw do
 
     resources :products, only: [:index, :show] do
       collection do
-        get :search
+        get 'search/:store_sku' => 'products#search'
       end
     end
   end

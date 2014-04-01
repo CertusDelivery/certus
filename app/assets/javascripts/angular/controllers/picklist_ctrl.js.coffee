@@ -96,8 +96,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
     barcode = $scope.scannedBarcode
     deliveryItem = $scope.mySelections[0]
     if deliveryItem.picking_progress.split('/')[2] isnt '0' and deliveryItem.store_sku isnt barcode and deliveryItem.is_replaced is false
-      $scope.substituteProduct(deliveryItem.id, deliveryItem.product_name, barcode)
-      deliveryItem.is_replaced = true
+      $scope.substituteProduct(deliveryItem, barcode)
       return false
     barcode = "OUT_OF_STOCK" if operation_code == 2
     return false unless barcode
@@ -129,29 +128,33 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.markAsOutOfStock = ->
     $scope.pickProduct(2)
 
-  $scope.substituteProduct = (deliveryItemID, deliveryItemName, substituteBarcode) ->
-    # product = $source('url/substituteBarcode').query()
-    # mock here
-    product = { product_name: "Alternative Product", client_sku: '1010101010101010', store_sku: '1010101010101010', price: 50.0,   tax: 4.0, other_adjustments: 0 }
-    ensureMsg = 'Do you want to substitude ' + product.product_name + ' for ' + deliveryItemName + '?'
-    if confirm ensureMsg
-      $http.post('api/delivery_items/'+deliveryItemID+'/substitute.json',
-        product: product
-      ).success((data) ->
-        $scope.scannedBarcode = ''
-        needInsertFlag = true
-        angular.forEach $scope.picklist, (row, index) ->
-          if row.id == data.id
-            needInsertFlag = false
-            angular.forEach data, (v, k) ->
-              row[k] = v
-            $scope.gridOptions.selectItem(index, true)
-        if needInsertFlag
-          index = $scope.picklist.push data
-          setTimeout( ->
-            $scope.gridOptions.selectItem(index-1, true)
-          , 0)
-      )
+  $scope.substituteProduct = (deliveryItem, substituteBarcode) ->
+    $http.get('api/products/search/'+substituteBarcode+'.json'
+    ).success((product) ->
+      ensureMsg = 'Do you want to substitude ' + product.product_name + ' for ' + deliveryItem.product_name + '?'
+      if confirm ensureMsg
+        $http.post('api/delivery_items/'+deliveryItem.id+'/substitute.json',
+          product: product
+        ).success((data) ->
+          deliveryItem.is_replaced = true
+          $scope.scannedBarcode = ''
+          needInsertFlag = true
+          angular.forEach $scope.picklist, (row, index) ->
+            if row.id == data.id
+              needInsertFlag = false
+              angular.forEach data, (v, k) ->
+                row[k] = v
+              $scope.gridOptions.selectItem(index, true)
+          if needInsertFlag
+            index = $scope.picklist.push data
+            setTimeout( ->
+              $scope.gridOptions.selectItem(index-1, true)
+            , 0)
+        )
+    ).error((data) ->
+      $scope.scannedBarcode = ''
+      $scope.errorMessage = data.message
+    )
 
 
   $scope.removePickedOrders = ->

@@ -46,7 +46,7 @@ class DeliveryItem < ActiveRecord::Base
     end
 
     def substitute(original_item, product_params)
-      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id})
+      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id, picked_quantity: 1})
       self.create(item_params.permit!)
     end
   end
@@ -127,7 +127,7 @@ class DeliveryItem < ActiveRecord::Base
 
   # FIXME
   def calculate_amount
-    self.order_item_amount = (price + tax) * quantity + other_adjustments
+    self.order_item_amount = (price + tax) * (quantity - out_of_stock_quantity) + other_adjustments
   end
 
   # private instance methods ..................................................
