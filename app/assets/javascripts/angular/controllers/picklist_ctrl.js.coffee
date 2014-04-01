@@ -3,8 +3,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
   $scope.mySelections = []
-  cellEditableTemplate = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
-  cellTemplatePickedlocation = '<div ng-dblclick=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
+  cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
+  cellLocation = '<div ng-dblclick=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
   cellTemplatePicked = '<div ng-class="{hidden: row.getProperty(col.field) == \'PICKED\' ? false : true }" class="picked">✓</div>'
 
   $scope.gridOptions = {
@@ -13,7 +13,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'picking_progress', displayName: 'Qty', width: '10%'},
       {field: 'product_name', displayName: 'Product', width: '40%'},
       {field: 'shipping_weight', visible: false},
-      {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellTemplatePickedlocation, enableCellEdit: true, editableCellTemplate: cellEditableTemplate, width: '15%'},
+      {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, editableCellTemplate: cellEditableLocation, width: '15%'},
       {field: 'delivery_id', displayName: 'ID', width: '10%'},
       {field: 'picked_status', displayName: 'Picked', width: '10%', cellTemplate: cellTemplatePicked},
       {field: 'store_sku', displayName: 'SKU', width: '15%'},
@@ -163,4 +163,5 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
           row.location = data.location
       )
     $scope.addFocus()
+
 ])
