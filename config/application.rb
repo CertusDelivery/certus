@@ -25,16 +25,5 @@ module Certus
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.action_mailer.perform_deliveries = true
-    config.action_mailer.raise_delivery_errors = false
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-        :address              => "smtp.gmail.com",
-        :port                 => 587,
-        :user_name            => 'certusdelivery@gmail.com',
-        :password             => ' certus123',
-        :authentication       => 'plain',
-        :enable_starttls_auto => true  }
-
   end
 end
