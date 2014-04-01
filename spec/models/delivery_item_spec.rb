@@ -143,4 +143,13 @@ describe DeliveryItem do
     end
   end
 
+  describe '#update_location' do
+    it 'should update location' do
+      delivery_item = create(:delivery_item, location: "5e-11-89")
+      delivery_item.update_location("5e-23-09")
+      delivery_item.reload
+      delivery_item.location.should == '5e-23-09'
+    end
+  end
+
 end
