@@ -87,12 +87,17 @@ class Delivery < ActiveRecord::Base
     if order_grand_total != payment_amount
       self.errors.add(:order_grand_total,"order_grand_total doesn't match payment_amount")
     end
-    if order_sku_count != delivery_items.size()
-      self.errors.add(:order_sku_count,"sku_count doesn't match number of order_items")
-    end
-    #Total Price must equal the sum of all order_item. price values
-    if order_total_price != delivery_items.to_a.sum(&:total_price)
-      self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")
-    end
+
+    ##
+    # Comment off the validation for now.
+    # TODO: 1. We need to handle order total price and order SKU count changes when products has been replaced by other products.
+
+    # if order_sku_count != delivery_items.size()
+    #   self.errors.add(:order_sku_count,"sku_count doesn't match number of order_items")
+    # end
+    # #Total Price must equal the sum of all order_item. price values
+    # if order_total_price != delivery_items.to_a.sum(&:total_price)
+    #   self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")
+    # end
   end
 end
