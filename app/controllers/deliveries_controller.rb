@@ -60,10 +60,14 @@ class DeliveriesController < ApplicationController
   end
 
   def print_packing_list
-    @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+    if params[:complete].to_i == 1
+      @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+    else
+      @deliveries = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
+    end
     render 'deliveries/print_packing_list', :layout => false
   end
-  
+
   private
 
   def unpicked_count

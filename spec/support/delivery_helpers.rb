@@ -30,7 +30,7 @@ def create_delivery(picked_status = :unpicked)
   item_count.times do
     delivery_item = FactoryGirl.build(:delivery_item)
     delivery.delivery_items << delivery_item
-    total_price += delivery_item.price
+    total_price += delivery_item.total_price
   end
   delivery.payment_amount = delivery.order_grand_total = delivery.order_total_price = total_price
   delivery.save!

@@ -8,52 +8,84 @@
     @media print { .no-print, .no-print * { display: none !important; } }
     @page { size: auto; margin: 1cm}
     #print_page{
-     width: 550px;
-     margin:10px auto;
+     width: 528px;
+     padding: 30px;
+     margin:0 auto;
     }
     #print_page table,#print_page tr td, #print_page tr th{
       text-align: left;
       border-collapse: collapse;
     }
+
+    .header {
+      margin: 30px auto 40px;
+    }
+
+    .header p {
+      color: #666;
+      font-weight: 100px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .print_dash {
+      border-bottom: 1px #ccc dotted;
+      margin: 40px auto 0;
+    }
+    
+    .page_breaker {
+      page-break-after:always;
+    }
+
+    .print_summary {
+      margin: 30px auto;
+      font-weight: bold;
+      text-align: right;
+    }
+
     table {
       width: 100%;
     }
+
     -->
   </style>
 </head>
 <body>
- <div class="no-print" style="text-align: right;padding: 10px;">
-   <button onclick="window.print();">Print</button>
- </div>
- <div id="print_page" style="width: 508px; padding: 40px; margin: 0 auto;">
-  <div id="header">
-    <h1 style="text-align: center; margin-bottom:20px;"> Packing List</h1>
+  <div class="no-print" style="text-align: right;padding: 10px;">
+    <button onclick="window.print();">Print</button>
   </div>
-   <% @deliveries.each do |delivery| %>
-     <table>
-       <thead>
-         <tr>
-           <th>Product Name</th>
-           <th>Picked Qty</th>
-           <th>Price</th>
-           <th>Tax</th>
-         </tr>
-       </thead>
-       <tbody>
-         <% delivery.delivery_items.each do |delivery_item| %>
-            <tr>
-              <td><%= delivery_item.product_name %></td>
-              <td style="width: 80px;"><%= delivery_item.picked_quantity %></td>
-              <td style="width: 80px;"><%= delivery_item.picked_total_price %></td>
-              <td style="width: 80px;"><%= delivery_item.tax %></td>
-            </tr>
-         <% end %>
-       </tbody>
-     <table>
-     <h1 style="text-align: center; margin-top:20px;">Total <%= delivery.picked_total_price %></h1>
-     <div style="page-break-after:always;border-bottom: 1px #cccccc dotted;"></div>
-   <% end %>
- </div>
-
+  <div id="print_page">
+    <% @deliveries.each_with_index do |delivery, index| %>
+      <div class="header">
+        <h1 style="text-align: center;"> Packing List</h1>
+        <p>Order# <%= delivery.order_id %><p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Picked Qty</th>
+            <th>Product Name</th>
+            <th>SKU</th>
+            <th style="text-align:center;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% delivery.delivery_items.each do |delivery_item| %>
+          <tr>
+            <td style="width: 80px;"><%= delivery_item.picked_quantity %></td>
+            <td><%= delivery_item.product_name %></td>
+            <td style="width: 150px;"><%= delivery_item.store_sku %></td>
+            <td style="width: 60px;text-align:right;"><%= delivery_item.picked_total_price %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="print_summary">Total: <%= delivery.picked_total_price %>  </div>
+      <div class="print_dash"></div>
+      <% if @deliveries.size != index + 1 %>
+        <div class="page_breaker"></div>
+      <% end %>
+    <% end %>
+  </div>
 </body>
 </html>

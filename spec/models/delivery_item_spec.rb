@@ -89,5 +89,18 @@ describe DeliveryItem do
     end
   end
 
+  describe '#total_price' do
+    it 'should get total price' do
+      delivery_item = create(:delivery_item, quantity: 3, price: 2.3)
+      expect(delivery_item.total_price).to eq(6.9)
+    end
+  end
+
+  describe '#picked_total_price' do
+    it 'should get picked total price' do
+      delivery_item = create(:delivery_item, picked_quantity: 2, price: 2.3)
+      expect(delivery_item.picked_total_price).to eq(4.6)
+    end
+  end
 
 end

@@ -129,10 +129,24 @@ describe Delivery do
           d.delivery_items.each {|item| item.pick!(item.quantity)}
         end
       end
-      
+
       it 'should return message "2 orders have been removed from the list."' do
         expect(Delivery.complete_all).to eq("2 orders have been removed from the list.")
       end
     end
   end
+
+  describe "#picked_total_price" do
+    it "should get sum all picked delivery items total price" do
+      delivery = build(:delivery)
+      delivery_item1 = build(:delivery_item, picked_quantity: 3, price: 3.2)
+      delivery_item2 = build(:delivery_item, picked_quantity: 2, price: 1.1)
+      delivery_item3 = build(:delivery_item, picked_quantity: 0, price: 2.7)
+      delivery.delivery_items << delivery_item1
+      delivery.delivery_items << delivery_item2
+      delivery.delivery_items << delivery_item3
+      expect(delivery.picked_total_price).to eq(11.8)
+    end
+  end
+  
 end
