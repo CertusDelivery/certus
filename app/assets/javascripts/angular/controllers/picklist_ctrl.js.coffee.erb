@@ -1,4 +1,4 @@
-app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resource, $http) ->
+app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scope, $resource, $http, $modal) ->
   picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
@@ -6,6 +6,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
   cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
   cellLocation = '<div ng-dblclick=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
   cellTemplatePicked = '<div ng-class="{hidden: row.getProperty(col.field) == \'PICKED\' ? false : true }" class="picked">✓</div>'
+  cellDeliveryDetailButton = '<button type="button" class="btn btn-primary btn-sm ng-button" ng-click="deliveryDetail(row)">Detail</button>'
 
   $scope.gridOptions = {
     data: 'picklist',
@@ -15,8 +16,9 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       {field: 'shipping_weight', visible: false},
       {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, editableCellTemplate: cellEditableLocation, width: '15%'},
       {field: 'delivery_id', displayName: 'ID', width: '10%'},
-      {field: 'picked_status', displayName: 'Picked', width: '10%', cellTemplate: cellTemplatePicked},
+      {field: 'picked_status', displayName: 'Picked', width: '5%', cellTemplate: cellTemplatePicked},
       {field: 'store_sku', displayName: 'SKU', width: '15%'},
+      {displayName: 'Detail', cellTemplate: cellDeliveryDetailButton, width: '5%' },
       {field: 'id', visible: false}
     ],
     selectedItems: $scope.mySelections,
@@ -179,4 +181,12 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', ($scope, $resour
       )
     $scope.addFocus()
 
+  $scope.deliveryDetail = (row) ->
+    $scope.selectedProduct = row.entity
+    $scope.selectedProduct.modal = $modal.open {
+      templateUrl: "<%= asset_path('angular/templates/product_detail.html') %>",
+      scope: ( ->
+        $scope
+      )()
+   }
 ])

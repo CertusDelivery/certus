@@ -12,5 +12,6 @@ json.(item,
   :out_of_stock_quantity,
   :scanned_quantity,
   :picking_progress,
-  :is_replaced
+  :is_replaced,
+  :product_image
 )

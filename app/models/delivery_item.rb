@@ -68,6 +68,10 @@ class DeliveryItem < ActiveRecord::Base
     out_of_stock = quantity - picked_quantity
     self.update_attributes(out_of_stock_quantity: out_of_stock)
   end
+
+  def product_image
+    "/products/#{['len', 'piggy', 'battery'][self.id%3]}.jpg"
+  end
   alias :update_out_of_stock_quantity :out_of_stock!
 
   def replace!

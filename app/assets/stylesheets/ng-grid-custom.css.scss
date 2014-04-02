@@ -3,6 +3,7 @@
   height: auto !important;
   overflow:visible;
   position: static;
+  padding: 5px 0;
 }
 
 .ngRow {
@@ -16,4 +17,7 @@
   white-space: normal;
   overflow:visible;
   word-break: break-word;
+}
+.ng-button{
+  line-height: 1 !important;
 }

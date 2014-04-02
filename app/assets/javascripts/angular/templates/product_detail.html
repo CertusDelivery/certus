@@ -1,0 +1,33 @@
+<div class='modal-header'>
+  <button class='close' ng-click='selectedProduct.modal.dismiss("cancel")' type='button'>&times;</button>
+  <h4>{{selectedProduct.product_name}}</h4>
+</div>
+<div class='modal-body'>
+  <div class='row'>
+    <div class='col-md-6'>
+      <table>
+        <tr>
+          <th>SKU :</th><td>{{selectedProduct.store_sku}}</td>
+        </tr>
+        <tr>
+          <th>Bin :</th><td>{{selectedProduct.picker_bin_number}}</td>
+        </tr>
+        <tr>
+          <th>Quantity :</th><td>{{selectedProduct.picking_progress}}</td>
+        </tr>
+        <tr>
+          <th>Location :</th><td>{{selectedProduct.location}}</td>
+        </tr>
+        <tr>
+          <th>Weight :</th><td>{{selectedProduct.shipping_weight}}</td>
+        </tr>
+        <tr>
+          <th>Status :</th><td>{{selectedProduct.picked_status}}</td>
+        </tr>
+      </table>
+    </div>
+    <div class='col-md-6'>
+      <img ng-src='{{selectedProduct.product_image}}' style='width:100%'>
+    </div>
+  </div>
+</div>
