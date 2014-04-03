@@ -57,7 +57,7 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def picking_progress
-    [quantity, picked_quantity, out_of_stock_quantity, scanned_quantity].join('/')
+    [quantity, picked_quantity, out_of_stock_quantity].join('/')
   end
 
   def picked?
