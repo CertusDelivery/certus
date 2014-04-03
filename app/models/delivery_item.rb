@@ -15,7 +15,7 @@ class DeliveryItem < ActiveRecord::Base
   before_save :update_status_if_all_picked
   # TODO
   # before_save :calculate_amount
-
+  LOCATION_REG = /^(?<aisle_num>\d{1,3})(?<direction>(N|S|E|W))?-( |(?<front>\d{1,3}))?-(?<shelf>\d{1,2})?$/
   # scopes ....................................................................
   scope :in_picking_list, -> { includes(:delivery).where("deliveries.picked_status = '#{Delivery::PICKED_STATUS[:picking]}'").references(:delivery) }
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
@@ -93,8 +93,7 @@ class DeliveryItem < ActiveRecord::Base
 
   def update_location(item_location)
     status = true
-    reg_location = /^(?<aisle_num>\d{2})(?<direction>(N|S|E|W))?-( |(?<front>100|\d{1,2}))?-(?<shelf>\d{1,2})?$/
-    location_arr = reg_location.match(item_location)
+    location_arr = LOCATION_REG.match(item_location)
     status = false if location_arr.nil?
     if status
       self.location = item_location
@@ -143,8 +142,7 @@ class DeliveryItem < ActiveRecord::Base
       self.location_direction = ''
       self.location_front = 0
       self.location_shelf = 0
-      reg_location = /^(?<aisle_num>\d{2})(?<direction>(N|S|E|W))?-( |(?<front>100|\d{1,2}))?-(?<shelf>\d{1,2})?$/
-      location_arr = reg_location.match(location)
+      location_arr = LOCATION_REG.match(location)
       self.location_aisle_num = location_arr[:aisle_num].to_i
       self.location_direction = location_arr[:direction].to_s.upcase
       self.location_front = location_arr[:front].to_i
