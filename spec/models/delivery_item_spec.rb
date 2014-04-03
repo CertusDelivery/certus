@@ -57,22 +57,22 @@ describe DeliveryItem do
       item.location_front.should == 0
       item.location_shelf.should == 1
 
-      @delivery_item = create(:delivery_item, :location => '2--13')
-      item = DeliveryItem.find_by_location('2--13')
+      @delivery_item = create(:delivery_item, :location => '02--13')
+      item = DeliveryItem.find_by_location('02--13')
       item.location_aisle_num.should == 2
       item.location_direction.should == ''
       item.location_front.should == 0
       item.location_shelf.should == 13
 
-      @delivery_item = create(:delivery_item, :location => '4w-11-')
-      item = DeliveryItem.find_by_location('4w-11-')
+      @delivery_item = create(:delivery_item, :location => '04W-11-')
+      item = DeliveryItem.find_by_location('04W-11-')
       item.location_aisle_num.should == 4
       item.location_direction.should == 'W'
       item.location_front.should == 11
       item.location_shelf.should == 0
 
-      @delivery_item = create(:delivery_item, :location => '5e-  23  -09')
-      item = DeliveryItem.find_by_location('5e-  23  -09')
+      @delivery_item = create(:delivery_item, :location => '05E-23-09')
+      item = DeliveryItem.find_by_location('05E-23-09')
       item.location_aisle_num.should == 5
       item.location_direction.should == 'E'
       item.location_front.should == 23
@@ -145,10 +145,10 @@ describe DeliveryItem do
 
   describe '#update_location' do
     it 'should update location' do
-      delivery_item = create(:delivery_item, location: "5e-11-89")
-      delivery_item.update_location("5e-23-09")
+      delivery_item = create(:delivery_item, location: "05W-11-89")
+      delivery_item.update_location("05W-23-09")
       delivery_item.reload
-      delivery_item.location.should == '5e-23-09'
+      delivery_item.location.should == '05W-23-09'
     end
   end
 

@@ -115,11 +115,11 @@ describe DeliveriesController do
       delivery.delivery_items << @delivery_item_1
       total_price += @delivery_item_1.price
 
-      @delivery_item_2 = FactoryGirl.build(:delivery_item, :location =>'2W-2-9')
+      @delivery_item_2 = FactoryGirl.build(:delivery_item, :location =>'02W-2-9')
       delivery.delivery_items << @delivery_item_2
       total_price += @delivery_item_2.price
 
-      @delivery_item_3 = FactoryGirl.build(:delivery_item, :location =>'2-01-19')
+      @delivery_item_3 = FactoryGirl.build(:delivery_item, :location =>'02-01-19')
       delivery.delivery_items << @delivery_item_3
       total_price += @delivery_item_3.price
 
@@ -132,7 +132,7 @@ describe DeliveriesController do
       delivery2.delivery_items << @delivery2_delivery_item_4
       total_price += @delivery2_delivery_item_4.price
 
-      @delivery2_delivery_item_5 = FactoryGirl.build(:delivery_item, :location =>'2E-02-29')
+      @delivery2_delivery_item_5 = FactoryGirl.build(:delivery_item, :location =>'02E-02-29')
       delivery2.delivery_items << @delivery2_delivery_item_5
       total_price += @delivery2_delivery_item_5.price
       delivery2.payment_amount = delivery2.order_grand_total = delivery2.order_total_price = total_price
@@ -140,13 +140,13 @@ describe DeliveriesController do
     end
 
     it 'should return correct sort delivery_items by location asc' do
-      #sort asc ['01E-1-9', '2-01-19', '2E-02-29', '02W-01-9', '2W-2-9']
+      #sort asc ['01E-1-9', '02-01-19', '02E-02-29', '02W-01-9', '2W-2-9']
       get :sort_picking_orders, {direction: 'asc'}, format: :json
       controller.instance_variable_get(:@delivery_items).should == [@delivery2_delivery_item_4, @delivery_item_3, @delivery2_delivery_item_5, @delivery_item_1, @delivery_item_2]
     end
 
     it 'should return correct sort delivery_items by location desc' do
-      #sort desc ['2W-2-9', '02W-01-9','2E-02-29','2-01-19','01E-1-9']
+      #sort desc ['02W-2-9', '02W-01-9','2E-02-29','02-01-19','01E-1-9']
       get :sort_picking_orders, {direction: 'desc'}, format: :json
       controller.instance_variable_get(:@delivery_items).should == [@delivery_item_2,@delivery_item_1, @delivery2_delivery_item_5, @delivery_item_3,@delivery2_delivery_item_4]
     end
