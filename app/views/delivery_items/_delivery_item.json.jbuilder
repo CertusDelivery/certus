@@ -13,5 +13,6 @@ json.(item,
   :scanned_quantity,
   :picking_progress,
   :is_replaced,
-  :product_image
+  :product_image,
+  :price
 )

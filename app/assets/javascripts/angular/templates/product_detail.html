@@ -1,33 +1,72 @@
-<div class='modal-header'>
-  <button class='close' ng-click='selectedProduct.modal.dismiss("cancel")' type='button'>&times;</button>
-  <h4>{{selectedProduct.product_name}}</h4>
-</div>
-<div class='modal-body'>
-  <div class='row'>
-    <div class='col-md-6'>
+<style>
+  <!--
+    .modal-dialog {
+      width: 2in;
+    }
+    .modal-content {
+      border: 2px solid #333;
+      border-radius: 0;
+    }
+    .product-detail-modal-footer {
+      padding: 10px;
+      text-align: center;
+    }
+    .product-detail-modal {
+      padding: 0px;
+    }
+    .prdocut-detail-modal table {
+      width: 2in;
+    }
+    .product-detail-modal h5 {
+      padding: 5px  10px;
+      line-height: 1.3;
+    }
+    .product-detail-modal img {
+      border: 1px solid #333;
+    }
+    .product-detail-modal .label{
+      padding: 3px 10px;
+      background: white;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: black;
+      cursor: pointer;
+    }
+    .product-detail-modal th, .product-detail-modal td {
+      text-align: center;
+      font-size: 14px;   
+      padding: 7px;
+    }
+    .product-detail-modal tr.normal th{
+      font-size: 10px;
+    }
+  -->
+</style>
+<div class='modal-body product-detail-modal' style="width:2in;">
+  <div>
       <table>
         <tr>
-          <th>SKU :</th><td>{{selectedProduct.store_sku}}</td>
+          <td rowspan="3" style="width:1in;"> 
+            <img ng-src='{{selectedProduct.product_image}}' style='width:1in;'>
+          </td>
+          <td colspan="2"><span class="label label-default" ng-click='selectedProduct.modal.dismiss("cancel")'>{{selectedProduct.picker_bin_number}}</span></td>
         </tr>
         <tr>
-          <th>Bin :</th><td>{{selectedProduct.picker_bin_number}}</td>
+          <th colspan="2" style="font-size: 18px;">{{selectedProduct.quantity}}/{{selectedProduct.picked_quantity}}/{{selectedProduct.out_of_stock_quantity}}</th>
         </tr>
         <tr>
-          <th>Quantity :</th><td>{{selectedProduct.picking_progress}}</td>
+          <th colspan="2">{{selectedProduct.location}}</th>
         </tr>
-        <tr>
-          <th>Location :</th><td>{{selectedProduct.location}}</td>
-        </tr>
-        <tr>
-          <th>Weight :</th><td>{{selectedProduct.shipping_weight}}</td>
-        </tr>
-        <tr>
-          <th>Status :</th><td>{{selectedProduct.picked_status}}</td>
+        <tr class="normal">
+          <th colspan="2">{{selectedProduct.store_sku}}</th>
+          <th>${{selectedProduct.price}}</th>
         </tr>
       </table>
-    </div>
-    <div class='col-md-6'>
-      <img ng-src='{{selectedProduct.product_image}}' style='width:100%'>
-    </div>
   </div>
+  <div>
+    <h5>{{selectedProduct.product_name}}</h5>
+  </div>      
+</div>
+<div class="modal-footer product-detail-modal-footer">
+  <button ng-click="markAsOutOfStock();selectedProduct.modal.dismiss('cancel');">Out Of Stock</button>
 </div>

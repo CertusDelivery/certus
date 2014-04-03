@@ -10,6 +10,7 @@
     = button_tag 'Print Invoice', 'id' =>'print_picking_list', 'class' => 'print_button', 'url'=> "#{ picking_print_deliveries_url() }"
     = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
     = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
+    = button_tag 'Product Detail', 'ng-click' => "productDetail()"
   %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}
