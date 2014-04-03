@@ -93,22 +93,13 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
     5000
   )
 
-  # operation_code: 1 -> normal, 2 -> out of stock
-  $scope.pickProduct = (operation_code) ->
-    $scope.notice = ''
-    $scope.errorMessage = ''
-    barcode = $scope.scannedBarcode
-    deliveryItem = $scope.mySelections[0]
-    if deliveryItem.picking_progress.split('/')[2] isnt '0' and deliveryItem.store_sku isnt barcode and deliveryItem.is_replaced is false
-      $scope.substituteProduct(deliveryItem, barcode)
-      return false
-    barcode = "OUT_OF_STOCK" if operation_code == 2
+  $scope.picking = (barcode) ->
     return false unless barcode
+    deliveryItem = $scope.mySelections[0]
     $http.post('/api/delivery_items/pick.json',
        barcode: barcode,
        id: deliveryItem.id,
-       delivery_id: deliveryItem.delivery_id,
-       operation_code: operation_code
+       delivery_id: deliveryItem.delivery_id
     ).success((data) ->
       $scope.scannedBarcode = ''
       $scope.notice = data.message if data.message
@@ -128,6 +119,20 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
         $scope.scannedBarcode = ''
         $scope.errorMessage = data.message
     )
+
+  # operation_code: 1 -> normal, 2 -> out of stock
+  $scope.pickProduct = (operation_code) ->
+    $scope.notice = ''
+    $scope.errorMessage = ''
+    barcode = $scope.scannedBarcode
+    deliveryItem = $scope.mySelections[0]
+    if operation_code == 2
+      barcode = "OUT_OF_STOCK"
+    else if barcode isnt "REMOVE_COMPLETED_DELIVERY" and barcode isnt "OUT_OF_STOCK"
+      if !!barcode and deliveryItem.out_of_stock_quantity isnt 0 and deliveryItem.is_replaced is false and deliveryItem.store_sku isnt barcode
+        $scope.substituteProduct(deliveryItem, barcode)
+        return false
+    $scope.picking(barcode)
 
   $scope.markAsOutOfStock = ->
     $scope.pickProduct(2)
@@ -155,6 +160,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
               $scope.gridOptions.selectItem(index-1, true)
             , 0)
         )
+      else
+        $scope.picking(substituteBarcode)
     ).error((data) ->
       $scope.scannedBarcode = ''
       $scope.errorMessage = data.message
