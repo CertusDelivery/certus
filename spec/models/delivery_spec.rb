@@ -44,19 +44,19 @@ describe Delivery do
       @delivery.errors.messages[:order_grand_total].first.should == "order_grand_total doesn't match payment_amount"
     end
 
-    it "should sku_count doesn't match number of order_items" do
-      @delivery.order_sku_count = 999
-      @delivery.save
-      @delivery.should have(1).error_on(:order_sku_count)
-      @delivery.errors.messages[:order_sku_count].first.should == "sku_count doesn't match number of order_items"
-    end
+    # it "should sku_count doesn't match number of order_items" do
+    #   @delivery.order_sku_count = 999
+    #   @delivery.save
+    #   @delivery.should have(1).error_on(:order_sku_count)
+    #   @delivery.errors.messages[:order_sku_count].first.should == "sku_count doesn't match number of order_items"
+    # end
 
-    it "should total price doesn't match the sum of all order_items price" do
-      @delivery.order_total_price = 9999
-      @delivery.save
-      @delivery.should have(1).error_on(:order_total_price)
-      @delivery.errors.messages[:order_total_price].first.should == "total price doesn't match the sum of all order_items price"
-    end
+    # it "should total price doesn't match the sum of all order_items price" do
+    #   @delivery.order_total_price = 9999
+    #   @delivery.save
+    #   @delivery.should have(1).error_on(:order_total_price)
+    #   @delivery.errors.messages[:order_total_price].first.should == "total price doesn't match the sum of all order_items price"
+    # end
 
 
   end
