@@ -37,6 +37,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
       if row.entity.picked_status == 'UNPICKED'
         $scope.gridOptions.selectRow(index, true)
         found = true
+    if !found
+      $scope.gridOptions.selectRow(0, true)
 
   $scope.clearSortingData = ->
     if ($scope.gridOptions)
