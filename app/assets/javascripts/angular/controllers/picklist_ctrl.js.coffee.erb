@@ -27,13 +27,16 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
   }
 
   $scope.$on('ngGridEventData', ->
+    $scope.selectUnpickedRow()
+  )
+
+  $scope.selectUnpickedRow = ->
     found = false
-    angular.forEach $scope.picklist, (row, index) ->
+    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
       return if found
-      if row.picked_status == 'UNPICKED'
+      if row.entity.picked_status == 'UNPICKED'
         $scope.gridOptions.selectRow(index, true)
         found = true
-  )
 
   $scope.clearSortingData = ->
     if ($scope.gridOptions)
@@ -119,7 +122,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
             $scope.gridOptions.selectItem(index, true)
             $('.ngGrid').find('.selected').fadeTo('fast',0).fadeTo('fast',1)
             if data.picked_status is 'PICKED'
-              $scope.gridOptions.selectItem(index+1, true)
+              $scope.selectUnpickedRow()
     ).error((data) ->
       if data.status is 'nok'
         $scope.scannedBarcode = ''
