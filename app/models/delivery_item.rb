@@ -11,7 +11,7 @@ class DeliveryItem < ActiveRecord::Base
   #validate :order_to_delivery_convert
 
   # callbacks .................................................................
-  before_create :initial_picked_status, :init_random_location_for_test
+  before_create :initial_picked_status, :init_random_location_for_test, :update_status_if_all_picked
   before_save :update_status_if_all_picked
   # TODO
   # before_save :calculate_amount
@@ -117,7 +117,7 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def update_status_if_all_picked
-    self.picked_status = PICKED_STATUS[:picked] if quantity == (picked_quantity + out_of_stock_quantity)
+    self.picked_status = PICKED_STATUS[:picked] if self.quantity == (self.picked_quantity + self.out_of_stock_quantity)
   end
 
   def init_random_location_for_test
