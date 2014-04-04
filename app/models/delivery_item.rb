@@ -46,7 +46,7 @@ class DeliveryItem < ActiveRecord::Base
     end
 
     def substitute(original_item, product_params)
-      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id, picked_quantity: 1})
+      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id, picked_quantity: 1, picker_bin_number: original_item.picker_bin_number})
       self.create(item_params.permit!)
     end
   end

@@ -11,6 +11,9 @@
       padding: 10px;
       text-align: center;
     }
+    .productDetailInput {
+      margin: 6px 0;
+    }
     .product-detail-modal {
       padding: 0px;
     }
@@ -34,7 +37,7 @@
     }
     .product-detail-modal th, .product-detail-modal td {
       text-align: center;
-      font-size: 14px;   
+      font-size: 14px;
       padding: 7px;
     }
     .product-detail-modal tr.normal th{
@@ -46,27 +49,33 @@
   <div>
       <table>
         <tr>
-          <td rowspan="3" style="width:1in;"> 
-            <img ng-src='{{selectedProduct.product_image}}' style='width:1in;'>
+          <td rowspan="3" style="width:1in;">
+            <img ng-src='{{mySelections[0].product_image}}' style='width:1in;'>
           </td>
-          <td colspan="2"><span class="label label-default" ng-click='selectedProduct.modal.dismiss("cancel")'>{{selectedProduct.picker_bin_number}}</span></td>
+          <td colspan="2"><span class="label label-default" ng-click='dismissProductDetail();'>&nbsp;{{mySelections[0].picker_bin_number}}</span></td>
         </tr>
         <tr>
-          <th colspan="2" style="font-size: 18px;">{{selectedProduct.quantity}}/{{selectedProduct.picked_quantity}}/{{selectedProduct.out_of_stock_quantity}}</th>
+          <th colspan="2" style="font-size: 18px;">{{mySelections[0].quantity}}/{{mySelections[0].picked_quantity}}/{{mySelections[0].out_of_stock_quantity}}</th>
         </tr>
         <tr>
-          <th colspan="2">{{selectedProduct.location}}</th>
+          <th colspan="2">{{mySelections[0].location}}</th>
         </tr>
         <tr class="normal">
-          <th colspan="2">{{selectedProduct.store_sku}}</th>
-          <th>${{selectedProduct.price}}</th>
+          <th colspan="2">{{mySelections[0].store_sku}}</th>
+          <th>${{mySelections[0].price}}</th>
         </tr>
       </table>
   </div>
   <div>
-    <h5>{{selectedProduct.product_name}}</h5>
-  </div>      
+    <h5>{{mySelections[0].product_name}}</h5>
+  </div>
 </div>
 <div class="modal-footer product-detail-modal-footer">
-  <button ng-click="markAsOutOfStock();selectedProduct.modal.dismiss('cancel');">Out Of Stock</button>
+  <div class="flash">
+    <div class="error ng-binding">{{errorMessage}}</div>
+    <div class="notice ng-binding">{{notic}}</div>
+  </div>
+  <input id="productDetailScannedBarcode" focus-me="focusProductDetailScanner" ng-keyup="setScannedBarcode($event)" press-enter="pickProduct(1)" placeholder="Item barcode" type="text" class="ng-pristine ng-valid productDetailInput">
+  <button ng-click="pickProduct(1);" onclick="jQuery('#productDetailScannedBarcode').val('');" class="productDetailInput">Submit Scanner Input</button>
+  <a style="cursor:pointer;" ng-click="markAsOutOfStock();" ng-show="mySelections[0].quantity != mySelections[0].picked_quantity + mySelections[0].out_of_stock_quantity">Out Of Stock</a>
 </div>

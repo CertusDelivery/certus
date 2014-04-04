@@ -20,3 +20,16 @@ app.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
       #scope.$apply(model.assign(scope, true))
     )
 ])
+
+
+app.directive('pressEnter', ->
+  (scope, element, attrs) ->
+    element.bind('keypress', (event)->
+      if event.which == 13
+        scope.$apply(->
+          scope.$eval(attrs.pressEnter)
+        )
+        element.val('') 
+        event.preventDefault()
+    )
+)

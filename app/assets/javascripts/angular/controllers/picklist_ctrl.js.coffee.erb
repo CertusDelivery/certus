@@ -114,7 +114,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
               row[k] = v
             $scope.gridOptions.selectItem(index, true)
             $('.ngGrid').find('.selected').fadeTo('fast',0).fadeTo('fast',1)
-            if data.picked_status is 'PICKED'
+            if data.picked_status is 'PICKED' && barcode != 'OUT_OF_STOCK'
               $scope.selectUnpickedRow()
     ).error((data) ->
       if data.status is 'nok'
@@ -193,11 +193,23 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
     $scope.addFocus()
 
   $scope.productDetail= (row) ->
-    $scope.selectedProduct = $scope.mySelections[0]
-    $scope.selectedProduct.modal = $modal.open {
+    $scope.focusScanner = false
+    $scope.focusProductDetailScanner = true
+    $scope.productDetailModal = $modal.open {
       templateUrl: "<%= asset_path('angular/templates/product_detail.html') %>",
+      backdrop: 'static',
+      keyboard: false,
       scope: ( ->
         $scope
       )()
    }
+
+  $scope.dismissProductDetail = ->
+    $scope.focusScanner = true
+    $scope.focusProductDetailScanner = false
+    $scope.productDetailModal.close()
+
+  $scope.setScannedBarcode = (e) ->
+    if event.which != 13
+      $scope.scannedBarcode = e.target.value
 ])
