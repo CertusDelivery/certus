@@ -47,16 +47,35 @@
       width: 100%;
     }
 
+    p.date {
+      text-align:right;
+      padding-bottom:0;
+    }
+    p.order{
+      font-size: 18px;
+      font-style: italic;
+      color: #333;
+    }
     -->
   </style>
+  <script lang="javascript" type="text/javascript">
+    $(document).ready(function(){
+      $("#user").val(<%=params[:user]%>)
+      $("#user").change(function(){
+        $('form').submit()
+      });
+    });
+  </script>
 </head>
 <body>
   <div class="no-print" style="text-align: right;padding: 10px;">
-    <button onclick="window.print();">Print</button>
+    <%#= form_tag history_deliveries_path, :method => 'get' %>
+      <%#= select_tag :user, options_for_select(@users) %>
   </div>
   <div id="print_page">
+    <div class="header"><h1 style="text-align: center;">Delivery History</h1></div>
     <% @deliveries.each_with_index do |delivery, index| %>
-      <%= render :partial => "print_packing_delivery",:locals => {:delivery => delivery, :list_name => 'Packing List', :date => false} %>
+      <%= render :partial => "print_packing_delivery",:locals => {:delivery => delivery, :list_name => '', :date => true} %>
       <% if @deliveries.size != index + 1 %>
         <div class="page_breaker"></div>
       <% end %>

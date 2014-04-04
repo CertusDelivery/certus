@@ -68,6 +68,13 @@ class DeliveriesController < ApplicationController
     render 'deliveries/print_packing_list', :layout => false
   end
 
+  def history
+    #clients = Delivery.select(:client_id).where(:picked_status => Delivery::PICKED_STATUS[:store_staging]).group('client_id').flatten
+    #@users = clients.map{|client| [ "User #{client.client_id}", client.client_id ]}
+    #client_id = params[:user] ? params[:user] : @users[0][1]
+    @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+  end
+
   private
 
   def unpicked_count

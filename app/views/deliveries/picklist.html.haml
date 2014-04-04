@@ -11,6 +11,7 @@
     = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
     = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
     = button_tag 'Product Detail', 'ng-click' => "productDetail()"
+    = button_tag 'Delivery History', 'class' => 'print_button', 'url'=> "#{ history_deliveries_url() }"
   %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}
