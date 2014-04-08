@@ -11,10 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140331161511) do
+ActiveRecord::Schema.define(version: 20140408051517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: true do |t|
+    t.string   "name"
+    t.integer  "parent_id",  default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "deliveries", force: true do |t|
     t.datetime "created_at"
@@ -100,6 +107,17 @@ ActiveRecord::Schema.define(version: 20140331161511) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stock_status",         default: "IN_STOCK"
+    t.integer  "category_id"
+    t.decimal  "reg_price"
+    t.decimal  "unit_price"
+    t.string   "unit_price_unit"
+    t.integer  "sale_qty_min"
+    t.integer  "sale_qty_limit"
+    t.text     "size"
+    t.string   "brand"
+    t.string   "image"
+    t.text     "info_1"
+    t.text     "info_2"
   end
 
 end
