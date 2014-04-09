@@ -14,16 +14,17 @@ namespace :products do
       # repare logger
       log_path = Rails.root.join('log', 'products')
       Dir.mkdir log_path unless File.exist? log_path 
-      log_file = File.open("#{log_path}/#{Time.new.strftime("%Y%m%d%H%M%S")}_import_from_csv.log", 'a')
-      log_file.sync = true
-      logger = Logger.new(log_file)
+      csv = CSV.open("#{log_path}/#{Time.new.strftime("%Y%m%d%H%M%S")}_import_from_csv_log.csv", "wb")
+      csv << ['type','time','message']
 
       # import data from cvs file
       pid = nil # print pid when import failse
+      count = 0;
       puts "Importing the data of product from csv file..."
       Product.transaction do
         CSV.foreach(file_path, :headers => true) do |row|
           pid =  row['pid']
+          count += 1
           product = Product.find_by_store_sku(row['sku/upc'])
           product ||= Product.new
           
@@ -59,19 +60,17 @@ namespace :products do
 
           product.category = Category.create_by_string(row['category']) 
           product.save!
-          logger.info "`#{product.name}` created successfully"
+          csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{product.name}` created successfully"] 
         end
         puts "Import Succseefully!!!"
+        csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Counts: #{count} "] 
       end
     rescue Exception => ex
-      logger.fatal "#{pid}"
-      logger.fatal "*** #{ex.message}"
-      logger.fatal "Rollback!"
-      puts "#{pid}"
-      puts "*** #{ex.message}"
+      csv << ["F", Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "*** ##{pid}  #{ex.message}"] if csv
+      puts "*** ##{pid}  #{ex.message}"
       puts "Rollback!"
     ensure
-      log_file.close
+      csv.close if csv
     end
   end
 
