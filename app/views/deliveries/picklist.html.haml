@@ -1,17 +1,16 @@
 
-%div{'ng-controller' => 'PicklistCtrl'}
-  %h Put buttons or links to options here: Download New Order, Remove Picked Orders, Sort by location
-  %p Put time of day and number of unassigned orders on server here
-  %p
-    = button_tag 'Download New Order', 'ng-click' => "loadNewOrder()"
-    = button_tag 'Remove Picked Orders', 'ng-click' => "removePickedOrders()"
-    = button_tag 'Sort By Location', 'ng-click' => "loadOrdersByLocation()"
-    = button_tag 'Out of Stock', 'ng-click' => "markAsOutOfStock()"
-    = button_tag 'Print Invoice', 'id' =>'print_picking_list', 'class' => 'print_button', 'url'=> "#{ picking_print_deliveries_url() }"
-    = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
-    = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
-    = button_tag 'Product Detail', 'ng-click' => "productDetail()"
-    = button_tag 'Delivery History', 'class' => 'print_button', 'url'=> "#{ history_deliveries_url() }"
+%div{'ng-controller' => 'PicklistCtrl', 'class' => 'row'}
+  %div{'class' => 'box'}
+    = button_tag 'Download New Order', 'ng-click' => "loadNewOrder()", 'class' => 'btn btn-default'
+    = button_tag 'Remove Picked Orders', 'ng-click' => "removePickedOrders()", 'class' => 'btn btn-default'
+    = button_tag 'Sort By Location', 'ng-click' => "loadOrdersByLocation()", 'class' => 'btn btn-default'
+    = button_tag 'Out of Stock', 'ng-click' => "markAsOutOfStock()", 'class' => 'btn btn-default'
+    = button_tag 'Product Detail', 'ng-click' => "productDetail()", 'class' => 'btn btn-default'
+  %div{'class' => 'box'}
+    = button_tag 'Print Invoice', 'id' =>'print_picking_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ picking_print_deliveries_url() }"
+    = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
+    = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
+    = button_tag 'Delivery History', 'class' => 'btn btn-default print_button', 'url'=> "#{ history_deliveries_url() }"
   %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}
@@ -19,9 +18,9 @@
     Unpicked orders:
     %span#unpicked_order_count{'ng-click' => "refreshUnpickedCount()"}
       {{unpicked_count}}
-  %form{ "ng-submit" => "pickProduct(1)"}
-    = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "focus-me" => "focusScanner", placeholder: 'Item barcode'
-    = submit_tag 'Submit Scanner Input'
+  %form{ "ng-submit" => "pickProduct(1)", 'class'=>'form-inline'}
+    = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "focus-me" => "focusScanner", placeholder: 'Item barcode', 'class' => 'form-control'
+    = submit_tag 'Submit Scanner Input', 'class'=>'btn btn-primary'
     .flash
       .error
         {{errorMessage}}
@@ -30,7 +29,7 @@
 
   %p
   %center
-    %big Products To Be Picked
+    %h4 Products To Be Picked
   %p
   %hr
   .current_product
