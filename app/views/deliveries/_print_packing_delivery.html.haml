@@ -20,7 +20,7 @@
 
   - delivery.delivery_items.each do |delivery_item|
     %tr
-      %td #{ date ? "#{delivery_item.quantity}/#{delivery_item.picked_quantity}/#{delivery_item.out_of_stock_quantity}" : delivery_item.quantity }
+      %td #{ date ? "#{delivery_item.quantity}/#{delivery_item.picked_quantity}/#{delivery_item.out_of_stock_quantity}" : delivery_item.picked_quantity }
       %td #{delivery_item.product_name}
       %td #{delivery_item.store_sku}
       %td{:style => 'width: 50px;text-align:right'}

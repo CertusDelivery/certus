@@ -10,7 +10,7 @@
     = button_tag 'Print Invoice', 'id' =>'print_picking_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ picking_print_deliveries_url() }"
     = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
     = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
-    = button_tag 'Delivery History', 'class' => 'btn btn-default print_button', 'url'=> "#{ history_deliveries_url() }"
+    = link_to 'Delivery History', history_deliveries_url(), {:class => 'btn btn-default', :target => '_blank'}
   %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}

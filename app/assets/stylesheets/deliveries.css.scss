@@ -43,3 +43,11 @@
   line-height: 3em;
   margin: 10px auto;
 }
+
+.history {
+  margin-top: 20px;
+  th, td {
+    text-align: center;
+    cursor: pointer;
+  }
+}

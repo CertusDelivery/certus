@@ -60,19 +60,19 @@ class DeliveriesController < ApplicationController
   end
 
   def print_packing_list
+    @deliveries = Delivery.includes(:delivery_items).where(:id => params[:id]) if params[:id]
     if params[:complete].to_i == 1
-      @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+      @deliveries ||= Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
     else
-      @deliveries = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
+      @deliveries ||= Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
     end
     render 'deliveries/print_packing_list', :layout => false
   end
 
   def history
-    #clients = Delivery.select(:client_id).where(:picked_status => Delivery::PICKED_STATUS[:store_staging]).group('client_id').flatten
-    #@users = clients.map{|client| [ "User #{client.client_id}", client.client_id ]}
-    #client_id = params[:user] ? params[:user] : @users[0][1]
-    @deliveries = Delivery.includes(:delivery_items).where({:picked_status => Delivery::PICKED_STATUS[:store_staging]}).order('id desc')
+    # ids = DeliveryItem.where('picked_quantity != 0').pluck(:delivery_id)
+    # @deliveries = Delivery.where(:id => ids)
+    @deliveries = Delivery.includes(:delivery_items).where('id in (select delivery_id from delivery_items where picked_quantity != 0)').order('placed_at desc')
   end
 
   private

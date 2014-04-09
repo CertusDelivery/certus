@@ -76,6 +76,10 @@ class Delivery < ActiveRecord::Base
     delivery_items.inject(0) { |sum, item| sum += item.picked_total_price }
   end
 
+  def picked_quantity
+    delivery_items.inject(0) { |sum, item| sum += item.picked_quantity }
+  end
+
   # protected instance methods ................................................
   protected
 
