@@ -85,3 +85,7 @@ To run the spec suite (includes some integration tests)
 
     bundle exec rake spec
 
+To run the spec features(in spec/features, file ext with .feature):
+
+    bundle exec rake spec:features
+
