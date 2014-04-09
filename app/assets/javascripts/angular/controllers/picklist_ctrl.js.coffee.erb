@@ -7,10 +7,19 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
   cellLocation = '<div ng-click=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
   cellTemplatePicked = '<div ng-class="{hidden: row.getProperty(col.field) == \'PICKED\' ? false : true }" class="picked">✓</div>'
 
+  qtySortFn = (a, b) ->
+    a_arr = a.split("/")
+    b_arr = b.split("/")
+    result = 0
+    $.each a_arr, (index, data)->
+      result = parseInt(a_arr[index]) - parseInt(b_arr[index])
+      return false if result isnt 0
+    return result
+
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
-      {field: 'picking_progress', displayName: 'Qty', width: '10%'},
+      {field: 'picking_progress', displayName: 'Qty', width: '10%', sortFn: qtySortFn },
       {field: 'product_name', displayName: 'Product', width: '40%'},
       {field: 'shipping_weight', visible: false},
       {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, enableCellEditOnFocus:true, editableCellTemplate: cellEditableLocation, width: '15%'},
