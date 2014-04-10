@@ -1,67 +1,11 @@
-<style>
-  <!--
-    .expanded-view {
-      background: rgba(255,255,255,0.5);
-    }
-    .expanded-view .modal-dialog {
-      margin: 0;
-     }
-    @media (min-width: 640px) {
-      .expanded-view .modal-dialog {
-        width: 240px;
-        margin: 30px auto !important;
-      }
-    }
-
-    .expanded-view .modal-content {
-      border: 5px solid #333;
-      border-radius: 0;
-    }
-    .expanded-view .product-detail-modal-footer {
-      padding: 10px;
-      text-align: center;
-    }
-    .expanded-view .productDetailInput {
-      margin: 6px 0;
-    }
-    .expanded-view .product-detail-modal {
-      padding: 0px;
-    }
-    .expanded-view .prdocut-detail-modal table {
-      width: 100%;
-    }
-    .expanded-view .product-detail-modal h5 {
-      padding: 5px  10px;
-      line-height: 1.3;
-      font-size: 16px;
-    }
-    .expanded-view .product-detail-modal img {
-      border: 1px solid #333;
-    }
-    .expanded-view .product-detail-modal .label{
-      padding: 3px 10px;
-      background: white;
-      border: 1px solid #333;
-      border-radius: 12px;
-      color: black;
-      cursor: pointer;
-    }
-    .expanded-view .product-detail-modal th, .product-detail-modal td {
-      text-align: center;
-      font-size: 14px;
-      padding: 7px;
-    }
-
-  -->
-</style>
 <div class='modal-body product-detail-modal'>
   <div>
       <table>
         <tr>
-          <td rowspan="3" style="width:50%;">
+          <td rowspan="3">
             <img ng-src='{{mySelections[0].product_image}}' style='width:100%;'>
           </td>
-          <td colspan="2"><span class="label label-default" ng-click='dismissProductDetail();'>&nbsp;{{mySelections[0].picker_bin_number}}</span></td>
+          <td colspan="2" style="width:50%;"><span class="label label-default" ng-click='dismissProductDetail();'>&nbsp;{{mySelections[0].picker_bin_number}}</span></td>
         </tr>
         <tr>
           <th colspan="2" style="font-size: 26px;">{{mySelections[0].quantity}}/{{mySelections[0].picked_quantity}}/{{mySelections[0].out_of_stock_quantity}}</th>
@@ -84,9 +28,9 @@
     <div class="error ng-binding">{{errorMessage}}</div>
     <div class="notice ng-binding">{{notic}}</div>
   </div>
-  <input id="productDetailScannedBarcode" focus-me="focusProductDetailScanner" ng-keyup="setScannedBarcode($event)" press-enter="pickProduct(1)" placeholder="Item barcode" type="text" class="ng-pristine ng-valid productDetailInput">
-  <button ng-click="pickProduct(1);" onclick="jQuery('#productDetailScannedBarcode').val('');" class="productDetailInput">Submit Scanner Input</button>
+  <input id="productDetailScannedBarcode" focus-me="focusProductDetailScanner" ng-keyup="setScannedBarcode($event)" press-enter="pickProduct(1)" placeholder="Item barcode" type="text" class="ng-pristine ng-valid productDetailInput form-control">
+  <button class="btn btn-primary" ng-click="pickProduct(1);" onclick="jQuery('#productDetailScannedBarcode').val('');" class="productDetailInput">Submit Scanner Input</button>
   <div ng-show="mySelections[0].quantity != mySelections[0].picked_quantity + mySelections[0].out_of_stock_quantity">
-    <p><a style="cursor:pointer;" ng-click="markAsOutOfStock();" >Out Of Stock</a></p>
+    <p><a class="btn btn-link" ng-click="markAsOutOfStock();" >Out Of Stock</a></p>
   </div>
 </div>

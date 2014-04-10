@@ -1,0 +1,65 @@
+.expanded-view {
+  background: rgba(255,255,255,0.5);
+
+  .modal-dialog {
+    margin: 0;
+   }
+
+  .btn {
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .modal-dialog {
+      width: 240px;
+      margin: 30px auto !important;
+    }
+  }
+
+  .modal-content {
+    border: 5px solid #333;
+    border-radius: 0;
+  }
+
+  .product-detail-modal-footer {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .productDetailInput {
+    margin: 6px 0;
+  }
+
+  .product-detail-modal {
+    padding: 0px;
+
+    table {
+      width: 100%;
+    }
+
+    h5 {
+      padding: 5px  10px;
+      line-height: 1.3;
+      font-size: 16px;
+      font-weight: bold !important;
+    }
+
+    img {
+      border: 1px solid #333;
+    }
+
+    .label{
+      padding: 3px 10px;
+      background: white;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: black; cursor: pointer;
+    }
+
+    th, td {
+      text-align: center;
+      font-size: 14px;
+      padding: 7px;
+    }
+  }
+}
