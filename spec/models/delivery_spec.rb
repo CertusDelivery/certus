@@ -136,16 +136,26 @@ describe Delivery do
     end
   end
 
-  describe "#picked_total_price" do
-    it "should get sum all picked delivery items total price" do
-      delivery = build(:delivery)
+  describe "call(refer delivery items)" do
+    before do  
       delivery_item1 = build(:delivery_item, picked_quantity: 3, price: 3.2)
       delivery_item2 = build(:delivery_item, picked_quantity: 2, price: 1.1)
       delivery_item3 = build(:delivery_item, picked_quantity: 0, price: 2.7)
-      delivery.delivery_items << delivery_item1
-      delivery.delivery_items << delivery_item2
-      delivery.delivery_items << delivery_item3
-      expect(delivery.picked_total_price).to eq(11.8)
+      @delivery.delivery_items << delivery_item1
+      @delivery.delivery_items << delivery_item2
+      @delivery.delivery_items << delivery_item3
+    end
+
+    describe "#picked_total_price" do
+      it "should get sum all picked delivery items total price" do
+        expect(@delivery.picked_total_price).to eq(11.8)
+      end
+    end
+
+    describe "#picked_quantity" do
+      it "should get sum all picked delivery items total picked_quantity" do
+        expect(@delivery.picked_quantity).to eq(5)
+      end
     end
   end
   
