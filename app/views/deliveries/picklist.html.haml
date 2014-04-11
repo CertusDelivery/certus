@@ -1,16 +1,6 @@
 
 %div{'ng-controller' => 'PicklistCtrl', 'class' => 'row'}
-  %div{'class' => 'box'}
-    = button_tag 'Download New Order', 'ng-click' => "loadNewOrder()", 'class' => 'btn btn-default'
-    = button_tag 'Remove Picked Orders', 'ng-click' => "removePickedOrders()", 'class' => 'btn btn-default'
-    = button_tag 'Sort By Location', 'ng-click' => "loadOrdersByLocation()", 'class' => 'btn btn-default'
-    = button_tag 'Out of Stock', 'ng-click' => "markAsOutOfStock()", 'class' => 'btn btn-default'
-    = button_tag 'Product Detail', 'ng-click' => "productDetail()", 'class' => 'btn btn-default'
-  %div{'class' => 'box'}
-    = button_tag 'Print Invoice', 'id' =>'print_picking_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ picking_print_deliveries_url() }"
-    = button_tag 'Print Packing List', 'id' =>'print_packing_list', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
-    = button_tag 'Print Packing List(out of picking list)', 'id' =>'print_packing_list_complete', 'class' => 'btn btn-default print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
-    = link_to 'Delivery History', history_deliveries_url(), {:class => 'btn btn-default', :target => '_blank'}
+  = render "header"
   %p
     %span#current_time{'ng-click' => "timer()"}
       {{time}}

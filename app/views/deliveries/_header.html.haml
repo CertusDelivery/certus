@@ -1,0 +1,37 @@
+%header.navbar.navbar-default{ role: "navigation"}
+  /Brand and toggle get grouped for better mobile display
+  .navbar-header
+    %button{ type: "button", class: "navbar-toggle", data: {toggle: "collapse", target: "#bs-example-navbar-collapse-1"}, "ng-click" => "isCollapsed = !isCollapsed"}
+      %span.sr-only
+        Toggle navigation
+      %span.icon-bar
+      %span.icon-bar
+      %span.icon-bar
+    = link_to "Pick List", "#", class: "navbar-brand"
+
+  /Collect the nav links, forms, and other content for toggling
+  %nav.navbar-collapse.bs-navbar-collapse.collapse#bs-example-navbar-collapse-1{collapse: "!isCollapsed"}
+    %ul.nav.navbar-nav
+      %li
+        = link_to 'Download New Order', "#", 'ng-click' => "loadNewOrder()"
+      %li
+        = link_to 'Remove Picked Orders', "#", 'ng-click' => "removePickedOrders()"
+      %li
+        = link_to 'Sort By Location', "#", 'ng-click' => "loadOrdersByLocation()"
+      %li
+        = link_to 'Out of Stock', "#", 'ng-click' => "markAsOutOfStock()"
+      %li
+        = link_to 'Product Detail', "#", 'ng-click' => "productDetail()"
+      %li.dropdown
+        = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
+          Print
+          %b.caret
+        %ul.dropdown-menu
+          %li
+            = link_to 'Print Invoice', "#", 'id' =>'print_picking_list', 'class' => 'print_button', 'url'=> "#{ picking_print_deliveries_url() }"
+          %li
+            = link_to 'Print Packing List', "#", 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
+          %li
+            = link_to 'Print Packing List(out of picking list)', "#", 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
+      %li
+        = link_to 'Delivery History', history_deliveries_url(), {:target => '_blank'}
