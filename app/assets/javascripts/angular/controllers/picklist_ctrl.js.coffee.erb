@@ -1,4 +1,4 @@
-app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scope, $resource, $http, $modal) ->
+app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$interval', ($scope, $resource, $http, $modal, $interval) ->
   picklist = $resource('/api/deliveries/picklist.json')
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
@@ -31,6 +31,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
     selectedItems: $scope.mySelections,
     multiSelect: false,
     enableHighlighting: true,
+    headerRowHeight: 40,
+    rowHeight: 40,
     enableCellEditOnFocus: true,
     sortInfo: { fields: ['product_name'], directions: ['asc']}
   }
@@ -86,21 +88,18 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', ($scop
   $scope.removeFocus = ->
     $scope.focusScanner = false
 
-  $scope.timer = ->
-    today = new Date()
-    $scope.time = today.toTimeString()
-
   $scope.focusScanner = true
   $scope.refreshUnpickedCount()
-  $scope.timer()
-  setInterval(
+
+  $scope.time = new Date().toTimeString()
+  $interval(
     ->
-      $('#current_time').click()
+      $scope.time = new Date().toTimeString()
     1000
   )
-  setInterval(
+  $interval(
     ->
-      $('#unpicked_order_count').click()
+      $scope.refreshUnpickedCount() 
     5000
   )
 

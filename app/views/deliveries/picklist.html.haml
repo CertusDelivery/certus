@@ -1,37 +1,33 @@
-
 %div{'ng-controller' => 'PicklistCtrl', 'class' => 'row'}
   = render "header"
-  %p
-    %span#current_time{'ng-click' => "timer()"}
-      {{time}}
-    |
-    Unpicked orders:
-    %span#unpicked_order_count{'ng-click' => "refreshUnpickedCount()"}
-      {{unpicked_count}}
-  %form{ "ng-submit" => "pickProduct(1)", 'class'=>'form-inline'}
-    = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "focus-me" => "focusScanner", placeholder: 'Item barcode', 'class' => 'form-control'
-    = submit_tag 'Submit Scanner Input', 'class'=>'btn btn-primary'
-    .flash
-      .error
-        {{errorMessage}}
-      .notice
-        {{notice}}
-
-  %p
-  %center
-    %h4 Products To Be Picked
-  %p
-  %hr
-  .current_product
-    %span Product Name:
-    %label {{mySelections[0].product_name}}
-    |
-    %span Location:
-    %label {{mySelections[0].location}}
-    |
-    %span Picking Progress:
-    %label {{mySelections[0].picking_progress}}
-    |
-    %span Store SKU:
-    %label {{mySelections[0].store_sku}}
-  #picklist.gridStyle{"ng-grid" => "gridOptions"}
+  %div.col-md-12{'style' => 'margin-top: 70px;'}
+    %center
+      %h1 Products To Be Picked
+    %div.row{'style' => 'margin:50px 0;'}
+      %div.col-sm-12.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
+        %form{ "ng-submit" => "pickProduct(1)", 'class'=>'form-inline'}
+          %div.input-group
+            = text_field_tag 'barcode', nil, "ng-model" => "scannedBarcode", "focus-me" => "focusScanner", placeholder: 'Item barcode', 'class' => 'form-control'
+            %span.input-group-btn
+              = submit_tag 'Submit Scanner', 'class'=>'btn btn-primary'
+          .flash
+            .error
+              {{errorMessage}}
+            .notice
+              {{notice}}
+    %div.row
+      %div.col-sm-12.col-md-8.col-lg-9
+        %p
+          %span#current_time
+            {{time}}
+          |
+          UNPICKED ORDERS:
+          %span#unpicked_order_count
+            {{unpicked_count}}
+      %div.col-sm-12.col-md-4.col-lg-3
+        %div.btn-group.pull-right{'style'=>'margin-top:-5px;margin-bottom:5px;'}
+          %button.btn.btn-default.btn-sm{'ng-click' => "markAsOutOfStock()"}
+            Out of Stock
+          %button.btn.btn-default.btn-sm{'ng-click' => "productDetail()"}
+            Product Detail
+    #picklist.gridStyle{"ng-grid" => "gridOptions"}

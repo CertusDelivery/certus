@@ -1,19 +1,14 @@
-.gridStyle {
-  border: 1px solid rgb(212, 212, 212);
-  height: 300px;
-}
-
 .flash {
   display: inline;
   color: #FFFFFF;
   .notice {
-    display: inline;
-    padding: 5px 0;
+    padding: 0px 10px;
+    margin: 5px 0;
     background: #7aa83d;
   }
   .error {
-    display: inline;
-    padding: 5px 0;
+    padding: 0px 10px;
+    margin: 5px 0;
     background: #864323
   }
 }
@@ -53,4 +48,8 @@
   .selected {
     background: #c9dde1;
   }
+}
+
+input, .btn {
+  border-radius: 0 !important;
 }
