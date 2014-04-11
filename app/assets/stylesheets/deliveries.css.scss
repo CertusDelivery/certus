@@ -53,3 +53,24 @@
 input, .btn {
   border-radius: 0 !important;
 }
+
+.barcode-form{
+  margin: 50px 0;
+}
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 30px;
+  width: 200px;
+  margin: -10px -100px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .barcode-form {
+    margin: 20px 0;
+  }
+  .navbar-center {
+    margin: -8px -100px;
+  }
+}

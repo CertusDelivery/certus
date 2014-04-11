@@ -30,7 +30,7 @@
   </div>
   <input id="productDetailScannedBarcode" focus-me="focusProductDetailScanner" ng-keyup="setScannedBarcode($event)" press-enter="pickProduct(1)" placeholder="Item barcode" type="text" class="ng-pristine ng-valid productDetailInput form-control">
   <button class="btn btn-primary" ng-click="pickProduct(1);" onclick="jQuery('#productDetailScannedBarcode').val('');" class="productDetailInput">Submit Scanner Input</button>
-  <div ng-show="mySelections[0].quantity != mySelections[0].picked_quantity + mySelections[0].out_of_stock_quantity">
+  <div style="margin-top: 15px;" ng-show="mySelections[0].quantity != mySelections[0].picked_quantity + mySelections[0].out_of_stock_quantity">
     <p><a class="btn btn-link" ng-click="markAsOutOfStock();" >Out Of Stock</a></p>
   </div>
 </div>

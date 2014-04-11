@@ -1,11 +1,13 @@
 app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$interval', ($scope, $resource, $http, $modal, $interval) ->
   picklist = $resource('/api/deliveries/picklist.json')
+  $scope.notice = ''
+  $scope.errorMessage = ''
   $scope.picklist = picklist.query()
   $scope.location_sort = 'asc'
   $scope.mySelections = []
   cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
   cellLocation = '<div ng-click=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
-  cellTemplatePicked = '<div ng-class="{hidden: row.getProperty(col.field) == \'PICKED\' ? false : true }" class="picked">✓</div>'
+  cellTemplatePicked = '<div ng-class="{picked:row.getProperty(\'picked_status\') == \'PICKED\' ? true: false}"><span ng-class="{hidden: row.getProperty(\'picked_status\') == \'PICKED\' ? false : true }">✓</span>{{row.getProperty(col.field)}}</div>'
 
   qtySortFn = (a, b) ->
     a_arr = a.split("/")
@@ -19,14 +21,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
-      {field: 'picking_progress', displayName: 'Qty', width: '10%', sortFn: qtySortFn },
-      {field: 'product_name', displayName: 'Product', width: '40%'},
-      {field: 'shipping_weight', visible: false},
-      {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, enableCellEditOnFocus:true, editableCellTemplate: cellEditableLocation, width: '15%'},
-      {field: 'delivery_id', displayName: 'ID', width: '10%'},
-      {field: 'picked_status', displayName: 'Picked', width: '10%', cellTemplate: cellTemplatePicked},
-      {field: 'store_sku', displayName: 'SKU', width: '15%'},
-      {field: 'id', visible: false}
+      {field: 'picking_progress', displayName: 'Qty', sortFn: qtySortFn, width:50 },
+      {field: 'product_name', displayName: 'Product', cellTemplate: cellTemplatePicked},
+      {field: 'delivery_id', displayName: 'ID', width: 50},
+      {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, enableCellEditOnFocus:true, editableCellTemplate: cellEditableLocation, headerClass: 'cellphone-hidden', cellClass: 'cellphone-hidden', width: 90},
+      {field: 'store_sku', displayName: 'SKU', width: 150}
     ],
     selectedItems: $scope.mySelections,
     multiSelect: false,
@@ -66,8 +65,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     )
 
   $scope.loadNewOrder = ->
-    $scope.notice = ''
-    $scope.errorMessage = ''
     loader = $resource('/api/deliveries/load_unpicked_order.json')
     $scope.picklist = loader.query()
     $scope.refreshUnpickedCount()
@@ -91,10 +88,21 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.focusScanner = true
   $scope.refreshUnpickedCount()
 
-  $scope.time = new Date().toTimeString()
+  format = (a)->
+    f = a
+    if a < 10
+      f = '0' + a
+    f
+  $scope.timer = ->
+    date = new Date()
+    hour = format date.getHours()
+    min = format date.getMinutes()
+    sec = format date.getSeconds()
+    $scope.time = hour + ':' + min + ':' + sec
+  $scope.timer()
   $interval(
     ->
-      $scope.time = new Date().toTimeString()
+      $scope.timer()
     1000
   )
   $interval(

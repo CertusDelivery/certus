@@ -9,7 +9,6 @@
         %span.icon-bar
         %span.icon-bar
       = link_to "Certus Delivery", "#", class: "navbar-brand"
-
     /Collect the nav links, forms, and other content for toggling
     %nav.navbar-collapse.bs-navbar-collapse.collapse#bs-example-navbar-collapse-1{collapse: "!isCollapsed"}
       %ul.nav.navbar-nav.navbar-right
@@ -20,8 +19,6 @@
           %ul.dropdown-menu
             %li
               = link_to 'Download New Order', "#", 'ng-click' => "loadNewOrder()"
-            %li
-              = link_to 'Remove Picked Orders', "#", 'ng-click' => "removePickedOrders()"
             %li
               = link_to 'Sort By Location', "#", 'ng-click' => "loadOrdersByLocation()"
             %li.divider

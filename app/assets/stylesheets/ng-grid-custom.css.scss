@@ -3,6 +3,10 @@
   border-top: 2px solid #ddd;
   border-bottom: 2px solid #ddd;
   height: 300px;
+  margin-bottom: 30px;
+  .ngViewport {
+    overflow-x: hidden;
+  }
 }
 
 .ngCell  {
@@ -11,6 +15,10 @@
   overflow:visible;
   position: static;
   padding: 5px 0;
+}
+
+.picked-cell {
+  text-align: center;
 }
 
 .ngRow {
