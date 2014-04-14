@@ -18,3 +18,4 @@
           %td{'style' => 'text-align:right'} $#{delivery.picked_total_price}
           %td #{delivery.delivery_items.size}
           %td #{delivery.picked_quantity}
+  = will_paginate @deliveires, :renderer => BootstrapLinkRender 

@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
   ## params
   #  store_sku: store SKU
   def index
-    @products = Product.all
+    @products = Product.page(params[:page])
   end
 
   def search

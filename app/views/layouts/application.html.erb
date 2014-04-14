@@ -12,7 +12,7 @@
   <script src="<%= asset_path('respond.min.js') %>"></script>
   <![endif]-->
 </head>
-<body ng-view>
+<body ng-view class="<%= "#{params[:controller]}_#{params[:action] }" %>">
   <div class="container">
     <%= yield %>
   </div>

@@ -15,5 +15,6 @@ $(document).ready ->
   $("#history table tbody tr").click ->
     $("#history table tbody tr").removeClass 'selected'
     $(this).addClass 'selected'
-  windowResize()
-  window.onresize = windowResize
+  if $(".deliveries_picklist").length > 0
+    windowResize()
+    window.onresize = windowResize

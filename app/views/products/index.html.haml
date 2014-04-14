@@ -1,10 +1,9 @@
-%p
+%div.row
   %center
-    Product List
-%p
-%hr
-%center.products-list
-  %table
+    %h4
+      Product List
+  %hr
+  %table.table
     %thead
       %tr
         %th Name
@@ -18,5 +17,4 @@
           %td= product.store_sku
           %td= product.location
           %td= product.price
-%p
-%hr
+  = will_paginate @products, :renderer => BootstrapLinkRender 

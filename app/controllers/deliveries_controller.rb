@@ -72,7 +72,7 @@ class DeliveriesController < ApplicationController
   def history
     # ids = DeliveryItem.where('picked_quantity != 0').pluck(:delivery_id)
     # @deliveries = Delivery.where(:id => ids)
-    @deliveries = Delivery.includes(:delivery_items).where('id in (select delivery_id from delivery_items where picked_quantity != 0)').order('placed_at desc')
+    @deliveries = Delivery.includes(:delivery_items).where('id in (select delivery_id from delivery_items where picked_quantity != 0)').page(params[:page]).order('placed_at desc')
   end
 
   private
