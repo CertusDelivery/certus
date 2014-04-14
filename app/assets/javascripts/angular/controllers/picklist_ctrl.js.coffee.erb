@@ -6,7 +6,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.location_sort = 'asc'
   $scope.mySelections = []
   cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
-  cellLocation = '<div ng-click=\"removeFocus()\">{{row.getProperty(col.field)}}</div>'
+  cellLocation = '<div ng-click=\"removeFocus();editCell();\">{{row.getProperty(col.field)}}</div>'
   cellTemplatePicked = '<div ng-class="{picked:row.getProperty(\'picked_status\') == \'PICKED\' ? true: false}"><span ng-class="{hidden: row.getProperty(\'picked_status\') == \'PICKED\' ? false : true }">✓</span>{{row.getProperty(col.field)}}</div>'
 
   qtySortFn = (a, b) ->
@@ -32,7 +32,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     enableHighlighting: true,
     headerRowHeight: 40,
     rowHeight: 40,
-    enableCellEditOnFocus: true,
     sortInfo: { fields: ['product_name'], directions: ['asc']}
   }
 

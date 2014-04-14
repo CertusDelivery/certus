@@ -49,10 +49,11 @@
     }
 
     .label{
-      padding: 3px 10px;
+      padding: 5px 20px;
       background: white;
       border: 1px solid #333;
-      border-radius: 12px;
+      border-radius: 20px;
+      margin-top:5px;
       color: black; cursor: pointer;
     }
 
@@ -60,6 +61,22 @@
       text-align: center;
       font-size: 14px;
       padding: 7px;
+    }
+  }
+  @media (max-width: 640px) {
+    .modal-dialog, .modal-content{
+      height: 100%;
+      min-height: 400px;
+    }
+    .product-detail-modal-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: white;
+    }
+    .product-detail-modal .label {
+      font-size: 14px;
+      padding: 10px 20px;
     }
   }
 }
