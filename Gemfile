@@ -35,4 +35,5 @@ end
 
 group :deployment do
   gem 'unicorn'
+  gem 'puma'
 end
