@@ -41,12 +41,13 @@
 
 .history {
   margin-top: 20px;
-  th, td {
-    text-align: center;
-    cursor: pointer;
-  }
+}
+.table-selected {
   .selected {
-    background: #c9dde1;
+    background: #d0eaff;
+  }
+  th, td {
+    cursor: pointer;
   }
 }
 

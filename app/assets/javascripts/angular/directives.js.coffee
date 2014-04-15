@@ -9,6 +9,7 @@ app.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
     )
     element.bind('blur', ->
       scope.$watch(model, (value) ->
+        console.log value
         if value == true
           $timeout( ->
             element[0].focus()

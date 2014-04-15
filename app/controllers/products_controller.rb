@@ -3,7 +3,15 @@ class ProductsController < ApplicationController
   ## params
   #  store_sku: store SKU
   def index
-    @products = Product.page(params[:page])
+    @products = Product.search(params[:search],params[:page])
+    if  @products.size == 1
+      @product = @products[0]
+      render 'show'
+    end
+  end
+
+  def show
+    @product ||= Product.find(params[:id])
   end
 
   def search

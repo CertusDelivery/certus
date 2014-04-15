@@ -7,3 +7,54 @@
     }
   }
 }
+.products_index {
+  .alert {
+    margin-top: 15px;
+    border-radius: 0;
+    overflow: auto;
+  }
+  .form-box{
+    margin-top: 20px;
+  }
+}
+.product-detail {
+  padding: 20px;
+  margin-top: 30px;
+  border: 3px solid #ccc;
+  .main-info {
+  }
+  .sub-info, .detail-info{
+    margin: 10px 0;
+    border-top: 1px dotted #ccc;
+    padding-top: 10px;
+    .col-md-6, .col-md-12 {
+      padding: 0;
+    }
+  }
+  strong {
+    display: inline-block;
+    width: 100px;
+    padding: 5px 0;
+  }
+  .detail-info {
+    strong {
+      display: block;
+    }
+  }
+  img {
+    border-radius: 0;
+    margin-top: 10px;
+    min-height: 180px;
+  }
+  .title {
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #ccc;
+  }
+}
+@media(max-width:768px) {
+  .product-detail {
+    border:0;
+    margin:0;
+    padding-top:0;
+  }
+}

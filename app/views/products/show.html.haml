@@ -1,0 +1,59 @@
+%div.row{'ng-controller' => 'ProductsCtrl'}
+  %div.col-md-8
+    %h3 Product Detail
+  %div.form-box.col-md-4
+    =render "search"
+  %div.clearfix
+  %hr
+  %div.product-detail.col-md-offset-2.col-md-8.col-sm-12
+    %div.row.main-info
+      %div.col-md-4.col-sm-4
+        %img.img-thumbnail{'src' => @product.image, 'width' => '100%'}
+      %div.col-md-8.col-sm-8
+        %h4.title #{@product.name}
+      %div.col-md-8.col-sm-8
+        <strong>SKU:</strong> #{@product.store_sku}
+      %div.col-md-8.col-sm-8
+        <strong>Location:</strong> #{@product.location}
+      %div.col-md-8.col-sm-8
+        <strong>Price:</strong> #{@product.price}
+      %div.col-md-8.col-sm-8
+        <strong>Weight:</strong> #{@product.shipping_weight} #{@product.shipping_weight_unit}
+      %div.col-md-8.col-sm-8
+        <strong>Brand:</strong> #{@product.brand}
+    %div.row.sub-info
+      %div.col-md-6.col-sm-6
+        %strong Category: 
+        #{@product.category.name if @product.category}       
+      %div.col-md-6.col-sm-6
+        %strong Status:
+        #{@product.stock_status} 
+      %div.col-md-6.col-sm-6
+        %strong Reg Price: 
+        #{@product.reg_price}       
+      %div.col-md-6.col-sm-6
+        %strong Unit Price:
+        #{@product.unit_price} / #{@product.unit_price_unit} 
+      %div.col-md-6.col-sm-6
+        %strong Taxable: 
+        #{'YES' if @product.taxable}       
+      %div.col-md-6.col-sm-6
+        %strong Tax Rate:
+        #{"#{@product.tax_rate*100}%" if @product.taxable} 
+      %div.col-md-6.col-sm-6
+        %strong Sale Qty Min: 
+        #{@product.sale_qty_min}       
+      %div.col-md-6.col-sm-6
+        %strong Sale Qty Limit:
+        #{@product.sale_qty_limit} 
+      %div.col-md-12.col-sm-12
+        %strong Size:
+        #{@product.size} 
+    %div.row.detail-info
+      %div.col-md-12
+        %strong Info 1
+        #{@product.info_1}
+      %div.col-md-12
+        %strong Info 2
+        #{@product.info_2}
+        

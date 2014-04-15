@@ -1,0 +1,7 @@
+app.controller('ProductsCtrl', ['$scope', '$interval', ($scope, $interval) ->
+  $interval(
+    ->
+      $scope.focusSearch = true 
+    500
+  )
+])
