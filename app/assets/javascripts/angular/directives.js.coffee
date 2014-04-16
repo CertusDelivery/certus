@@ -9,7 +9,6 @@ app.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
     )
     element.bind('blur', ->
       scope.$watch(model, (value) ->
-        console.log value
         if value == true
           $timeout( ->
             element[0].focus()
@@ -30,7 +29,42 @@ app.directive('pressEnter', ->
         scope.$apply(->
           scope.$eval(attrs.pressEnter)
         )
-        element.val('') 
+        element.val('')
         event.preventDefault()
     )
+)
+
+app.directive('clickToEdit', ->
+    editorTemplate = '<div class="click-to-edit">' +
+        '<div ng-hide="view.editorEnabled" ng-click="enableEditor()">' +
+            '{{value}}&nbsp;&nbsp;&nbsp;' +
+        '</div>' +
+        '<div ng-show="view.editorEnabled">' +
+            '<input ng-model="view.editableValue" ng-blur="save()" />' +
+        '</div>' +
+    '</div>'
+    {
+        restrict: "E",
+        replace: true,
+        template: editorTemplate,
+        scope: {
+            value: "=data",
+        },
+        link: ($scope, $element, $attrs)->
+            $scope.view = {
+                editableValue: $scope.value,
+                editorEnabled: false
+            }
+            $scope.enableEditor = ->
+                $scope.view.editorEnabled = true
+                $scope.view.editableValue = $scope.value
+
+            $scope.disableEditor = ->
+                $scope.view.editorEnabled = false
+
+            $scope.save = ->
+                $scope.value = $scope.view.editableValue
+                $scope.disableEditor()
+                $scope.$parent.$eval($attrs.afterSave)
+    }
 )

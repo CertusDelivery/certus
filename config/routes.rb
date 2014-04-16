@@ -22,7 +22,7 @@ Certus::Application.routes.draw do
         get 'history'
       end
     end
-    
+
     resources :delivery_items, only: [ :show ] do
       collection do
         post 'pick'
@@ -33,9 +33,12 @@ Certus::Application.routes.draw do
       end
     end
 
-    resources :products, only: [:index, :show] do
+    resources :products, only: [:index, :new, :create] do
       collection do
         get 'search/:store_sku' => 'products#search'
+      end
+      member do
+        post 'update_property'
       end
     end
   end

@@ -1,17 +1,37 @@
 class ProductsController < ApplicationController
-  
+
+  protect_from_forgery except: [:update_property]
+
   ## params
   #  store_sku: store SKU
   def index
     @products = Product.search(params[:search],params[:page])
-    if  @products.size == 1
-      @product = @products[0]
-      render 'show'
+  end
+
+  def new
+    @product = Product.new
+  end
+
+  def create
+    @product = Product.new(params[:product].permit!)
+    if @product.save()
+      redirect_to :action => 'index', :search => @product.store_sku
+    else
+      render :new
     end
   end
 
   def show
-    @product ||= Product.find(params[:id])
+    @product = Product.find(params[:id])
+  end
+
+  def update_property
+    begin
+      Product.find(params[:id]).update_column(params[:property], params[:value])
+      render json: { status: true }
+    rescue
+      render json: { status: false, message: 'operation failure!' }
+    end
   end
 
   def search

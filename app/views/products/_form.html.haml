@@ -1,0 +1,23 @@
+- if product.errors.any?
+  %div.alert.alert-danger
+    - product.errors.full_messages.each do |m|
+      %p=m
+
+= form_for product do |f|
+  %div.form-group
+    = f.label :name
+    = f.text_field :name, class: 'form-control'
+  %div.form-group
+    = f.label :price
+    = f.text_field :price, class: 'form-control'
+  %div.form-group
+    = f.label :location
+    = f.text_field :location, class: 'form-control'
+  %div.form-group
+    = f.label :store_sku
+    = f.text_field :store_sku, class: 'form-control'
+  %div.form-group
+    = f.label :stock_status
+    = f.text_field :stock_status, class: 'form-control'
+  %div.text-center
+    = f.submit 'submit', class: 'btn btn-primary', style: 'width: 100%'

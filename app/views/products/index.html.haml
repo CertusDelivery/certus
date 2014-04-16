@@ -5,26 +5,29 @@
     =render "search"
   %div.clearfix
   %div.col-md-12
+    %hr
     - if @products.size == 0
-      %div.alert.alert-warning 
-        %div.col-md-8 
+      %div.alert.alert-warning
+        %div.col-md-8
           <strong>Oops !!!</strong> The product is not Exist. <strong>Do you wanna add it?</strong>
         %div.col-md-4
-          %button.pull-right.btn.btn-primary.btn-xs
+          %a.pull-right.btn.btn-primary.btn-xs{"href" => new_product_path }
             Add Product
-    %hr
-    %table.table.table-hover.table-selected
-      %thead
-        %tr
-          %th Name
-          %th Store SKU
-          %th Location
-          %th Price
-      %tbody
-        - @products.each do |product|
-          %tr{'onclick' => "window.location='#{products_path()}?search=#{product.store_sku}'" }
-            %td= product.name
-            %td= product.store_sku
-            %td= product.location
-            %td= product.price
-    = will_paginate @products, :renderer => BootstrapLinkRender 
+    - if @products.size == 1
+      = render "detail", :product => @products[0]
+    - else
+      %table.table.table-hover.table-selected
+        %thead
+          %tr
+            %th Name
+            %th Store SKU
+            %th Location
+            %th Price
+        %tbody
+          - @products.each do |product|
+            %tr{'onclick' => "window.location='#{products_path()}?search=#{product.store_sku}'" }
+              %td= product.name
+              %td= product.store_sku
+              %td= product.location
+              %td= product.price
+      = will_paginate @products, :renderer => BootstrapLinkRender
