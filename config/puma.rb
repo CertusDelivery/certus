@@ -8,21 +8,24 @@ end
 
 basedir = Rails.root
 
+rackup      "#{basedir}/config.ru"
+
+port        ENV['PORT']     || 3000
+environment ENV['RAILS_ENV'] || 'development'
+
+daemonize true
+
+pidfile     "#{basedir}/tmp/pids/puma.pid"
+state_path  "#{basedir}/tmp/pids/puma.state"
+
+stdout_redirect "#{basedir}/log/stdout", "#{basedir}/log/stderr", true
+
 workers Integer(ENV['PUMA_WORKERS'] || 3)
 threads Integer(ENV['MIN_THREADS']  || 1), Integer(ENV['MAX_THREADS'] || 16)
 
 preload_app!
 
-port        ENV['PORT']     || 3000
-environment ENV['RAILS_ENV'] || 'development'
-
-
-bind        "unix://#{basedir}/tmp/puma/puma.certus.sock"
-pidfile     "#{basedir}/tmp/puma/pid"
-state_path  "#{basedir}/tmp/puma/state"
-rackup      "#{basedir}/config.ru"
-
-activate_control_app
+bind        "unix:///var/run/puma.certus.sock"
 
 on_worker_boot do
   # worker specific setup
