@@ -3,8 +3,8 @@ FactoryGirl.define do
     picked_status 'UNPICKED'
     picked_quantity 0
     store_sku { Faker.numerify('###############') }
+    location { FactoryGirl.create(:location) }
     client_sku { store_sku }
-    location { "#{Faker.numerify('##')}#{%w{N S E W}.sample}-#{Faker.numerify('##')}-#{Faker.numerify('#')}"}
     shipping_weight { Faker.numerify('##.##').to_f }
     picker_bin_number { Faker.numerify('#######') }
     payment_adjustment 0

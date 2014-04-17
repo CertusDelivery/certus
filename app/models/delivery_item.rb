@@ -1,6 +1,7 @@
 class DeliveryItem < ActiveRecord::Base
   # relationships .............................................................
   belongs_to :delivery
+  belongs_to :location
   #location rebuild
   attr_accessor :location_aisle_num, :location_direction, :location_front, :location_shelf
   after_find :location_rebuild

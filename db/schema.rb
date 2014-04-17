@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140417023528) do
+ActiveRecord::Schema.define(version: 20140417070549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(version: 20140417023528) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "store_sku"
-    t.text     "location"
     t.integer  "picked_quantity",          default: 0
     t.string   "picked_status"
     t.string   "substitute_sku"
@@ -92,12 +91,22 @@ ActiveRecord::Schema.define(version: 20140417023528) do
     t.integer  "out_of_stock_quantity",    default: 0
     t.integer  "scanned_quantity",         default: 0
     t.boolean  "is_replaced",              default: false
+    t.integer  "location_id"
   end
+
+  create_table "locations", force: true do |t|
+    t.string  "info"
+    t.string  "aisle"
+    t.string  "direction"
+    t.integer "distance"
+    t.integer "shelf"
+  end
+
+  add_index "locations", ["info"], name: "index_locations_on_info", unique: true, using: :btree
 
   create_table "products", force: true do |t|
     t.string   "name",                                      null: false
     t.string   "store_sku",                                 null: false
-    t.string   "location"
     t.decimal  "shipping_weight"
     t.string   "shipping_weight_unit"
     t.decimal  "adjustment"
@@ -119,6 +128,7 @@ ActiveRecord::Schema.define(version: 20140417023528) do
     t.text     "info_1"
     t.text     "info_2"
     t.boolean  "on_sale",              default: true
+    t.integer  "location_id"
   end
 
 end

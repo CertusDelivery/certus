@@ -3,7 +3,6 @@ json.(item,
   :picked_status,
   :product_name,
   :shipping_weight,
-  :location,
   :delivery_id,
   :picker_bin_number,
   :store_sku,
@@ -16,3 +15,4 @@ json.(item,
   :product_image,
   :price
 )
+json.location item.location.info if item.location

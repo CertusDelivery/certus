@@ -16,7 +16,7 @@ def create_delivery(picked_status = :unpicked)
     total_price += delivery_item.total_price
   end
   delivery.payment_amount = delivery.order_grand_total = delivery.order_total_price = total_price
-  delivery.save!
+  delivery.save
 end
 
 100.times do

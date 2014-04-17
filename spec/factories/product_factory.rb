@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :product do
     name { Faker::Product.product_name }
     store_sku { Faker.numerify('###############') }
-    location { "#{Faker.numerify('##')}#{%w{N S E W}.sample}-#{Faker.numerify('##')}-#{Faker.numerify('#')}"}
+    location { FactoryGirl.create(:location) }
     shipping_weight { Faker.numerify('##.##').to_f }
     shipping_weight_unit { %w{oz kg g liter}.sample }
     adjustment { Faker.numerify('#.#5') }

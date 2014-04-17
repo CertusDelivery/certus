@@ -1,5 +1,6 @@
 class Product < ActiveRecord::Base
   belongs_to :category
+  belongs_to :location
 
   validates_presence_of :name, :store_sku, :price
   validates_numericality_of :price, greater_than: 0
