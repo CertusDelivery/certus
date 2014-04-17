@@ -1,7 +1,7 @@
 %div.product-detail.col-md-offset-2.col-md-8.col-sm-12
   %div.row.main-info{'ng-init' => "product=#{product.to_json};watchProduct(product)"}
     %div.col-md-4.col-sm-4
-      %img.img-thumbnail{'src' => product.image, 'width' => '100%'}
+      %img.img-thumbnail{'src' => product.image, 'width' => '100%', 'style' => 'margin-top:25px;'}
     %div.col-md-8.col-sm-8
       %h4.title
         %click-to-edit{"data" => "product.name", "ng-click" => "removeFocus()", "after-save" => "updateProduct('name')"}
@@ -16,10 +16,18 @@
           %td
             %click-to-edit{"data" => "product.location", "ng-click" => "removeFocus()", "after-save" => "updateProduct('location')"}
         %tr
+          %th Regular Price:
+          %td
+            %click-to-edit{"data" => "product.reg_price", "ng-click" => "removeFocus()", "after-save" => "updateProduct('reg_price')"}
+        %tr
           %th Sale Price:
           %td
             %click-to-edit{"data" => "product.price", "ng-click" => "removeFocus()", "after-save" => "updateProduct('price')"}
         %tr
-          %th Status:
+          %th Stock Status:
           %td
-            %click-to-edit{"data" => "product.stock_status", "ng-click" => "removeFocus()", "after-save" => "updateProduct('stock_status')"}
+            %click-to-select{"data" => "product.stock_status", "ng-click" => "removeFocus()", "after-save" => "updateProduct('stock_status')", "options" => "#{Product::STOCK_STATUS.to_json}"}
+        %tr
+          %th On Sale:
+          %td
+            %click-to-select{"data" => "product.on_sale", "ng-click" => "removeFocus()", "after-save" => "updateProduct('on_sale')", "options" => "{\"YES\":true,\"NO\":false}"}

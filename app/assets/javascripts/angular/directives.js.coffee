@@ -68,3 +68,45 @@ app.directive('clickToEdit', ->
                 $scope.$parent.$eval($attrs.afterSave)
     }
 )
+
+app.directive('clickToSelect', ['$parse', ($parse) ->
+    selectorTemplate = '<div class="click-to-select">' +
+        '<div ng-hide="view.selectorEnabled" ng-click="enableSelector()">' +
+            '{{displayValue}}&nbsp;&nbsp;&nbsp;' +
+        '</div>' +
+        '<div ng-show="view.selectorEnabled">' +
+            '<select ng-blur="save()" ng-model="view.selectableValue" ng-options="key for (key, val) in view.options"></select>' +
+        '</div>' +
+    '</div>'
+    {
+        restrict: "E",
+        replace: true,
+        template: selectorTemplate,
+        scope: {
+            value: "=data",
+        },
+        link: ($scope, $element, $attrs)->
+            $scope.view = {
+                selectableValue: $scope.value,
+                options:         angular.fromJson($attrs.options)
+                selectorEnabled: false
+            }
+
+            $scope.runDisplayValue = ->
+              $scope.displayValue = if typeof($scope.value)=="boolean" then (if $scope.value then "YES" else "NO") else $scope.value
+            $scope.runDisplayValue()
+
+            $scope.enableSelector = ->
+                $scope.view.selectorEnabled = true
+                $scope.view.selectableValue = $scope.value
+
+            $scope.disableSelector = ->
+                $scope.view.selectorEnabled = false
+
+            $scope.save = ->
+                $scope.value = $scope.view.selectableValue
+                $scope.runDisplayValue()
+                $scope.disableSelector()
+                $scope.$parent.$eval($attrs.afterSave)
+    }
+])
