@@ -13,7 +13,7 @@ rackup      "#{basedir}/config.ru"
 port        ENV['PORT']     || 3000
 environment ENV['RAILS_ENV'] || 'development'
 
-daemonize true
+# daemonize true
 
 pidfile     "#{basedir}/tmp/pids/puma.pid"
 state_path  "#{basedir}/tmp/pids/puma.state"
