@@ -11,8 +11,8 @@ class DeliveriesController < ApplicationController
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
       end
-    rescue
-      render json: {:status => :nok, reason: 'Invalid Order'}, status: :bad_request
+    rescue => e
+      render json: {:status => :nok, reason: "Invalid Order. #{e.inspect}"}, status: :bad_request
     end
   end
 
