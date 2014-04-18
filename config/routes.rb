@@ -38,6 +38,7 @@ Certus::Application.routes.draw do
         get 'search/:store_sku' => 'products#search'
       end
       member do
+        post 'update_location'
         post 'update_property'
       end
     end

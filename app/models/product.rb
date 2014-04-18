@@ -1,9 +1,11 @@
 class Product < ActiveRecord::Base
+  include ModelInLocation
+
   belongs_to :category
   belongs_to :location
 
-  validates_presence_of :name, :store_sku, :price
-  validates_numericality_of :price, greater_than: 0
+  validates_presence_of :name, :store_sku
+  validates_numericality_of :price, greater_than: 0, :allow_blank => true
   validates_numericality_of :reg_price, greater_than: 0, :allow_blank => true
   
   validates_uniqueness_of :store_sku

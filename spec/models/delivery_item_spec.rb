@@ -48,39 +48,6 @@ describe DeliveryItem do
     end
   end
 
-  describe '#location_rebuild' do
-    it 'should return correct field value for location' do
-      @delivery_item = create(:delivery_item, :location => '01W--1')
-      item = DeliveryItem.find_by_location('01W--1')
-      item.location_aisle_num.should == 1
-      item.location_direction.should == 'W'
-      item.location_front.should == 0
-      item.location_shelf.should == 1
-
-      @delivery_item = create(:delivery_item, :location => '02--13')
-      item = DeliveryItem.find_by_location('02--13')
-      item.location_aisle_num.should == 2
-      item.location_direction.should == ''
-      item.location_front.should == 0
-      item.location_shelf.should == 13
-
-      @delivery_item = create(:delivery_item, :location => '04W-11-')
-      item = DeliveryItem.find_by_location('04W-11-')
-      item.location_aisle_num.should == 4
-      item.location_direction.should == 'W'
-      item.location_front.should == 11
-      item.location_shelf.should == 0
-
-      @delivery_item = create(:delivery_item, :location => '05E-23-09')
-      item = DeliveryItem.find_by_location('05E-23-09')
-      item.location_aisle_num.should == 5
-      item.location_direction.should == 'E'
-      item.location_front.should == 23
-      item.location_shelf.should == 9
-
-    end
-  end
-
   describe '#out_of_stock!' do
     it 'should update out_of_stock_quantity and out_of_stock_quantity should equal to (quantity - picked_quantity)' do
       delivery_item = create(:delivery_item, quantity: 4, picked_quantity: 1, out_of_stock_quantity: 0)
@@ -145,10 +112,10 @@ describe DeliveryItem do
 
   describe '#update_location' do
     it 'should update location' do
-      delivery_item = create(:delivery_item, location: "05W-11-89")
-      delivery_item.update_location("05W-23-09")
+      delivery_item = create(:delivery_item, location: Location.create_by_info("05W-11-89"))
+      delivery_item.update_location("05W-23-9")
       delivery_item.reload
-      delivery_item.location.should == '05W-23-09'
+      delivery_item.location.info.should == '05W-23-9'
     end
   end
 

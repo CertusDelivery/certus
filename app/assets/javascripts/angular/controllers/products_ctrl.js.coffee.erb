@@ -29,4 +29,18 @@ app.controller('ProductsCtrl', ['$scope', '$http', '$interval', ($scope, $http, 
         )
       200
     )
+
+  $scope.updateLocation = (property) ->
+    $scope.addFocus()
+    ov = $scope.product.location[property]
+    setTimeout(
+      ->
+        $http.post('/api/products/'+$scope.product.id+'/update_location',
+          property: property,
+          value: $scope.product.location[property]
+        ).success((data) ->
+          $scope.product.location = data.location
+        )
+      200
+    )
 ])

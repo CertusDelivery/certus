@@ -1,11 +1,11 @@
 class ProductsController < ApplicationController
 
-  protect_from_forgery except: [:update_property]
+  protect_from_forgery except: [:update_property, :update_location]
 
   ## params
   #  store_sku: store SKU
   def index
-    @products = Product.search(params[:search],params[:page])
+    @products = Product.includes(:location).search(params[:search],params[:page])
   end
 
   def new
@@ -27,11 +27,19 @@ class ProductsController < ApplicationController
 
   def update_property
     begin
-      Product.find(params[:id]).update_column(params[:property], params[:value])
+      product = Product.find(params[:id])
+      product[params[:property]] =  params[:value]
+      product.save!
       render json: { status: true }
     rescue
       render json: { status: false, message: 'operation failure!' }
     end
+  end
+
+  def update_location
+    product = Product.find(params[:id])
+    status = product.update_location(params[:value])
+    render json: { status: status , location: product.location }
   end
 
   def search

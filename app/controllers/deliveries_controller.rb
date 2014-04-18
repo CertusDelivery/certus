@@ -95,14 +95,14 @@ class DeliveriesController < ApplicationController
 
   def sort_picking_orders_by_location
     @delivery_items = picking_orders.map(&:delivery_items).flatten.sort! do |delivery_item_a, delivery_item_b|
-      if delivery_item_a.location_aisle_num != delivery_item_b.location_aisle_num #location_aisle_num
-        delivery_item_a.location_aisle_num <=> delivery_item_b.location_aisle_num
-      elsif delivery_item_a.location_direction != delivery_item_b.location_direction #location_direction
-        delivery_item_a.location_direction <=> delivery_item_b.location_direction
-      elsif delivery_item_a.location_front != delivery_item_b.location_front #location_front
-        delivery_item_a.location_front <=> delivery_item_b.location_front
-      elsif delivery_item_a.location_shelf != delivery_item_b.location_shelf #location_shelf
-        delivery_item_a.location_shelf <=> delivery_item_b.location_shelf
+      if delivery_item_a.location.aisle != delivery_item_b.location.aisle #location_aisle
+        delivery_item_a.location.aisle <=> delivery_item_b.location.aisle
+      elsif delivery_item_a.location.direction != delivery_item_b.location.direction #location_direction
+        delivery_item_a.location.direction <=> delivery_item_b.location.direction
+      elsif delivery_item_a.location.distance != delivery_item_b.location.distance #location_distance
+        delivery_item_a.location.distance <=> delivery_item_b.location.distance
+      elsif delivery_item_a.location.shelf != delivery_item_b.location.shelf #location_shelf
+        delivery_item_a.location.shelf <=> delivery_item_b.location.shelf
       else
         0
       end

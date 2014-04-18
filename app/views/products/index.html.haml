@@ -28,6 +28,6 @@
             %tr{'onclick' => "window.location='#{products_path()}?search=#{product.store_sku}'" }
               %td= product.name
               %td= product.store_sku
-              %td= product.location
+              %td= product.location.info
               %td= product.price
       = will_paginate @products, :renderer => BootstrapLinkRender

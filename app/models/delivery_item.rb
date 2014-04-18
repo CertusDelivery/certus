@@ -1,10 +1,9 @@
 class DeliveryItem < ActiveRecord::Base
+  include ModelInLocation
+
   # relationships .............................................................
   belongs_to :delivery
   belongs_to :location
-  #location rebuild
-  attr_accessor :location_aisle_num, :location_direction, :location_front, :location_shelf
-  after_find :location_rebuild
   # validations ...............................................................
   validates_presence_of :client_sku, :quantity, :price
   validates_numericality_of :price, greater_than: 0
@@ -92,17 +91,6 @@ class DeliveryItem < ActiveRecord::Base
     self.picked_quantity * self.price
   end
 
-  def update_location(item_location)
-    status = true
-    location_arr = LOCATION_REG.match(item_location)
-    status = false if location_arr.nil?
-    if status
-      self.location = item_location
-      self.save!
-    end
-    status
-  end
-
 
   # protected instance methods ................................................
   protected
@@ -122,11 +110,14 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def init_random_location_for_test
-    aisle_num = %w{01 12 03 04}.sample
-    direction = ["N", "S", "E", "W", ""].sample
-    front     = %w{10 20 66 90}.sample
-    shelf     = %w{1 2 3 4 5 6 7 8 9}.sample
-    self.location= "#{aisle_num}#{direction}-#{front}-#{shelf}" unless self.location
+    unless self.location
+      aisle_num = %w{01 12 03 04}.sample
+      direction = ["N", "S", "E", "W", ""].sample
+      front     = %w{10 20 66 90}.sample
+      shelf     = %w{1 2 3 4 5 6 7 8 9}.sample
+      
+      self.location= Location.create_by_info("#{aisle_num}#{direction}-#{front}-#{shelf}")
+    end
   end
 
   # FIXME
@@ -135,20 +126,4 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   # private instance methods ..................................................
-  private
-
-  def location_rebuild
-    begin
-      self.location_aisle_num = 0
-      self.location_direction = ''
-      self.location_front = 0
-      self.location_shelf = 0
-      location_arr = LOCATION_REG.match(location)
-      self.location_aisle_num = location_arr[:aisle_num].to_i
-      self.location_direction = location_arr[:direction].to_s.upcase
-      self.location_front = location_arr[:front].to_i
-      self.location_shelf = location_arr[:shelf].to_i
-    rescue
-    end
-  end
 end
