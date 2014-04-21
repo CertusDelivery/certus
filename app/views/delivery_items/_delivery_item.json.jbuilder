@@ -15,4 +15,4 @@ json.(item,
   :product_image,
   :price
 )
-json.location item.location.info if item.location
+json.location item.product.location.info if item.product && item.product.location

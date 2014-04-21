@@ -3,11 +3,12 @@ require 'spec_helper'
 describe DeliveriesController do
 
   describe "#create" do
-    it 'should response 400 when post error params' do
+    it 'should filt error params when post error params' do
       param = create_delivery_params
+      param[:delivery][:no_filed] = 'no filed in db'
       post :create, param
-      response.body.should == {:status => :nok, reason: 'Invalid Order'}.to_json
-      response.status.should == 400
+      response.body.should =={:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window:controller.instance_variable_get(:@delivery).desired_delivery_window }}.to_json
+      response.status.should == 200
     end
 
     it 'should response validate errors when post wrong params' do
@@ -110,18 +111,22 @@ describe DeliveriesController do
       #delivery 1
       delivery = FactoryGirl.build :delivery, :picking, order_sku_count: 3
       total_price = 0
+
+      @delivery_item_1 = FactoryGirl.build(:delivery_item)
       location1 = Location.new(aisle: '02', direction: 'W', distance: 1, shelf: 9)
-      @delivery_item_1 = FactoryGirl.build(:delivery_item, :location => location1)
+      product1 = FactoryGirl.create(:product, store_sku: @delivery_item_1.store_sku, location: location1)
       delivery.delivery_items << @delivery_item_1
       total_price += @delivery_item_1.price
 
+      @delivery_item_2 = FactoryGirl.build(:delivery_item)
       location2 = Location.new(aisle: '02', direction: 'W', distance: 2, shelf: 9)
-      @delivery_item_2 = FactoryGirl.build(:delivery_item, :location => location2)
+      product2 = FactoryGirl.create(:product, store_sku: @delivery_item_2.store_sku, location: location2)
       delivery.delivery_items << @delivery_item_2
       total_price += @delivery_item_2.price
 
+      @delivery_item_3 = FactoryGirl.build(:delivery_item)
       location3 = Location.new(aisle: '02', direction: '', distance: 1, shelf: 19)
-      @delivery_item_3 = FactoryGirl.build(:delivery_item, :location => location3)
+      product3 = FactoryGirl.create(:product, store_sku: @delivery_item_3.store_sku, location: location3)
       delivery.delivery_items << @delivery_item_3
       total_price += @delivery_item_3.price
 
@@ -131,13 +136,15 @@ describe DeliveriesController do
       delivery2 = FactoryGirl.build :delivery, :picking, order_sku_count: 2
       total_price = 0
 
+      @delivery2_delivery_item_4 = FactoryGirl.build(:delivery_item)
       location4 = Location.new(aisle: '01', direction: 'E', distance: 1, shelf: 9)
-      @delivery2_delivery_item_4 = FactoryGirl.build(:delivery_item, :location => location4)
+      product4 = FactoryGirl.create(:product, store_sku: @delivery2_delivery_item_4.store_sku, location: location4)
       delivery2.delivery_items << @delivery2_delivery_item_4
       total_price += @delivery2_delivery_item_4.price
 
+      @delivery2_delivery_item_5 = FactoryGirl.build(:delivery_item)
       location5 = Location.new(aisle: '02', direction: 'E', distance: 2, shelf: 29)
-      @delivery2_delivery_item_5 = FactoryGirl.build(:delivery_item, :location => location5)
+      product5 = FactoryGirl.create(:product, store_sku: @delivery2_delivery_item_5.store_sku, location: location5)
       delivery2.delivery_items << @delivery2_delivery_item_5
       total_price += @delivery2_delivery_item_5.price
       delivery2.payment_amount = delivery2.order_grand_total = delivery2.order_total_price = total_price

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140417070549) do
+ActiveRecord::Schema.define(version: 20140421022922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,7 +91,6 @@ ActiveRecord::Schema.define(version: 20140417070549) do
     t.integer  "out_of_stock_quantity",    default: 0
     t.integer  "scanned_quantity",         default: 0
     t.boolean  "is_replaced",              default: false
-    t.integer  "location_id"
   end
 
   create_table "locations", force: true do |t|

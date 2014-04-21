@@ -21,7 +21,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.gridOptions = {
     data: 'picklist',
     columnDefs: [
-      {field: 'picking_progress', displayName: 'Qty', sortFn: qtySortFn, width:50 },
+      {field: 'picking_progress', displayName: 'Qty', sortFn: qtySortFn, width:70 },
       {field: 'product_name', displayName: 'Product', cellTemplate: cellTemplatePicked},
       {field: 'delivery_id', displayName: 'ID', width: 50},
       {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, enableCellEditOnFocus:true, editableCellTemplate: cellEditableLocation, headerClass: 'cellphone-hidden', cellClass: 'cellphone-hidden', width: 90},

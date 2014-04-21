@@ -4,7 +4,7 @@ class DeliveriesController < ApplicationController
   def create
     begin
       #process auth, no auth, response 401(Unauthorized)
-      @delivery = Delivery.new(params[:delivery].permit!)
+      @delivery = Delivery.new(delivery_params)
       @delivery.picked_status = Delivery::PICKED_STATUS[:unpicked]
       if @delivery.save
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
@@ -86,7 +86,7 @@ class DeliveriesController < ApplicationController
   end
 
   def picking_orders
-    @deliveries ||= Delivery.includes(:delivery_items).picking.limit(Delivery::MAX_PICKING_COUNT)
+    @deliveries ||= Delivery.includes(:delivery_items => {:product => :location}).picking.limit(Delivery::MAX_PICKING_COUNT)
   end
 
   def picking_delivery_items
@@ -95,14 +95,16 @@ class DeliveriesController < ApplicationController
 
   def sort_picking_orders_by_location
     @delivery_items = picking_orders.map(&:delivery_items).flatten.sort! do |delivery_item_a, delivery_item_b|
-      if delivery_item_a.location.aisle != delivery_item_b.location.aisle #location_aisle
-        delivery_item_a.location.aisle <=> delivery_item_b.location.aisle
-      elsif delivery_item_a.location.direction != delivery_item_b.location.direction #location_direction
-        delivery_item_a.location.direction <=> delivery_item_b.location.direction
-      elsif delivery_item_a.location.distance != delivery_item_b.location.distance #location_distance
-        delivery_item_a.location.distance <=> delivery_item_b.location.distance
-      elsif delivery_item_a.location.shelf != delivery_item_b.location.shelf #location_shelf
-        delivery_item_a.location.shelf <=> delivery_item_b.location.shelf
+      location_a = begin delivery_item_a.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
+      location_b = begin delivery_item_b.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
+      if location_a.aisle != location_b.aisle #location_aisle
+        location_a.aisle <=> location_b.aisle
+      elsif location_a.direction != location_b.direction #location_direction
+        location_a.direction <=> location_b.direction
+      elsif location_a.distance != location_b.distance #location_distance
+        location_a.distance <=> location_b.distance
+      elsif location_a.shelf != location_b.shelf #location_shelf
+        location_a.shelf <=> location_b.shelf
       else
         0
       end
@@ -110,4 +112,7 @@ class DeliveriesController < ApplicationController
     @delivery_items
   end
 
+  def delivery_params
+    params.require(:delivery).permit(:customer_name, :shipping_address, :customer_email, :order_id, :client_id, :order_piece_count, :payment_id, :payment_card_token, :order_status, :picked_status, :order_grand_total, :payment_amount, :order_sku_count, :order_total_price, :placed_at, delivery_items_attributes: [:picked_status, :product_name, :quantity, :shipping_weight, :shipping_weight_unit, :picked_quantity, :picker_bin_number, :store_sku, :client_sku, :price])
+  end
 end

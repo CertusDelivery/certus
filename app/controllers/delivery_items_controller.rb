@@ -15,8 +15,8 @@ class DeliveryItemsController < ApplicationController
   end
 
   def update_location
-    status = delivery_item.update_location(params[:location])
-    render json: { status: status, location: delivery_item.location }
+    status = delivery_item.product.update_location(params[:location])
+    render json: { status: status, location: delivery_item.product.location }
   end
   
   def substitute

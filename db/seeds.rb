@@ -29,10 +29,15 @@ puts "Created 100 unpicked deliveries."
 end
 puts "Created 2 picking deliveries."
 
-200.times do
+DeliveryItem.all.each do |item|
+  FactoryGirl.create(:product, store_sku: item.store_sku)
+end
+puts "Created #{DeliveryItem.all.size} products for DeliveryItem."
+
+100.times do
   FactoryGirl.create(:product)
 end
-puts "Created 200 non-food products."
+puts "Created 100 non-food products."
 
 100.times do
   FactoryGirl.create(:product, :food)

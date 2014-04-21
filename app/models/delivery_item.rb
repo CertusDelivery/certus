@@ -1,9 +1,9 @@
 class DeliveryItem < ActiveRecord::Base
-  include ModelInLocation
 
   # relationships .............................................................
   belongs_to :delivery
-  belongs_to :location
+  belongs_to :product, primary_key: 'store_sku', foreign_key: 'store_sku'
+
   # validations ...............................................................
   validates_presence_of :client_sku, :quantity, :price
   validates_numericality_of :price, greater_than: 0
@@ -11,7 +11,7 @@ class DeliveryItem < ActiveRecord::Base
   #validate :order_to_delivery_convert
 
   # callbacks .................................................................
-  before_create :initial_picked_status, :init_random_location_for_test, :update_status_if_all_picked
+  before_create :initial_picked_status, :update_status_if_all_picked #,:init_random_location_for_test
   before_save :update_status_if_all_picked
   # TODO
   # before_save :calculate_amount
@@ -69,9 +69,11 @@ class DeliveryItem < ActiveRecord::Base
     self.update_attributes(out_of_stock_quantity: out_of_stock)
   end
 
+  # For Test
   def product_image
     "/products/#{['len', 'piggy', 'battery'][self.id%3]}.jpg"
   end
+
   alias :update_out_of_stock_quantity :out_of_stock!
 
   def replace!

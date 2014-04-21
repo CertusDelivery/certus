@@ -110,13 +110,4 @@ describe DeliveryItem do
     end
   end
 
-  describe '#update_location' do
-    it 'should update location' do
-      delivery_item = create(:delivery_item, location: Location.create_by_info("05W-11-89"))
-      delivery_item.update_location("05W-23-9")
-      delivery_item.reload
-      delivery_item.location.info.should == '05W-23-9'
-    end
-  end
-
 end
