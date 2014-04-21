@@ -5,7 +5,11 @@ class ProductsController < ApplicationController
   ## params
   #  store_sku: store SKU
   def index
-    @products = Product.includes(:location).search(params[:search],params[:page])
+    if params[:location_id]
+      @products = Product.where(location_id: params[:location_id]) 
+    else
+      @products = Product.includes(:location).search(params[:search],params[:page])
+    end
   end
 
   def new

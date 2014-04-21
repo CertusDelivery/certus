@@ -12,6 +12,9 @@ class Location < ActiveRecord::Base
 
   LOCATION_REG = /^(?<aisle>[a-zA-Z\d]{1,2}\d)(?<direction>(N|S|E|W))?-( |(?<distance>\d{1,3}))?-(?<shelf>\d{1,2})?$/
 
+  # scope
+  default_scope order(:aisle, :direction, :distance, :shelf)
+
   # call back
   before_validation :build_info
 
@@ -31,6 +34,10 @@ class Location < ActiveRecord::Base
       rescue => e
         nil
       end
+    end
+
+    def search(search, page)
+      paginate :per_page => 15, :page => page, :conditions => ["info = ?", "#{search}"]
     end
   end
 

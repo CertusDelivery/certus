@@ -1,5 +1,5 @@
 %div.product-detail.col-md-offset-2.col-md-8.col-sm-12
-  %div.row.main-info{'ng-init' => "product=#{product.to_json(include: :location)};watchProduct(product)"}
+  %div.row.main-info{'ng-init' => "product=#{product.to_json(include: :location)};"}
     %div.col-md-4.col-sm-4
       %img.img-thumbnail{'src' => product.image, 'width' => '100%', 'style' => 'margin-top:25px;'}
     %div.col-md-8.col-sm-8

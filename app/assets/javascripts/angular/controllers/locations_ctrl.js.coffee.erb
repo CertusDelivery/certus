@@ -1,0 +1,61 @@
+app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', ($scope, $http, $interval, $resource) ->
+
+  focusInterval = null
+  focusMethod = (flag)->
+    $interval.cancel(focusInterval) if focusInterval?
+    focusInterval = $interval(
+     ->
+       $scope.focusSearch = flag
+     500
+    )
+
+  $scope.addFocus = ->
+    focusMethod(true)
+  $scope.addFocus()
+
+  $scope.removeFocus = ->
+    focusMethod(false)
+
+  $scope.createLocation = (info) ->
+    $http.post('/api/locations/create_by_info',
+      info: info,
+    ).success((data) ->
+      if data.status
+        window.location = data.url
+      else
+        alert data.mess
+    )
+
+  # products at location
+  if $(".locations_show").length > 0
+    $scope.productlist = $resource(window.location.pathname+'/products.json').query()
+    $scope.mySelections = []
+    $scope.gridOptions = {
+      data: 'productlist',
+      columnDefs: [
+        {field: 'name', displayName: 'Name'},
+        {field: 'store_sku', displayName: 'Store SKU', width: 150},
+        {field: 'price', displayName: 'Price', width: 80},
+        {field: 'stock_status', displayName: 'Stock Status', width: 100}
+      ],
+      selectedItems: $scope.mySelections,
+      multiSelect: false,
+      enableHighlighting: true,
+      headerRowHeight: 40,
+      rowHeight: 40
+    }
+
+    $scope.$on('ngGridEventData', ->
+      $scope.selectUnpickedRow()
+    )
+
+    $scope.selectUnpickedRow = ->
+      found = false
+      angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
+        return if found
+        if row.entity.picked_status == 'UNPICKED'
+          $scope.gridOptions.selectRow(index, true)
+          found = true
+      if !found
+          $scope.gridOptions.selectRow(0, true)
+])

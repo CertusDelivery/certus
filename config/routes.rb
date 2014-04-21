@@ -42,6 +42,13 @@ Certus::Application.routes.draw do
         post 'update_property'
       end
     end
+
+    resources :locations do
+      collection do
+        post 'create_by_info' => 'locations#create_by_info'
+      end
+      resources :products, only: [:index, :create]
+    end
   end
 
   # Example resource route with options:

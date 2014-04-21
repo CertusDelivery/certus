@@ -1,0 +1,24 @@
+%div.row{'ng-controller' => 'LocationsCtrl'}
+  %div.col-md-8{'ng-init' => "location=#{@location.to_json};"}
+    %h3 Products At Location
+  %div.form-box.col-md-4
+    %form.form-inline{'action' => ''}
+      %div.input-group
+        = text_field_tag 'search', params[:search], "focus-me" => "focusSearch", placeholder: 'Product SKU', 'class' => 'form-control'
+        %span.input-group-btn
+          %button.btn.btn-default Search
+  %div.clearfix
+  %hr
+  %h3.text-center{'style' => 'margin:40px 0 50px;'}= @location.info
+  %div
+    - if 1 == 0
+      %div.alert.alert-warning
+        %div.col-md-8
+          <strong>Oops !!!</strong> The location is not Exist. Do you wanna add <strong>#{params[:search]}</strong>?
+        %div.col-md-4
+          %a.pull-right.btn.btn-default.btn-xs{"style" => "margin-left: 5px;", "href" => locations_path }
+            NO
+          %button.pull-right.btn.btn-primary.btn-xs{"ng-click" => "createLocation('#{params[:search]}')"}
+            YES
+    - else
+      .gridStyle{"ng-grid" => "gridOptions"}
