@@ -10,6 +10,14 @@ class Delivery < ActiveRecord::Base
     store_staging:  'STORE_STAGING'
   }
 
+  MESSAGE_STATUS = {
+    received:         'RECEIVED',
+    picked:           'PICKED',
+    out_for_delivery: 'OUT_FOR_DELIVERY',
+    arrive_soon:      'ARRIVE_SOON',
+    delivered:        'DELIVERED'
+  }
+
   has_many :delivery_items do
     def all_picked?
       collect do |item|
@@ -38,7 +46,7 @@ class Delivery < ActiveRecord::Base
   accepts_nested_attributes_for :delivery_items
 
   # callbacks .................................................................
-  before_create :initial_delivery_window
+  before_create :initial_delivery_window, :setup_status
 
   # class methods .............................................................
 
@@ -69,7 +77,10 @@ class Delivery < ActiveRecord::Base
   end
 
   def complete!
-    self.update_attributes({ picked_status: PICKED_STATUS[:store_staging]}) if can_be_complete?
+    if can_be_complete?
+      self.update_attributes({ picked_status: PICKED_STATUS[:store_staging], message_status: MESSAGE_STATUS[:picked]})
+      UserMailer.customer_notification(self).deliver
+    end
   end
 
   def picked_total_price
@@ -85,6 +96,11 @@ class Delivery < ActiveRecord::Base
 
   def initial_delivery_window
     self.desired_delivery_window = DateTime.current + 6.hours unless self.desired_delivery_window
+  end
+
+  def setup_status
+    self.picked_status = PICKED_STATUS[:unpicked] unless self.picked_status
+    self.message_status = MESSAGE_STATUS[:received]
   end
 
   def order_to_delivery_convert

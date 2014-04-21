@@ -1,0 +1,25 @@
+﻿!!! 5
+%html
+  %head
+    %title
+      Print Preview
+    :css
+      <!--
+      *{margin: 0; padding: 0}
+      @media print { .no-print, .no-print * { display: none !important; } }
+      @page { size: auto; margin: 1cm}
+      #print_page{
+        width: 550px;
+        margin:10px auto;
+      }
+      #print_page table,#print_page tr td, #print_page tr th{
+        text-align: left;
+        border-collapse: collapse;
+      }
+      -->
+
+  %body
+    #print_page{style: "width: 550px; margin: 0 auto;"}
+      - @deliveries.each do |delivery|
+        = render :partial => "deliveries/print_delivery",:locals => {:delivery => delivery}
+        %div{style: "page-break-after:always;border-bottom: 1px #cccccc dotted;"}

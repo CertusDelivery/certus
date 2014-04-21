@@ -5,8 +5,8 @@ class DeliveriesController < ApplicationController
     begin
       #process auth, no auth, response 401(Unauthorized)
       @delivery = Delivery.new(delivery_params)
-      @delivery.picked_status = Delivery::PICKED_STATUS[:unpicked]
       if @delivery.save
+        UserMailer.customer_notification(@delivery).deliver
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity

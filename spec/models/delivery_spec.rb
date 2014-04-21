@@ -97,6 +97,7 @@ describe Delivery do
       expect(@delivery.can_be_complete?).to be_true
       @delivery.complete!
       expect(@delivery.store_staging?).to be_true
+      expect(@delivery.message_status).to eq(Delivery::MESSAGE_STATUS[:picked])
     end
   end
 
@@ -158,5 +159,11 @@ describe Delivery do
       end
     end
   end
-  
+
+  describe "#initial_status" do
+    it 'should initial delivery status' do
+      expect(@delivery.picked_status).to eq(Delivery::PICKED_STATUS[:unpicked])
+      expect(@delivery.message_status).to eq(Delivery::MESSAGE_STATUS[:received])
+    end
+  end
 end
