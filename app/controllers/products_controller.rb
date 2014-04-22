@@ -17,7 +17,8 @@ class ProductsController < ApplicationController
   end
 
   def create
-    @product = Product.new(params[:product].permit!)
+    @product = Product.new(product_params)
+    @product.location = Location.create_by_info(params[:product][:location])
     if @product.save()
       redirect_to :action => 'index', :search => @product.store_sku
     else
@@ -72,5 +73,10 @@ class ProductsController < ApplicationController
     else
       render json: { status: 'nok', messages: product.errors.full_messages.as_json}, status: :not_found
     end
+  end
+
+  private
+  def product_params
+    params.require(:product).permit(:name, :store_sku, :reg_price, :price, :stock_status, :on_sale, :location_id) 
   end
 end

@@ -12,7 +12,7 @@
           <strong>Oops !!!</strong> The product doesn't exist. <strong>Do you wanna create one?</strong>
         %div.col-md-4
           %a.pull-right.btn.btn-primary.btn-xs{"href" => new_product_path }
-            Add Product
+            Create Product
     - if @products.size == 1
       = render "detail", :product => @products[0]
     - else
