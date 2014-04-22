@@ -35,10 +35,6 @@ class Location < ActiveRecord::Base
         nil
       end
     end
-
-    def search(search, page)
-      paginate :per_page => 15, :page => page, :conditions => ["info = ?", "#{search}"]
-    end
   end
 
   # private methods

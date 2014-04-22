@@ -1,4 +1,4 @@
-app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', ($scope, $http, $interval, $resource) ->
+app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$modal', ($scope, $http, $interval, $resource, $modal) ->
 
   focusInterval = null
   focusMethod = (flag)->
@@ -28,15 +28,17 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', ($
 
   # products at location
   if $(".locations_show").length > 0
+    # $scope.location is defined at page
     $scope.productlist = $resource(window.location.pathname+'/products.json').query()
+    $scope.product = {'store_sku':''}
     $scope.mySelections = []
     $scope.gridOptions = {
       data: 'productlist',
       columnDefs: [
         {field: 'name', displayName: 'Name'},
-        {field: 'store_sku', displayName: 'Store SKU', width: 150},
-        {field: 'price', displayName: 'Price', width: 80},
-        {field: 'stock_status', displayName: 'Stock Status', width: 100}
+        {field: 'stock_status', displayName: 'Stock Status', width: 120}
+        {field: 'price', displayName: 'Price', width: 50},
+        {field: 'store_sku', displayName: 'Store SKU', width: 130},
       ],
       selectedItems: $scope.mySelections,
       multiSelect: false,
@@ -45,17 +47,61 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', ($
       rowHeight: 40
     }
 
-    $scope.$on('ngGridEventData', ->
-      $scope.selectUnpickedRow()
-    )
+    $scope.locationProduct = ()->
+      return unless $scope.product.store_sku
+      $http.get(window.location.pathname+'/products/relocation/'+$scope.product.store_sku+'.json').success((product) ->
+        needInsertFlag = true
+        angular.forEach $scope.productlist, (row, index) ->
+          if row.id == product.id
+            needInsertFlag = false
+            angular.forEach product, (v, k) ->
+              row[k] = v
+            $scope.gridOptions.selectItem(index, true)
+        if needInsertFlag
+          index = $scope.productlist.push product
+          setTimeout( ->
+            $scope.gridOptions.selectItem(index-1, true)
+          , 0)
+        $scope.product.store_sku = ''
+      ).error((data) ->
+        ensureMsg = 'Product('+$scope.product.store_sku+') is not Exist.Do you wanna create one?'
+        if confirm ensureMsg
+          $scope.productForm()
+      )
 
-    $scope.selectUnpickedRow = ->
-      found = false
-      angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
-        return if found
-        if row.entity.picked_status == 'UNPICKED'
-          $scope.gridOptions.selectRow(index, true)
-          found = true
-      if !found
-          $scope.gridOptions.selectRow(0, true)
+    $scope.productForm = ->
+      $scope.removeFocus()
+      $scope.product.price = ''
+      $scope.product.name = ''
+      $scope.productFormModal = $modal.open {
+        templateUrl: "<%= asset_path('angular/templates/product_form.html') %>",
+        backdrop: 'static',
+        keyboard: false,
+        windowClass: 'product-modal-form'
+        scope: ( ->
+          $scope
+        )()
+     }
+
+    $scope.createProduct = ->
+      if $scope.product.store_sku is '' || $scope.product.name is '' || $scope.product.price is ''
+        $scope.errorMessages = ['please fill this form at first']
+      else
+        $scope.errorMessages = []
+        $scope.product.location_id = $scope.location.id
+        $http.post(window.location.pathname+'/products/create_at_location', product: $scope.product).success((product) ->
+          index = $scope.productlist.push product
+          setTimeout( ->
+            $scope.gridOptions.selectItem(index-1, true)
+          , 0)
+          $scope.product.store_sku = ''
+          $scope.dismissProductForm()
+        ).error((data) ->
+          $scope.errorMessages = data.messages
+        )
+
+    $scope.dismissProductForm = ->
+      $scope.addFocus()
+      $scope.errorMessages = []
+      $scope.productFormModal.close()
 ])

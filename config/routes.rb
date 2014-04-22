@@ -47,7 +47,12 @@ Certus::Application.routes.draw do
       collection do
         post 'create_by_info' => 'locations#create_by_info'
       end
-      resources :products, only: [:index, :create]
+      resources :products, only: [:index, :create] do
+        collection do
+          get 'relocation/:store_sku' => 'products#relocation'
+          post 'create_at_location'
+        end
+      end
     end
   end
 

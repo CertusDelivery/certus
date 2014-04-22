@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
 
-  protect_from_forgery except: [:update_property, :update_location]
+  protect_from_forgery except: [:update_property, :update_location, :create_at_location]
 
   ## params
   #  store_sku: store SKU
@@ -52,6 +52,25 @@ class ProductsController < ApplicationController
       render :search
     else
       render json: { status: 'nok', message: "Not Found."}, status: :not_found
+    end
+  end
+
+  # for locations/:location_id/products
+  def relocation
+    product = Product.relocation(params[:store_sku], params[:location_id])
+    if product
+      render json: product.as_json
+    else
+      render json: { status: 'nok', message: "Not Found."}, status: :not_found
+    end
+  end
+
+  def create_at_location
+    product = Product.new(params[:product].permit!)
+    if product.save()
+      render json: product.as_json
+    else
+      render json: { status: 'nok', messages: product.errors.full_messages.as_json}, status: :not_found
     end
   end
 end
