@@ -64,7 +64,7 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$
           , 0)
         $scope.product.store_sku = ''
       ).error((data) ->
-        ensureMsg = 'Product('+$scope.product.store_sku+') doesn't Exist.Do you wanna create one?'
+        ensureMsg = 'Product('+$scope.product.store_sku+') doesn\'t Exist.Do you wanna create one?'
         if confirm ensureMsg
           $scope.productForm()
       )
