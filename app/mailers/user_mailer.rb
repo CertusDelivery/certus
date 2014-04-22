@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def delivery_mail(deliveries)
     @deliveries = deliveries
-    mail(:to => "henry.yanbf@gmail.com", :subject => 'Delivery Picking List')
+    mail(:to => "deliveries@certusdelivery.com", :subject => 'Delivery Picking List')
   end
 
   def customer_notification(delivery)
