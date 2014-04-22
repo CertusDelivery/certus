@@ -9,7 +9,7 @@
     - if @products.size == 0
       %div.alert.alert-warning
         %div.col-md-8
-          <strong>Oops !!!</strong> The product is not Exist. <strong>Do you wanna add it?</strong>
+          <strong>Oops !!!</strong> The product doesn't exist. <strong>Do you wanna create one?</strong>
         %div.col-md-4
           %a.pull-right.btn.btn-primary.btn-xs{"href" => new_product_path }
             Add Product
@@ -28,6 +28,6 @@
             %tr{'onclick' => "window.location='#{products_path()}?search=#{product.store_sku}'" }
               %td= product.name
               %td= product.store_sku
-              %td= product.location.info
+              %td= product.location.info if product.location
               %td= product.price
       = will_paginate @products, :renderer => BootstrapLinkRender
