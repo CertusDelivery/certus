@@ -7,8 +7,8 @@ class Location < ActiveRecord::Base
   validates_uniqueness_of :info
   validates_presence_of :aisle
   validates_inclusion_of :direction, in: %w{E W S N}, allow_blank: true
-  validates_numericality_of :distance, only_integer: true, greater_than: 0, less_than: 100, :allow_blank => true
-  validates_numericality_of :shelf, only_integer: true, greater_than: 0, :allow_blank => true
+  validates_numericality_of :distance, only_integer: true, less_than: 1000, :allow_blank => true
+  validates_numericality_of :shelf, only_integer: true, :allow_blank => true
 
   LOCATION_REG = /^(?<aisle>[a-zA-Z\d]{1,2}\d)(?<direction>(N|S|E|W))?-( |(?<distance>\d{1,3}))?-(?<shelf>\d{1,2})?$/
 
@@ -39,6 +39,6 @@ class Location < ActiveRecord::Base
   # private methods
   private
   def build_info
-    self.info = "#{self.aisle}#{self.direction}-#{self.distance}-#{self.shelf}"
+    self.info = "#{self.aisle}#{self.direction}-#{self.distance == 0 ? '' : self.distance}-#{self.shelf == 0 ? '' : self.shelf}"
   end
 end
