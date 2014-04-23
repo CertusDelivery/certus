@@ -10,6 +10,7 @@ gem 'jquery-rails'
 gem 'json'
 gem 'pg'
 gem 'rails', '4.0.3'
+gem 'typhoeus'
 gem 'will_paginate'
 gem 'nested_form'
 gem "inherited_resources", "~> 1.4.1"

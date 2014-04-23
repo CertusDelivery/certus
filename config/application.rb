@@ -1,4 +1,7 @@
 require File.expand_path('../boot', __FILE__)
+require 'rails/all'
+
+require File.join(__FILE__, '..', 'postinitialize')
 
 # Pick the frameworks you want:
 require "active_record/railtie"

@@ -53,6 +53,7 @@ describe DeliveryItem do
       delivery_item = create(:delivery_item, quantity: 4, picked_quantity: 1, out_of_stock_quantity: 0)
       delivery_item.out_of_stock!
       expect(delivery_item.out_of_stock_quantity).to eq(3)
+      expect(delivery.product.stock_status).to eq('OUT_OF_STOCK')
     end
   end
 

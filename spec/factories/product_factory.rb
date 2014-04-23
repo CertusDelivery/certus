@@ -9,6 +9,7 @@ FactoryGirl.define do
     price { Faker.numerify('##.#1') }
     taxable true
     tax_rate 0.0635
+    stock_stauts 'IN_STOCK'
 
     trait :food do
       taxable false
