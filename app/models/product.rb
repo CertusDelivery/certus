@@ -18,7 +18,7 @@ class Product < ActiveRecord::Base
 
   def self.relocation(store_sku, location_id)
     begin
-      if store_sku.present? || location_id.present?
+      if store_sku.present? && location_id.present?
         product = Product.where(store_sku: store_sku).first
         product.location_id = location_id
         product.stock_status = Product::STOCK_STATUS[:in_stock]

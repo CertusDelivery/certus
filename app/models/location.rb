@@ -13,7 +13,7 @@ class Location < ActiveRecord::Base
   LOCATION_REG = /^(?<aisle>[a-zA-Z\d]{1,2}\d)(?<direction>(N|S|E|W))?-( |(?<distance>\d{1,3}))?-(?<shelf>\d{1,2})?$/
 
   # scope
-  default_scope order(:aisle, :direction, :distance, :shelf)
+  default_scope { order(:aisle, :direction, :distance, :shelf) }
 
   # call back
   before_validation :build_info
@@ -24,7 +24,6 @@ class Location < ActiveRecord::Base
       begin
         new_location = Location.new
         location_arr   = LOCATION_REG.match(info)
-        puts location_arr
         new_location.aisle     = location_arr[:aisle].to_s
         new_location.direction = location_arr[:direction].to_s.upcase
         new_location.distance  = location_arr[:distance].to_i
