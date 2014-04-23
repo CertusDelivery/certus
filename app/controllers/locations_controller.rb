@@ -4,7 +4,7 @@ class LocationsController < ApplicationController
     if params[:search].blank?
       @locations = Location.includes(:products).paginate(per_page: 15, page: params[:page])
     else
-      @locations = Location.where("info=?", params[:search])
+      @locations = Location.at_info(params[:search])
       if @locations.size != 0
         redirect_to location_path(@locations.first)
       end

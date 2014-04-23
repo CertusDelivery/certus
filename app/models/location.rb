@@ -10,8 +10,6 @@ class Location < ActiveRecord::Base
   validates_numericality_of :distance, only_integer: true, less_than: 1000, :allow_blank => true
   validates_numericality_of :shelf, only_integer: true, :allow_blank => true
 
-  LOCATION_REG = /^(?<aisle>[a-zA-Z\d]{1,2}\d)(?<direction>(N|S|E|W))?-( |(?<distance>\d{1,3}))?-(?<shelf>\d{1,2})?$/
-
   # scope
   default_scope { order(:aisle, :direction, :distance, :shelf) }
 
@@ -23,8 +21,9 @@ class Location < ActiveRecord::Base
     def create_by_info(info)
       begin
         new_location = Location.new
-        location_arr   = LOCATION_REG.match(info)
-        new_location.aisle     = location_arr[:aisle].to_s
+        location_arr   = Product::LOCATION_REG.match(info)
+        new_location.aisle     = location_arr[:aisle].to_i.to_s
+        return nil if new_location.aisle.to_i == 0
         new_location.direction = location_arr[:direction].to_s.upcase
         new_location.distance  = location_arr[:distance].to_i
         new_location.shelf     = location_arr[:shelf].to_i
@@ -34,11 +33,24 @@ class Location < ActiveRecord::Base
         nil
       end
     end
+
+    def at_info(info)
+      location_arr   = Product::LOCATION_REG.match(info)
+      if  location_arr
+        location_arr = Hash[location_arr.names.zip(location_arr.captures)]
+        location_arr['distance'] = 0 if location_arr['distance'].blank? 
+        location_arr['shelf'] = 0 if location_arr['shelf'].blank? 
+        where(location_arr)
+      else
+        includes(:products).paginate(per_page: 15, page: 1)
+      end
+    end
   end
 
   # private methods
   private
   def build_info
-    self.info = "#{self.aisle}#{self.direction}-#{self.distance == 0 ? '' : self.distance}-#{self.shelf == 0 ? '' : self.shelf}"
+    aisle = self.aisle.length < 3 ? '0' * (3-self.aisle.length) + self.aisle : self.aisle 
+    self.info = "#{aisle}#{self.direction}-#{self.distance == 0 ? '' : self.distance}-#{self.shelf == 0 ? '' : self.shelf}"
   end
 end

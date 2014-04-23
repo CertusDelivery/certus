@@ -202,8 +202,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       $http.post('/api/delivery_items/'+row.id+'/update_location',
         location: row.location
       ).success((data) ->
-        if data.status is false
-          row.location = data.location.info
+        row.location = data.location.info
       )
     $scope.addFocus()
 
