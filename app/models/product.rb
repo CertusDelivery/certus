@@ -45,26 +45,20 @@ class Product < ActiveRecord::Base
         sku: self.store_sku
       },
       headers: {
-        referers: "http://#{APP_CONFIG[:domain]}"
+        referer: "http://#{APP_CONFIG[:domain]}"
       }
     }
-    need_propagate = false
-    if self.new_record?
-      need_propagate = true
+    if self.new_record? || stock_status_changed?
       options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale'))
-    elsif stock_status_changed?
-      need_propagate = true
-      options[:body][:stock_status] = self.stock_status
-    end
-    if need_propagate
+      logger = Logger.new(Rails.root.join('log/typhoeus.log'))
       begin
-        logger = Logger.new(Rails.root.join('log/typhoeus.log'))
         logger.info "--------------BEGIN--------"
+        logger.info "Action: #{self.new_record? ? 'Create' : 'Update'}"
         logger.info "URL: #{"http://#{APP_CONFIG[:web_shop]}/wc-api.php"}"
         logger.info "Options: #{options.inspect}"
         response = Typhoeus::Request.post("http://#{APP_CONFIG[:web_shop]}/wc-api.php", options)
-        logger.info "Success: #{response.success?}"
-        logger.info "Response: #{response.inspect}"
+        logger.info "Success: #{response.success?}  Code: #{response.code}"
+        logger.info "Response: #{response.inspect}" unless response.success?
         logger.info "--------------END----------"
       rescue => e
         logger.error "Exception: #{e.inspect}"
