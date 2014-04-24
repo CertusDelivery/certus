@@ -20,14 +20,15 @@ class Location < ActiveRecord::Base
   class << self
     def create_by_info(info)
       begin
-        new_location = Location.new
-        location_arr   = Product::LOCATION_REG.match(info)
-        new_location.aisle     = location_arr[:aisle].to_i.to_s
-        return nil if new_location.aisle.to_i == 0
-        new_location.direction = location_arr[:direction].to_s.upcase
-        new_location.distance  = location_arr[:distance].to_i
-        new_location.shelf     = location_arr[:shelf].to_i
-        new_location.save!
+        location_hash = Product::generate_location_hash(info)
+        if location_hash
+          new_location           = Location.new
+          new_location.aisle     = location_hash['aisle']
+          new_location.direction = location_hash['direction']
+          new_location.distance  = location_hash['distance'].to_i
+          new_location.shelf     = location_hash['shelf'].to_i
+          new_location.save!
+        end
         new_location
       rescue => e
         nil
@@ -35,14 +36,11 @@ class Location < ActiveRecord::Base
     end
 
     def at_info(info)
-      location_arr   = Product::LOCATION_REG.match(info)
-      if  location_arr
-        location_arr = Hash[location_arr.names.zip(location_arr.captures)]
-        location_arr['distance'] = 0 if location_arr['distance'].blank? 
-        location_arr['shelf'] = 0 if location_arr['shelf'].blank? 
-        where(location_arr)
+      location_hash = Product.generate_location_hash(info)
+      if location_hash 
+        where(location_hash)
       else
-        includes(:products).paginate(per_page: 15, page: 1)
+        where("info = ?", info)
       end
     end
   end
@@ -50,7 +48,6 @@ class Location < ActiveRecord::Base
   # private methods
   private
   def build_info
-    aisle = self.aisle.length < 3 ? '0' * (3-self.aisle.length) + self.aisle : self.aisle 
-    self.info = "#{aisle}#{self.direction}-#{self.distance == 0 ? '' : self.distance}-#{self.shelf == 0 ? '' : self.shelf}"
+    self.info = Product.generate_location_info("#{self.aisle}#{self.direction}-#{self.distance}-#{self.shelf}")
   end
 end

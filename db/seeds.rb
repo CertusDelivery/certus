@@ -34,7 +34,7 @@ end
 puts "Created 2 picking deliveries."
 
 DeliveryItem.all.each do |item|
-  FactoryGirl.create(:product, store_sku: item.store_sku)
+  FactoryGirl.create(:product, store_sku: item.store_sku, name: item.product_name, price: item.price)
 end
 puts "Created #{DeliveryItem.all.size} products for DeliveryItem."
 
