@@ -25,7 +25,10 @@ app.controller('ProductsCtrl', ['$scope', '$http', '$interval', ($scope, $http, 
           property: property,
           value: $scope.product[property]
         ).success((data) ->
-          $scope.product[property] = ov unless data.status
+          if data.status
+            $scope.product[property] = data.value 
+          else
+            $scope.product[property] = ov 
         )
       200
     )

@@ -1,3 +1,5 @@
+require 'float_ext'
+
 class Product < ActiveRecord::Base
   include ModelInLocation
 
@@ -8,8 +10,8 @@ class Product < ActiveRecord::Base
   validates_uniqueness_of :store_sku
 
   validates_numericality_of :price, :reg_price, greater_than: 0, :allow_blank => true
-  validates_format_of :price, :reg_price, :with => /\A\d+(\.{1}\d{1,2})?\z/, :allow_blank => true
 
+  before_save :format_price
   before_save :propagate_to_client
   
   STOCK_STATUS = { in_stock: 'IN_STOCK', out_of_stock: 'OUT_OF_STOCK' }
@@ -36,6 +38,11 @@ class Product < ActiveRecord::Base
 
   def out_of_stock!
     self.update_attributes(stock_status: STOCK_STATUS[:out_of_stock])
+  end
+
+  def format_price
+    self.price = self.price.to_f.round_down(2) unless self.price.blank?
+    self.reg_price = self.reg_price.to_f.round_down(2) unless self.reg_price.blank? 
   end
 
   def propagate_to_client

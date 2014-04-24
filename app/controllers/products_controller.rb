@@ -35,7 +35,7 @@ class ProductsController < ApplicationController
       product = Product.find(params[:id])
       product[params[:property]] =  params[:value]
       product.save!
-      render json: { status: true }
+      render json: { status: true, value: product[params[:property]] }
     rescue
       render json: { status: false, message: 'operation failure!' }
     end
