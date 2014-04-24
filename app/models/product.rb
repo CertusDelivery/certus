@@ -45,20 +45,27 @@ class Product < ActiveRecord::Base
         sku: self.store_sku
       }
     }
+    need_propagate = false
     if self.new_record?
+      need_propagate = true
       options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale'))
-    else
-      options[:body][:stock_status] = self.stock_status if stock_status_changed?
+    elsif stock_status_changed?
+      need_propagate = true
+      options[:body][:stock_status] = self.stock_status
     end
-    logger = Logger.new(Rails.root.join('log/typhoeus.log'))
-    begin
-      logger.info "--------------start--------"
-      logger.info "URL: #{"http://#{APP_CONFIG[:web_shop]}/wc-api.php"}"
-      logger.info "Options: #{options.inspect}"
-      Typhoeus::Request.post("http://#{APP_CONFIG[:web_shop]}/wc-api.php", options)
-      logger.info "--------------end----------"
-    rescue => e
-      logger.error "Exception: #{e.inspect}"
+    if need_propagate
+      begin
+        logger = Logger.new(Rails.root.join('log/typhoeus.log'))
+        logger.info "--------------BEGIN--------"
+        logger.info "URL: #{"http://#{APP_CONFIG[:web_shop]}/wc-api.php"}"
+        logger.info "Options: #{options.inspect}"
+        response = Typhoeus::Request.post("http://#{APP_CONFIG[:web_shop]}/wc-api.php", options)
+        logger.info "Success: #{response.success?}"
+        logger.info "Response: #{response.inspect}"
+        logger.info "--------------END----------"
+      rescue => e
+        logger.error "Exception: #{e.inspect}"
+      end
     end
   end
 end
