@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe DeliveryItemsController do
+  before do
+    Product.any_instance.stubs(:propagate_to_client)
+  end
 
   describe '#pick' do
     before do
