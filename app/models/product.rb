@@ -62,7 +62,6 @@ class Product < ActiveRecord::Base
         logger.info "--------------BEGIN--------"
         logger.info "Action: #{self.new_record? ? 'Create' : 'Update'}"
         logger.info "URL: #{"http://#{APP_CONFIG[:web_shop]}/wc-api.php"}"
-        logger.info "Options: #{options.inspect}"
         response = Typhoeus::Request.post("http://#{APP_CONFIG[:web_shop]}/wc-api.php", options)
         logger.info "Success: #{response.success?}  Code: #{response.code}"
         logger.info "Response: #{response.inspect}" unless response.success?
