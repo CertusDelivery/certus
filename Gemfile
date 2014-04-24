@@ -26,8 +26,10 @@ group :test do
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'ffaker'
+  gem 'mocha'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
+  gem 'vcr'
 end
 
 group :test, :development do

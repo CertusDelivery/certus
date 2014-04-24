@@ -20,6 +20,7 @@ describe Product do
   describe "#out_of_stock!" do
     before do
       @product = Product.create(name: "product name", store_sku: "534550181")
+      @product.stubs(:propagate_to_client)
     end
 
     it "should set product's stock status to be OUT_OF_STOCK" do
