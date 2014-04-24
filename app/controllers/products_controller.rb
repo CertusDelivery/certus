@@ -14,12 +14,12 @@ class ProductsController < ApplicationController
 
   def new
     @product = Product.new
+    @product.store_sku = params[:store_sku]
   end
 
   def create
     @product = Product.new(product_params)
-    @product.location = Location.create_by_info(params[:product][:location])
-    if @product.save()
+    if @product.errors.blank? && @product.save()
       redirect_to :action => 'index', :search => @product.store_sku
     else
       render :new
@@ -77,6 +77,6 @@ class ProductsController < ApplicationController
 
   private
   def product_params
-    params.require(:product).permit(:name, :store_sku, :reg_price, :price, :stock_status, :on_sale, :location_id) 
+    params.require(:product).permit(:name, :store_sku, :reg_price, :price, :stock_status, :on_sale, :location_id, :location_info) 
   end
 end

@@ -13,7 +13,26 @@ class Product < ActiveRecord::Base
 
   before_save :format_price
   before_save :propagate_to_client
-  
+
+  attr_accessor :location_info
+  attr_accessor :location_info_temp
+  def location_info=(value)
+    #TODO: validate 
+    if value.present?
+      info = Product.generate_location_info(value)
+      if info
+        self.location = Location.find_by_info(info) || Location.create_by_info(info)
+      else
+        errors.add(:location, "format is invalid")
+      end
+    end
+    self.location_info_temp = value
+  end
+
+  def location_info
+    self.location ? self.location.info : self.location_info_temp
+  end
+
   STOCK_STATUS = { in_stock: 'IN_STOCK', out_of_stock: 'OUT_OF_STOCK' }
 
   def self.search(search, page)
