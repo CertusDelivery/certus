@@ -43,6 +43,9 @@ class Product < ActiveRecord::Base
       body: {
         token: '43edc126236f331d578f74ac55fc34259bcd832b',
         sku: self.store_sku
+      },
+      headers: {
+        referers: "http://#{APP_CONFIG[:domain]}"
       }
     }
     need_propagate = false
