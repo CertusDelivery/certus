@@ -1,20 +1,16 @@
 app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$modal', ($scope, $http, $interval, $resource, $modal) ->
-
-  focusInterval = null
-  focusMethod = (flag)->
-    $interval.cancel(focusInterval) if focusInterval?
-    focusInterval = $interval(
-     ->
-       $scope.focusSearch = flag
-     500
-    )
+  $interval(
+    ->
+      $scope.focusSearch
+    500
+  )
 
   $scope.addFocus = ->
-    focusMethod(true)
-  $scope.addFocus()
+    $scope.focusSearch = true 
+  $scope.focusSearch = true 
 
   $scope.removeFocus = ->
-    focusMethod(false)
+    $scope.focusSearch = false 
 
   $scope.createLocation = (info) ->
     $http.post('/api/locations/create_by_info',
@@ -28,6 +24,13 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$
 
   # products at location
   if $(".locations_show").length > 0
+    cellEditablePrice = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateProperty(row.entity, col)\" />"
+    cellPrice = '<div ng-click=\"removeFocus();editCell();\">{{row.getProperty(col.field)}}</div>'
+    cellEditableStockStatus = "<select ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateProperty(row.entity, col)\">"+
+      "<option value=\"IN_STOCK\">IN_STOCK</option>"+
+      "<option value=\"OUT_OF_STOCK\">OUT_OF_STOCK</option>"+
+    "</select>"
+    cellStockStatus = '<div ng-click=\"removeFocus();editCell();\">{{row.getProperty(col.field)}}</div>'
     # $scope.location is defined at page
     $scope.productlist = $resource(window.location.pathname+'/products.json').query()
     $scope.product = {'store_sku':''}
@@ -36,8 +39,8 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$
       data: 'productlist',
       columnDefs: [
         {field: 'name', displayName: 'Name'},
-        {field: 'stock_status', displayName: 'Stock Status', width: 120}
-        {field: 'price', displayName: 'Price', width: 50},
+        {field: 'stock_status', displayName: 'Stock Status', width: 120, cellTemplate: cellStockStatus, editableCellTemplate: cellEditableStockStatus, enableCellEdit: true, enableCellEditOnFocus: true},
+        {field: 'price', displayName: 'Price', width: 50, cellTemplate: cellPrice, editableCellTemplate: cellEditablePrice, enableCellEdit: true, enableCellEditOnFocus: true },
         {field: 'store_sku', displayName: 'Store SKU', width: 130},
       ],
       selectedItems: $scope.mySelections,
@@ -46,7 +49,16 @@ app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$
       headerRowHeight: 40,
       rowHeight: 40
     }
-
+    
+    $scope.updateProperty = (row, col)->
+      $http.post('/api/products/'+row.id+'/update_property',
+        property: col.field,
+        value: row[col.field]
+      ).success((data) ->
+        row[col.field] = data.value 
+      )
+      $scope.addFocus()
+    
     $scope.locationProduct = ()->
       return unless $scope.product.store_sku
       $http.get(window.location.pathname+'/products/relocation/'+$scope.product.store_sku+'.json').success((product) ->
