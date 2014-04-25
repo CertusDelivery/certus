@@ -170,12 +170,18 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
               needInsertFlag = false
               angular.forEach data, (v, k) ->
                 row[k] = v
-              $scope.gridOptions.selectItem(index, true)
+              if data.picked_status is 'PICKED'
+                $scope.selectUnpickedRow()
+              else
+                $scope.gridOptions.selectItem(index, true)
           if needInsertFlag
             index = $scope.picklist.push data
-            setTimeout( ->
-              $scope.gridOptions.selectItem(index-1, true)
-            , 0)
+            if data.picked_status is 'PICKED'
+              $scope.selectUnpickedRow()
+            else
+              setTimeout( ->
+                $scope.gridOptions.selectItem(index-1, true)
+              , 0)
         )
       else
         $scope.picking(substituteBarcode)
