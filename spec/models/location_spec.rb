@@ -7,7 +7,7 @@ describe Location do
     end
 
     it "should return nil when using invalid info" do
-      expect(Location.create_by_info("100e-3-3")).to be_nil
+      expect(Location.create_by_info("100f-3-3")).to be_nil
       expect(Location.create_by_info("1000-e-3")).to be_nil
       expect(Location.create_by_info("1000-3-y")).to be_nil
       expect(Location.create_by_info("E-3-3")).to be_nil

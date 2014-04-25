@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Product do
   describe "#relocation" do
     before do
-      @location = Location.create_by_info("A10E-32-12")
+      @location = Location.create_by_info("10E-32-12")
       @product = Product.create(name: "product name", store_sku: "534550181")
     end
 
