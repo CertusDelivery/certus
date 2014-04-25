@@ -28,6 +28,8 @@ namespace :products do
           product = Product.find_by_store_sku(row['sku/upc'])
           product ||= Product.new
           
+          product.source = Product::SOURCE[:import]
+          product.import = true
           product.store_sku = row['sku/upc']
           product.name = row['name'] || 'UNDEFINED'
           product.brand = row['brand']
