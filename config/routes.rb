@@ -1,4 +1,5 @@
 Certus::Application.routes.draw do
+  get "orders/show"
   # You can have the root of your site routed with "root"
   root 'deliveries#picklist'
 
@@ -9,6 +10,10 @@ Certus::Application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
+  namespace :customer do
+    resources :orders, only: [:show]
+  end
+
   scope :api do
     resources :deliveries do
       collection do

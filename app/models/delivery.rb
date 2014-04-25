@@ -18,6 +18,19 @@ class Delivery < ActiveRecord::Base
     delivered:        'DELIVERED'
   }
 
+  ORDER_FLAGS = {
+    substitute: 'SUBSTITUTE',
+    backorder:  'BACKORDER',
+    critical:   'CRITICAL',
+    skip:       'SKIP'
+  }
+
+  DELIVERY_OPTIONS = {
+    doorstep_delivery:        'DOORSTEP_DELIVERY',
+    kitchen_counter_delivery: 'KITCHEN_COUNTER_DELIVERY',
+    doorstep_if_no_one_home:  'DOORSTEP_IF_NO_ONE_HOME'
+  }
+
   has_many :delivery_items do
     def all_picked?
       collect do |item|
@@ -46,7 +59,7 @@ class Delivery < ActiveRecord::Base
   accepts_nested_attributes_for :delivery_items
 
   # callbacks .................................................................
-  before_create :initial_delivery_window, :setup_status
+  before_create :initial_secure_salt, :initial_delivery_window, :setup_status
 
   # class methods .............................................................
 
@@ -62,6 +75,11 @@ class Delivery < ActiveRecord::Base
       else
         "#{picked_orders.size} orders have been removed from the list."
       end
+    end
+
+    def search_by_secure_code(secure_code)
+      #TODO: how make a md5 secure code
+      includes(:delivery_items).where('digest(order_id::text||secure_salt, "md5")=?', secure_code).first
     end
   end
 
@@ -96,6 +114,10 @@ class Delivery < ActiveRecord::Base
 
   def initial_delivery_window
     self.desired_delivery_window = DateTime.current + 6.hours unless self.desired_delivery_window
+  end
+
+  def initial_secure_salt
+    self.secure_salt = SecureRandom.hex(10)
   end
 
   def setup_status
