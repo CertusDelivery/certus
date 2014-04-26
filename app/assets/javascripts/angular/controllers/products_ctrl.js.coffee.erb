@@ -1,0 +1,49 @@
+app.controller('ProductsCtrl', ['$scope', '$http', '$interval', ($scope, $http, $interval) ->
+
+  focusInterval = null
+  focusMethod = (flag)->
+    $interval.cancel(focusInterval) if focusInterval?
+    focusInterval = $interval(
+     ->
+       $scope.focusSearch = flag
+     500
+    )
+
+  $scope.addFocus = ->
+    focusMethod(true)
+  $scope.addFocus()
+
+  $scope.removeFocus = ->
+    focusMethod(false)
+
+  $scope.updateProduct = (property) ->
+    $scope.addFocus()
+    ov = $scope.product[property]
+    setTimeout(
+      ->
+        $http.post('/api/products/'+$scope.product.id+'/update_property',
+          property: property,
+          value: $scope.product[property]
+        ).success((data) ->
+          if data.status
+            $scope.product[property] = data.value 
+          else
+            $scope.product[property] = ov 
+        )
+      200
+    )
+
+  $scope.updateLocation = (property) ->
+    $scope.addFocus()
+    ov = $scope.product.location[property] if $scope.product.location?
+    setTimeout(
+      ->
+        $http.post('/api/products/'+$scope.product.id+'/update_location',
+          property: property,
+          value: $scope.product.location[property]
+        ).success((data) ->
+          $scope.product.location = data.location
+        )
+      200
+    )
+])

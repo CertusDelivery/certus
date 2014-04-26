@@ -45,6 +45,18 @@ PostgreSQL
     create role [your login] superuser login
 
 
+NodeJS
+---
+
+    brew install node
+
+
+Karma
+---
+
+    npm install karma
+
+
 Pow
 ---
 
@@ -67,8 +79,13 @@ Update the configs as necessary.
     bundle install
     rake db:create
     rake db:setup
+    rake db:seed
 
 To run the spec suite (includes some integration tests)
 
     bundle exec rake spec
+
+To run the spec features(in spec/features, file ext with .feature):
+
+    bundle exec rake spec:features
 

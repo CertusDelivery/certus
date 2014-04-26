@@ -1,0 +1,36 @@
+<div class='modal-body product-detail-modal'>
+  <div>
+      <table>
+        <tr>
+          <td rowspan="3">
+            <img ng-src='{{mySelections[0].product_image}}' style='width:100%;'>
+          </td>
+          <td colspan="2" style="width:50%;"><span class="label label-default" ng-click='dismissProductDetail();'>&nbsp;{{ mySelections[0].delivery_id  }}&nbsp;</span></td>
+        </tr>
+        <tr>
+          <th colspan="2" style="font-size: 26px;">{{mySelections[0].quantity}}/{{mySelections[0].picked_quantity}}/{{mySelections[0].out_of_stock_quantity}}</th>
+        </tr>
+        <tr>
+          <th colspan="2">{{mySelections[0].location}}</th>
+        </tr>
+        <tr class="normal">
+          <th colspan="2">{{mySelections[0].store_sku}}</th>
+          <th>${{mySelections[0].price}}</th>
+        </tr>
+      </table>
+  </div>
+  <div>
+    <h5>{{mySelections[0].product_name}}</h5>
+  </div>
+</div>
+<div class="modal-footer product-detail-modal-footer">
+  <div class="flash">
+    <div class="error ng-binding">{{errorMessage}}</div>
+    <div class="notice ng-binding">{{notic}}</div>
+  </div>
+  <input id="productDetailScannedBarcode" focus-me="focusProductDetailScanner" ng-keyup="setScannedBarcode($event)" press-enter="pickProduct(1)" placeholder="Item barcode" type="text" class="ng-pristine ng-valid productDetailInput form-control">
+  <button class="btn btn-primary" ng-click="pickProduct(1);" onclick="jQuery('#productDetailScannedBarcode').val('');" class="productDetailInput">Submit Scanner Input</button>
+  <div style="margin-top: 15px;" ng-show="mySelections[0].quantity != mySelections[0].picked_quantity + mySelections[0].out_of_stock_quantity">
+    <p><a class="btn btn-link" ng-click="markAsOutOfStock();" >Out Of Stock</a></p>
+  </div>
+</div>

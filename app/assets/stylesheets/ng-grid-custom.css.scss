@@ -1,0 +1,67 @@
+.gridStyle {
+  border: 0px solid #66afe9;
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  height: 300px;
+  margin-bottom: 30px;
+  .ngViewport {
+    overflow-x: hidden;
+  }
+}
+
+.ngCell  {
+  display : table-cell;
+  height: auto !important;
+  overflow:visible;
+  position: static;
+  padding: 5px 0;
+}
+
+.picked-cell {
+  text-align: center;
+}
+
+.ngRow {
+  display : table-row;
+  height: auto !important;
+  position: static;
+}
+
+.ngRow.even {
+  background: #fff;
+}
+.ngRow.odd{
+  background: #f9f9f9;
+}
+.ngRow.selected{
+  background: #d0eaff;
+}
+
+.ngVerticalBarVisible {
+  width: 0;
+  display: none;
+}
+
+.ngHeaderSortColumn {
+  line-height: 30px;
+}
+
+.ngTopPanel {
+  background-color: #428bca;
+  background-color: transparent;
+  border-bottom: 2px solid #ddd;
+}
+
+.ngHeaderText {
+  color: black;
+}
+.ngCellText{
+  height: auto !important;
+  white-space: normal;
+  overflow:visible;
+  word-break: break-word;
+  color: #333;
+}
+.ng-button{
+  line-height: 1 !important;
+}

@@ -12,5 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+//= require angular
+//= require angular-animate
+//= require angular-resource
+//= require angular-ui-bootstrap
+//= require angular-ui-bootstrap-tpls
+//= require ng-grid-2.0.8.debug
+//= require main
 //= require_tree .

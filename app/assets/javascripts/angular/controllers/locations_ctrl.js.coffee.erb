@@ -1,0 +1,107 @@
+app.controller('LocationsCtrl', ['$scope', '$http', '$interval', '$resource', '$modal', ($scope, $http, $interval, $resource, $modal) ->
+
+  focusInterval = null
+  focusMethod = (flag)->
+    $interval.cancel(focusInterval) if focusInterval?
+    focusInterval = $interval(
+     ->
+       $scope.focusSearch = flag
+     500
+    )
+
+  $scope.addFocus = ->
+    focusMethod(true)
+  $scope.addFocus()
+
+  $scope.removeFocus = ->
+    focusMethod(false)
+
+  $scope.createLocation = (info) ->
+    $http.post('/api/locations/create_by_info',
+      info: info,
+    ).success((data) ->
+      if data.status
+        window.location = data.url
+      else
+        alert data.mess
+    )
+
+  # products at location
+  if $(".locations_show").length > 0
+    # $scope.location is defined at page
+    $scope.productlist = $resource(window.location.pathname+'/products.json').query()
+    $scope.product = {'store_sku':''}
+    $scope.mySelections = []
+    $scope.gridOptions = {
+      data: 'productlist',
+      columnDefs: [
+        {field: 'name', displayName: 'Name'},
+        {field: 'stock_status', displayName: 'Stock Status', width: 120}
+        {field: 'price', displayName: 'Price', width: 50},
+        {field: 'store_sku', displayName: 'Store SKU', width: 130},
+      ],
+      selectedItems: $scope.mySelections,
+      multiSelect: false,
+      enableHighlighting: true,
+      headerRowHeight: 40,
+      rowHeight: 40
+    }
+
+    $scope.locationProduct = ()->
+      return unless $scope.product.store_sku
+      $http.get(window.location.pathname+'/products/relocation/'+$scope.product.store_sku+'.json').success((product) ->
+        needInsertFlag = true
+        angular.forEach $scope.productlist, (row, index) ->
+          if row.id == product.id
+            needInsertFlag = false
+            angular.forEach product, (v, k) ->
+              row[k] = v
+            $scope.gridOptions.selectItem(index, true)
+        if needInsertFlag
+          index = $scope.productlist.push product
+          setTimeout( ->
+            $scope.gridOptions.selectItem(index-1, true)
+          , 0)
+        $scope.product.store_sku = ''
+      ).error((data) ->
+        ensureMsg = 'Product('+$scope.product.store_sku+') doesn\'t Exist.Do you wanna create one?'
+        if confirm ensureMsg
+          $scope.productForm()
+      )
+
+    $scope.productForm = ->
+      $scope.removeFocus()
+      $scope.product.price = ''
+      $scope.product.name = ''
+      $scope.productFormModal = $modal.open {
+        templateUrl: "<%= asset_path('angular/templates/product_form.html') %>",
+        backdrop: 'static',
+        keyboard: false,
+        windowClass: 'product-modal-form'
+        scope: ( ->
+          $scope
+        )()
+     }
+
+    $scope.createProduct = ->
+      if $scope.product.store_sku is '' || $scope.product.name is '' || $scope.product.price is ''
+        $scope.errorMessages = ['please fill this form at first']
+      else
+        $scope.errorMessages = []
+        $scope.product.location_id = $scope.location.id
+        $http.post(window.location.pathname+'/products/create_at_location', product: $scope.product).success((product) ->
+          index = $scope.productlist.push product
+          setTimeout( ->
+            $scope.gridOptions.selectItem(index-1, true)
+          , 0)
+          $scope.product.store_sku = ''
+          $scope.dismissProductForm()
+        ).error((data) ->
+          $scope.errorMessages = data.messages
+        )
+
+    $scope.dismissProductForm = ->
+      $scope.addFocus()
+      $scope.errorMessages = []
+      $scope.productFormModal.close()
+])

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Print Preview</title>
+  <style type="text/css">
+    <!--
+    *{margin: 0; padding: 0}
+    @media print { .no-print, .no-print * { display: none !important; } }
+    @page { size: auto; margin: 1cm}
+    #print_page{
+     width: 528px;
+     padding: 30px;
+     margin:0 auto;
+    }
+    #print_page table,#print_page tr td, #print_page tr th{
+      text-align: left;
+      border-collapse: collapse;
+    }
+
+    .header {
+      margin: 30px auto 40px;
+    }
+
+    .header p {
+      color: #666;
+      font-weight: 100px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .print_dash {
+      border-bottom: 1px #ccc dotted;
+      margin: 40px auto 0;
+    }
+
+    .page_breaker {
+      page-break-after:always;
+    }
+
+    .print_summary {
+      margin: 30px auto;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    -->
+  </style>
+</head>
+<body>
+  <div class="no-print" style="text-align: right;padding: 10px;">
+    <button onclick="window.print();">Print</button>
+  </div>
+  <div id="print_page">
+    <% @deliveries.each_with_index do |delivery, index| %>
+      <%= render :partial => "print_packing_delivery",:locals => {:delivery => delivery, :list_name => 'Packing List', :date => false} %>
+      <% if @deliveries.size != index + 1 %>
+        <div class="page_breaker"></div>
+      <% end %>
+    <% end %>
+  </div>
+</body>
+</html>

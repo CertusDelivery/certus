@@ -1,0 +1,44 @@
+!!! 5
+%html
+  %head
+    %title
+      CertusDelivery Notification
+    :css
+      <!--
+      #message {
+        width: auto;
+        margin: 20px 40px;
+      }
+      #message p {
+        margin: 20px 0 20px 0;
+      }
+      -->
+
+  %body
+    #message
+      %p
+        = "Dear #{@delivery.customer_name},"
+      %p
+        - case @delivery.message_status
+        - when Delivery::MESSAGE_STATUS[:received]
+          = "Your order has been received by the Certus delivery team.  We are pleased to be serving you.  Your expected delivery window is #{@delivery.desired_delivery_window.strftime("%H:%M:%S %h %d %Y")}.  For more information,  please visit your order progress bar at:" 
+          = link_to 'www.wf.CertusDelivery.Com/ProgressBarPageForYourOrder.', url_for(controller: 'deliveries', action: 'index', only_path: false)
+          %br
+          From this webpage, you may change the delivery type for your order to either doorstep delivery or kitchen counter delivery at any time prior to your route driver arriving at your home.
+        - when Delivery::MESSAGE_STATUS[:picked]
+          = "We have finished picking your order.  There are XX size or product adjustments.  The details for your order are available on your order progress bar at:"
+          = link_to 'www.wf.CertusDelivery.Com/ProgressBarPageForYourOrder.', url_for(controller: 'deliveries', action: 'index', only_path: false)
+          %br
+          From this webpage, you may change the delivery type for your order to either doorstep delivery or kitchen counter delivery at any time prior to your route driver arriving at your home.
+        - when Delivery::MESSAGE_STATUS[:out_for_delivery]
+          Your order has left the store and is on its way to you.  Your delivery details, including updated delivery window information is available at:
+          = link_to 'www.wf.CertusDelivery.Com/ProgressBarPageForYourOrder.', url_for(controller: 'deliveries', action: 'index', only_path: false)
+          %br
+          From this webpage, you may change the delivery type for your order to either doorstep delivery or kitchen counter delivery at any time prior to your route driver arriving at your home.
+        - when Delivery::MESSAGE_STATUS[:arrive_soon]
+          Your delivery is the very next stop for your route driver.  Your delivery details are available at 
+          = link_to 'www.wf.CertusDelivery.Com/ProgressBarPageForYourOrder.', url_for(controller: 'deliveries', action: 'index', only_path: false)
+        - when Delivery::MESSAGE_STATUS[:delivered]
+          Your delivery has been made.  Your groceries have been delivered to your XXXdoorstepXXX / XXX kitchen counterXXX.  Gratuities are optional.  If you wish to provide a gratuity to your route driver or your picker, you can do so at 
+          = link_to 'www.wf.CertusDelivery.Com/ProgressBarPageForYourOrder.', url_for(controller: 'deliveries', action: 'index', only_path: false)
+          at your convenience.

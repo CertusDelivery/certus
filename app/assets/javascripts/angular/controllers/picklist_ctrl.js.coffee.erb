@@ -1,0 +1,230 @@
+app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$interval', ($scope, $resource, $http, $modal, $interval) ->
+  picklist = $resource('/api/deliveries/picklist.json')
+  $scope.notice = ''
+  $scope.errorMessage = ''
+  $scope.picklist = picklist.query()
+  $scope.location_sort = 'asc'
+  $scope.mySelections = []
+  cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
+  cellLocation = '<div ng-click=\"removeFocus();editCell();\">{{row.getProperty(col.field)}}</div>'
+  cellTemplatePicked = '<div ng-class="{picked:row.getProperty(\'picked_status\') == \'PICKED\' ? true: false}"><span ng-class="{hidden: row.getProperty(\'picked_status\') == \'PICKED\' ? false : true }">✓</span>{{row.getProperty(col.field)}}</div>'
+
+  qtySortFn = (a, b) ->
+    a_arr = a.split("/")
+    b_arr = b.split("/")
+    result = 0
+    $.each a_arr, (index, data)->
+      result = parseInt(a_arr[index]) - parseInt(b_arr[index])
+      return false if result isnt 0
+    return result
+
+  $scope.gridOptions = {
+    data: 'picklist',
+    columnDefs: [
+      {field: 'picking_progress', displayName: 'Qty', sortFn: qtySortFn, width:70 },
+      {field: 'product_name', displayName: 'Product', cellTemplate: cellTemplatePicked},
+      {field: 'delivery_id', displayName: 'ID', width: 50},
+      {field: 'location', displayName: 'Location', sortable: false, cellTemplate: cellLocation, enableCellEdit: true, enableCellEditOnFocus:true, editableCellTemplate: cellEditableLocation, headerClass: 'cellphone-hidden', cellClass: 'cellphone-hidden', width: 90},
+      {field: 'store_sku', displayName: 'SKU', width: 150}
+    ],
+    selectedItems: $scope.mySelections,
+    multiSelect: false,
+    enableHighlighting: true,
+    headerRowHeight: 40,
+    rowHeight: 40,
+    sortInfo: { fields: ['product_name'], directions: ['asc']}
+  }
+
+  $scope.$on('ngGridEventData', ->
+    $scope.selectUnpickedRow()
+  )
+
+  $scope.selectUnpickedRow = ->
+    found = false
+    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
+      return if found
+      if row.entity.picked_status == 'UNPICKED'
+        $scope.gridOptions.selectRow(index, true)
+        found = true
+    if !found
+      $scope.gridOptions.selectRow(0, true)
+
+  $scope.clearSortingData = ->
+    if ($scope.gridOptions)
+      $scope.gridOptions.ngGrid.config.sortInfo = { fields:[], directions: [] }
+      angular.forEach($scope.gridOptions.ngGrid.lastSortedColumns, (c) ->
+        c.sortPriority = null
+        c.sortDirection = ""
+      )
+      $scope.gridOptions.ngGrid.lastSortedColumns = []
+
+  $scope.refreshUnpickedCount = ->
+    $http.get('/api/deliveries/unpicked_orders').success( (data) ->
+      $scope.unpicked_count = data
+    )
+
+  $scope.loadNewOrder = ->
+    loader = $resource('/api/deliveries/load_unpicked_order.json')
+    $scope.picklist = loader.query()
+    $scope.refreshUnpickedCount()
+
+  $scope.loadOrdersByLocation = ->
+    $scope.clearSortingData()
+    loader = $resource('/api/deliveries/sort_picking_orders.json', {direction: $scope.location_sort})
+    if $scope.location_sort == 'asc'
+      $scope.location_sort = 'desc'
+    else
+      $scope.location_sort = 'asc'
+    $scope.picklist = loader.query()
+
+
+  $scope.addFocus = ->
+    $scope.focusScanner = true
+
+  $scope.removeFocus = ->
+    $scope.focusScanner = false
+
+  $scope.focusScanner = true
+  $scope.refreshUnpickedCount()
+
+  format = (a)->
+    f = a
+    if a < 10
+      f = '0' + a
+    f
+  $scope.timer = ->
+    date = new Date()
+    hour = format date.getHours()
+    min = format date.getMinutes()
+    sec = format date.getSeconds()
+    $scope.time = hour + ':' + min + ':' + sec
+  $scope.timer()
+  $interval(
+    ->
+      $scope.timer()
+    1000
+  )
+  $interval(
+    ->
+      $scope.refreshUnpickedCount() 
+    5000
+  )
+
+  $scope.picking = (barcode) ->
+    return false unless barcode
+    deliveryItem = $scope.mySelections[0]
+    $http.post('/api/delivery_items/pick.json',
+       barcode: barcode,
+       id: deliveryItem.id,
+       delivery_id: deliveryItem.delivery_id
+    ).success((data) ->
+      $scope.scannedBarcode = ''
+      $scope.notice = data.message if data.message
+      if data.remove_completed_delivery
+        $scope.picklist = picklist.query()
+      else
+        angular.forEach $scope.picklist, (row, index) ->
+          if row.id == data.id
+            angular.forEach data, (v, k) ->
+              row[k] = v
+            $scope.gridOptions.selectItem(index, true)
+            $('.ngGrid').find('.selected').fadeTo('fast',0).fadeTo('fast',1)
+            if data.picked_status is 'PICKED' && barcode != 'OUT_OF_STOCK'
+              $scope.selectUnpickedRow()
+    ).error((data) ->
+      if data.status is 'nok'
+        $scope.scannedBarcode = ''
+        $scope.errorMessage = data.message
+    )
+
+  # operation_code: 1 -> normal, 2 -> out of stock
+  $scope.pickProduct = (operation_code) ->
+    $scope.notice = ''
+    $scope.errorMessage = ''
+    barcode = $scope.scannedBarcode
+    deliveryItem = $scope.mySelections[0]
+    if operation_code == 2
+      barcode = "OUT_OF_STOCK"
+    else if barcode isnt "REMOVE_COMPLETED_DELIVERY" and barcode isnt "OUT_OF_STOCK"
+      if !!barcode and deliveryItem.out_of_stock_quantity isnt 0 and deliveryItem.is_replaced is false and deliveryItem.store_sku isnt barcode
+        $scope.substituteProduct(deliveryItem, barcode)
+        return false
+    $scope.picking(barcode)
+
+  $scope.markAsOutOfStock = ->
+    $scope.pickProduct(2)
+
+  $scope.substituteProduct = (deliveryItem, substituteBarcode) ->
+    $http.get('api/products/search/'+substituteBarcode+'.json'
+    ).success((product) ->
+      ensureMsg = 'Do you want to substitude ' + product.product_name + ' for ' + deliveryItem.product_name + '?'
+      if confirm ensureMsg
+        $http.post('api/delivery_items/'+deliveryItem.id+'/substitute.json',
+          product: product
+        ).success((data) ->
+          deliveryItem.is_replaced = true
+          $scope.scannedBarcode = ''
+          needInsertFlag = true
+          angular.forEach $scope.picklist, (row, index) ->
+            if row.id == data.id
+              needInsertFlag = false
+              angular.forEach data, (v, k) ->
+                row[k] = v
+              $scope.gridOptions.selectItem(index, true)
+          if needInsertFlag
+            index = $scope.picklist.push data
+            setTimeout( ->
+              $scope.gridOptions.selectItem(index-1, true)
+            , 0)
+        )
+      else
+        $scope.picking(substituteBarcode)
+    ).error((data) ->
+      $scope.scannedBarcode = ''
+      $scope.errorMessage = data.message
+    )
+
+
+  $scope.removePickedOrders = ->
+    $scope.notice = ''
+    $scope.errorMessage = ''
+    $http.delete('/api/deliveries/remove_picked_orders.json'
+    ).success((data) ->
+      $scope.notice = data.message if data.message
+      $scope.picklist = picklist.query()
+    )
+
+  $scope.updateEntity = (row) ->
+    if row.location is ''
+      picklist = $resource('/api/deliveries/picklist.json')
+      $scope.picklist = picklist.query()
+    else
+      $http.post('/api/delivery_items/'+row.id+'/update_location',
+        location: row.location
+      ).success((data) ->
+        row.location = data.location.info
+      )
+    $scope.addFocus()
+
+  $scope.productDetail= (row) ->
+    $scope.focusScanner = false
+    $scope.focusProductDetailScanner = true
+    $scope.productDetailModal = $modal.open {
+      templateUrl: "<%= asset_path('angular/templates/product_detail.html') %>",
+      backdrop: 'static',
+      keyboard: false,
+      windowClass: 'expanded-view'
+      scope: ( ->
+        $scope
+      )()
+   }
+
+  $scope.dismissProductDetail = ->
+    $scope.focusScanner = true
+    $scope.focusProductDetailScanner = false
+    $scope.productDetailModal.close()
+
+  $scope.setScannedBarcode = (e) ->
+    if event.which != 13
+      $scope.scannedBarcode = e.target.value
+])

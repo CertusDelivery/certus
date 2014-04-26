@@ -1,0 +1,33 @@
+%div.row{'ng-controller' => 'LocationsCtrl'}
+  %div.col-md-8
+    %h3 Location List
+  %div.form-box.col-md-4
+    %form.form-inline{'action' => locations_path}
+      %div.input-group
+        = text_field_tag 'search', params[:search], "focus-me" => "focusSearch", placeholder: 'Location', 'class' => 'form-control'
+        %span.input-group-btn
+          %button.btn.btn-default Search
+  %div.clearfix
+  %div.col-md-12
+    %hr
+    - if @locations.size == 0
+      %div.alert.alert-warning
+        %div.col-md-8
+          <strong>Oops !!!</strong> The location doesn't Exist. Do you wanna create <strong>#{params[:search]}</strong>?
+        %div.col-md-4
+          %a.pull-right.btn.btn-default.btn-xs{"style" => "margin-left: 5px;", "href" => locations_path }
+            NO
+          %button.pull-right.btn.btn-primary.btn-xs{"ng-click" => "createLocation('#{params[:search]}')"}
+            YES
+    - else
+      %table.table.table-hover.table-selected
+        %thead
+          %tr
+            %th.text-center Location
+            %th.text-center{"style" => "width:150px;"} Product Count 
+        %tbody
+          - @locations.each do |location|
+            %tr{"onclick" => "window.location = '#{location_path(location)}'"}
+              %td= location.info
+              %td.text-center= location.products.size
+      = will_paginate @locations, :renderer => BootstrapLinkRender

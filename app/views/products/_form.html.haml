@@ -1,0 +1,30 @@
+%div.product-form
+  - if product.errors.any?
+    %div.alert.alert-danger
+      - product.errors.full_messages.each do |m|
+        %p=m
+
+  = form_for product do |f|
+    %div.form-group
+      = f.label :store_sku, 'SKU'
+      = f.text_field :store_sku, class: 'form-control'
+    %div.form-group
+      = f.label :name
+      = f.text_field :name, class: 'form-control'
+    %div.form-group
+      = f.label :reg_price, 'Regular Price'
+      = f.text_field :reg_price, class: 'form-control'
+    %div.form-group
+      = f.label :price, 'Sale Price'
+      = f.text_field :price, class: 'form-control'
+    %div.form-group
+      = f.label :location
+      = f.text_field :location_info, class: 'form-control'
+    %div.form-group
+      = f.label :stock_status, 'Stock Status'
+      = f.select :stock_status, Product::STOCK_STATUS, {}, class: 'form-control'
+    %div.form-group
+      = f.label :on_sale, 'On Sale'
+      = f.select :on_sale, {:YES => true, :NO => false}, {}, class: 'form-control'
+    %div.text-center
+      = f.submit 'submit', class: 'btn btn-primary', style: 'width: 100%'

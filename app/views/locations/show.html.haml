@@ -1,0 +1,17 @@
+%div.row{'ng-controller' => 'LocationsCtrl'}
+  %div.col-md-8{'ng-init' => "location=#{@location.to_json};"}
+    %h3 Products At Location
+  %div.form-box.col-md-4
+    %form{ "ng-submit" => "locationProduct()", 'class'=>'form-inline'}
+      %div.input-group
+        = text_field_tag 'product_sku', "", "focus-me" => "focusSearch", "ng-model" => "product.store_sku",placeholder: 'SKU', 'class' => 'form-control'
+        %span.input-group-btn
+          %button.btn.btn-default Search
+  %div.clearfix
+  %div.col-md-12
+    %hr
+  %h3.text-center{'style' => 'margin:40px 0 50px;'}= @location.info
+  %div.col-md-12
+    .gridStyle{"ng-grid" => "gridOptions"}
+  %div.col-md-12
+    %a{'href'=>locations_path} Back To Location List

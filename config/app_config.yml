@@ -1,0 +1,30 @@
+defaults: &defaults
+  domain: wf.certusdelivery.com
+  app_version: 0.1.0
+
+development:
+  <<: *defaults
+  domain: 127.0.0.1
+  web_shop: 127.0.0.1
+
+test: &test
+  <<: *defaults
+  domain: 127.0.0.1
+  web_shop: 127.0.0.1
+
+dev:
+  <<: *defaults
+  domain: testwf.certusdelivery.com
+  web_shop: testshop.certusdelivery.com
+
+
+staging:
+  <<: *defaults
+  domain: stagingwf.certusdelivery.com
+  web_shop: staging.certusmarket.com
+
+
+production:
+  <<: *defaults
+  domain: wf.certusdelivery.com
+  web_shop: certusmarket.com

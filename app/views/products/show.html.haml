@@ -1,0 +1,8 @@
+%div.row{'ng-controller' => 'ProductsCtrl'}
+  %div.col-md-8
+    %h3 Product Detail
+  %div.form-box.col-md-4
+    =render "search"
+  %div.clearfix
+  %hr
+  = render "detail", :product => @product

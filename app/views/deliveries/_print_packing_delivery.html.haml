@@ -1,0 +1,30 @@
+%div.header
+  %h1{:style =>'text-align: center;'}
+    #{list_name}
+  %p.order Order# #{delivery.order_id}
+  - if date
+    %p.date
+      #{delivery.placed_at.strftime("%F %T")}
+
+%table{:style=>"width: 100%;"}
+  %tr
+    %th{:style => 'width: 80px;'}
+      - if date
+        Qty
+      - else
+        Picked Qty
+    %th Product Name
+    %th{:style => 'width: 150px;'}
+      SKU
+    %th Price
+
+  - delivery.delivery_items.each do |delivery_item|
+    %tr
+      %td #{ date ? "#{delivery_item.quantity}/#{delivery_item.picked_quantity}/#{delivery_item.out_of_stock_quantity}" : delivery_item.picked_quantity }
+      %td #{delivery_item.product_name}
+      %td #{delivery_item.store_sku}
+      %td{:style => 'width: 50px;text-align:right'}
+        #{delivery_item.price}
+
+%div.print_summary Total: #{delivery.picked_total_price}
+%div.print_dash

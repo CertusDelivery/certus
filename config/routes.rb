@@ -1,9 +1,6 @@
 Certus::Application.routes.draw do
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'deliveries#picklist'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -12,7 +9,52 @@ Certus::Application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+  scope :api do
+    resources :deliveries do
+      collection do
+        get 'picklist'
+        get 'unpicked_orders'
+        get 'load_unpicked_order'
+        get 'sort_picking_orders'
+        delete 'remove_picked_orders'
+        get 'picking_print'
+        get 'print_packing_list'
+        get 'history'
+      end
+    end
+
+    resources :delivery_items, only: [ :show ] do
+      collection do
+        post 'pick'
+      end
+      member do
+        post 'update_location'
+        post 'substitute'
+      end
+    end
+
+    resources :products, only: [:index, :new, :create] do
+      collection do
+        get 'search/:store_sku' => 'products#search'
+      end
+      member do
+        post 'update_location'
+        post 'update_property'
+      end
+    end
+
+    resources :locations do
+      collection do
+        post 'create_by_info' => 'locations#create_by_info'
+      end
+      resources :products, only: [:index, :create] do
+        collection do
+          get 'relocation/:store_sku' => 'products#relocation'
+          post 'create_at_location'
+        end
+      end
+    end
+  end
 
   # Example resource route with options:
   #   resources :products do

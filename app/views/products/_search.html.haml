@@ -1,0 +1,5 @@
+%form.form-inline{'action' => products_path}
+  %div.input-group
+    = text_field_tag 'search', params[:search], "focus-me" => "focusSearch", placeholder: 'SKU / Product Name', 'class' => 'form-control'
+    %span.input-group-btn
+      %button.btn.btn-default Search

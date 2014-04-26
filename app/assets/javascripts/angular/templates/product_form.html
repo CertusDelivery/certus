@@ -1,0 +1,26 @@
+<div class="modal-body product-detail-modal">
+  <div style="padding: 20px;">
+    <div class="form-group">
+      <label for="product-sotre-sku">Store SKU</label>
+      <input id="product-store-sku" ng-model="product.store_sku" class="form-control" placeholder="Store SKU" />  
+    </div>
+    <div class="form-group">
+      <label for="product-name">Name</label>
+      <input id="product-name" ng-model="product.name" class="form-control" placeholder="Product Name" />  
+    </div>
+    <div class="form-group">
+      <label for="product-price">Price</label>
+      <input id="product-price" ng-model="product.price" class="form-control" placeholder="Sale Price" />  
+    </div>
+  </div>
+</div>
+<div class="modal-footer product-detail-modal-footer">
+  <div class="flash">
+    <div class="error" ng-repeat="error in errorMessages"> 
+      {{error}} 
+    </div>
+  </div>
+  <button class="btn btn-primary" ng-click="createProduct()">Create Product</button>
+  <p></p>
+  <button class="btn btn-default" ng-click="dismissProductForm()">Cancel</button>
+</div>
