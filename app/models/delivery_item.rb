@@ -67,7 +67,7 @@ class DeliveryItem < ActiveRecord::Base
   def out_of_stock!
     out_of_stock = quantity - picked_quantity
     self.update_attributes(out_of_stock_quantity: out_of_stock)
-    self.product.out_of_stock!
+    self.product.out_of_stock! if self.product
   end
 
   # For Test
