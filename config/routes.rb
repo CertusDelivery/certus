@@ -11,7 +11,7 @@ Certus::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   namespace :customer do
-    resources :orders, only: [:show]
+    resources :orders, only: [:show, :update]
   end
 
   scope :api do

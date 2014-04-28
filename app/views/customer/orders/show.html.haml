@@ -1,1 +1,52 @@
-= @order.id
+%div.row
+  %center
+    %h2 User Profile 
+    %h4 configure order
+  = form_for @order, url: order_secure_url(@order), html: {id: 'customer_order_form', method: 'patch'} do |f|
+    %div.col-md-12.order-info
+      %hr
+      %div.col-xs-6.col-md-2
+        %strong Order ID :
+      %div.col-xs-6.col-md-4
+        #{@order.order_id}
+      %div.col-xs-6.col-md-2
+        %strong Placed Time :
+      %div.col-xs-6.col-md-4
+        #{@order.placed_at}
+      %div.col-xs-6.col-md-2
+        %strong Delivery Option:
+      %div.col-xs-6.col-md-4
+        - if Delivery::MESSAGE_STATUS.values.index(@order.message_status) < 3
+          = f.select :delivery_option, Delivery::DELIVERY_OPTIONS 
+        - else
+          #{@order.delivery_option}
+      %div.col-xs-6.col-md-2
+        %strong Global Substitution:
+      %div.col-xs-6.col-md-4
+        - if @order.message_status == Delivery::MESSAGE_STATUS[:received]
+          = f.select :order_flag, Delivery::ORDER_FLAGS
+        - else
+          #{@order.order_flag}
+  %div.clearfix
+    %hr
+  %div.col-md-12{'style' => 'margin-top:30px;'}
+    %table.table.table-hover.table-selected
+      %thead
+        %tr
+          %th Name 
+          %th Price
+          %th Qty
+          %th Picked
+          %th Substitution 
+      %tbody
+        - @order.delivery_items.each do |item|
+          %tr
+            %td #{item.product_name}
+            %td #{item.price}
+            %td #{item.quantity}
+            %td #{item.picked_quantity}
+            %td #{item.order_item_options_flags}
+  %div.col-md-12
+    %hr
+    %h4.text-right
+      Total : #{@order.order_total_price}

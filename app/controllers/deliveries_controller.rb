@@ -113,6 +113,6 @@ class DeliveriesController < ApplicationController
   end
 
   def delivery_params
-    params.require(:delivery).permit(:customer_name, :shipping_address, :customer_email, :order_id, :client_id, :order_piece_count, :payment_id, :payment_card_token, :order_status, :picked_status, :order_grand_total, :payment_amount, :order_sku_count, :order_total_price, :placed_at, delivery_items_attributes: [:picked_status, :product_name, :quantity, :shipping_weight, :shipping_weight_unit, :picked_quantity, :picker_bin_number, :store_sku, :client_sku, :price])
+    params.require(:delivery).permit(:customer_name, :delivery_option, :order_flag, :shipping_address, :customer_email, :order_id, :client_id, :order_piece_count, :payment_id, :payment_card_token, :order_status, :picked_status, :order_grand_total, :payment_amount, :order_sku_count, :order_total_price, :placed_at, delivery_items_attributes: [:picked_status, :product_name, :quantity, :shipping_weight, :shipping_weight_unit, :picked_quantity, :picker_bin_number, :store_sku, :client_sku, :price])
   end
 end

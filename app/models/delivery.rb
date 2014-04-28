@@ -1,3 +1,4 @@
+require 'digest/md5'
 class Delivery < ActiveRecord::Base
 
   MAX_PICKING_COUNT = 3
@@ -60,6 +61,7 @@ class Delivery < ActiveRecord::Base
 
   # callbacks .................................................................
   before_create :initial_secure_salt, :initial_delivery_window, :setup_status
+  before_update :change_order_items_options_flags, :if => :order_flag_changed?
 
   # class methods .............................................................
 
@@ -118,6 +120,7 @@ class Delivery < ActiveRecord::Base
 
   def initial_secure_salt
     self.secure_salt = SecureRandom.hex(10)
+    self.secure_order_id  = Digest::SHA2.hexdigest("#{self.order_id}#{self.secure_salt}")
   end
 
   def setup_status
@@ -141,5 +144,9 @@ class Delivery < ActiveRecord::Base
     # if order_total_price != delivery_items.to_a.sum(&:total_price)
     #   self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")
     # end
+  end
+
+  def change_order_items_options_flags
+    self.delivery_items.update_all(order_item_options_flags: self.order_flag)
   end
 end
