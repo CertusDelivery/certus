@@ -111,6 +111,10 @@ class Delivery < ActiveRecord::Base
     delivery_items.inject(0) { |sum, item| sum += item.picked_quantity }
   end
 
+  def out_of_stock_quantity 
+    delivery_items.inject(0) { |sum, item| sum += (item.quantity - item.picked_quantity) }
+  end
+
   # protected instance methods ................................................
   protected
 

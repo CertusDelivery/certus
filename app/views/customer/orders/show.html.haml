@@ -1,7 +1,6 @@
-%div.row
+%div.row{'style' => 'margin-bottom: 30px;'}
   %center
-    %h2 User Profile 
-    %h4 configure order
+    %h2 Order Infomation
   = form_for @order, url: order_secure_url(@order), html: {id: 'customer_order_form', method: 'patch'} do |f|
     %div.col-md-12.order-info
       %hr
@@ -14,23 +13,54 @@
       %div.col-xs-6.col-md-4
         #{@order.placed_at}
       %div.col-xs-6.col-md-2
-        %strong Delivery Option:
+        %strong Out Of Stock Qty :
+      %div.col-xs-6.col-md-4
+        #{@order.out_of_stock_quantity}
+      %div.col-xs-6.col-md-2
+        %strong Delivery Window:
+      %div.col-xs-6.col-md-4
+        #{@order.desired_delivery_window}
+      %div.col-xs-6.col-md-2
+        %strong Expected Delivery Window:
+      %div.col-xs-6.col-md-4
+        #{@order.desired_delivery_window}
+      %div.clearfix
+      %div.col-xs-6.col-md-2
+        %strong Delivery Option :
       %div.col-xs-6.col-md-4
         - if Delivery::MESSAGE_STATUS.values.index(@order.message_status) < 3
           = f.select :delivery_option, Delivery::DELIVERY_OPTIONS 
         - else
           #{@order.delivery_option}
       %div.col-xs-6.col-md-2
-        %strong Global Substitution:
+        %strong Global Substitution :
       %div.col-xs-6.col-md-4
         - if @order.message_status == Delivery::MESSAGE_STATUS[:received]
           = f.select :order_flag, Delivery::ORDER_FLAGS
         - else
           #{@order.order_flag}
   %div.clearfix
+  %div.col-md-12
     %hr
-  %div.col-md-12{'style' => 'margin-top:30px;'}
-    %table.table.table-hover.table-selected
+    %div.process-container
+      %div#process.delivery-progress-bar{'class' => "delivery-#{@order.message_status.downcase}"}
+        - Delivery::MESSAGE_STATUS.values.each_with_index do |status, index|
+          - if Delivery::MESSAGE_STATUS.values.index(status) <= Delivery::MESSAGE_STATUS.values.index(@order.message_status)
+            - cls = 'ready'
+          - else
+            - cls = 'wait'
+          - unless index == 0
+            %div.proce{'class'=> cls}
+          %div.node{'class' => "#{cls} #{index == 0?'fore':''}" }
+            %ul
+              %li.tx1 &nbsp;
+              %li.tx2 #{status.gsub('_',' ')}
+    %div.clearfix
+      %hr
+  %div.col-md-12
+    %div
+      %strong Order Items :
+    %table.table.table-hover.order-items-table
       %thead
         %tr
           %th Name 
@@ -46,7 +76,11 @@
             %td #{item.quantity}
             %td #{item.picked_quantity}
             %td #{item.order_item_options_flags}
-  %div.col-md-12
-    %hr
-    %h4.text-right
-      Total : #{@order.order_total_price}
+  %div.col-md-12.total-block
+    %table
+      %tr
+        %th Adjusted Total : 
+        %td #{@order.order_total_adjustments}
+      %tr
+        %th Ordered Total : 
+        %td #{@order.order_total_price}
