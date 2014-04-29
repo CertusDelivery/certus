@@ -1,6 +1,6 @@
 %div.row{'style' => 'margin-bottom: 30px;'}
   %center
-    %h2 Order Infomation
+    %h2 Order Information
   = form_for @order, url: order_secure_url(@order), html: {id: 'customer_order_form', method: 'patch'} do |f|
     %div.col-md-12.order-info
       %hr
