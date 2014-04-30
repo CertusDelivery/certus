@@ -37,7 +37,8 @@ class DeliveryItemsController < ApplicationController
     if DeliveryItem.specific_barcode?(barcode)
       return handle_specific_barcode(barcode)
     else
-      @delivery_item = DeliveryItem.in_picking_list.unpicked.find_by_store_sku(barcode)
+      @delivery_item = DeliveryItem.where(id: params[:id]).first
+      @delivery_item = DeliveryItem.in_picking_list.unpicked.find_by_store_sku(barcode) if !@delivery_item || @delivery_item.store_sku != barcode
     end
   end
 
