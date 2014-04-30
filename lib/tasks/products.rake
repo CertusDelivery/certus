@@ -21,6 +21,9 @@ namespace :products do
       pid = nil # print pid when import failse
       count = 0;
       puts "Importing the data of product from csv file..."
+      @current_procent = 0
+      @line_number = 0
+      @total_line_count = (`wc -l #{file_path}`[/\d+/]).to_f
       Product.transaction do
         CSV.foreach(file_path, :headers => true) do |row|
           pid =  row['pid']
@@ -63,8 +66,9 @@ namespace :products do
           product.category = Category.create_by_string(row['category']) 
           product.save!
           csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{product.name}` created successfully"] 
+          display_progress
         end
-        puts "Import Succseefully!!!"
+        puts "\r\nImport Succseefully!!!"
         csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Counts: #{count} "] 
       end
     rescue Exception => ex
@@ -74,6 +78,14 @@ namespace :products do
     ensure
       csv.close if csv
     end
+  end
+
+  def display_progress
+    @line_number += 1
+    procent = ((@line_number/@total_line_count)*100.0).round
+    print "\r\e[O #{procent}%" if @current_procent != procent
+    @current_procent = procent
+    $stdout.flush
   end
 
 end
