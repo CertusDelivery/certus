@@ -1,6 +1,6 @@
 def create_delivery_params
-    post_params = {:delivery=> { customer_name: Faker::Name.name,
-                                  delivery_option: %w{DOORSTEP_DELIVERY KITCHEN_COUNTER_DELIVERY DOORSTEP_IF_NO_ONE_HOME}.sample
+    post_params = {:delivery => { customer_name: Faker::Name.name,
+                                  delivery_option: %w{DOORSTEP_DELIVERY KITCHEN_COUNTER_DELIVERY DOORSTEP_IF_NO_ONE_HOME}.sample,
                                   shipping_address: Faker::AddressUS.street_address(true),
                                   customer_email: Faker::Internet.email,
                                   order_id: Faker.numerify('#########'),

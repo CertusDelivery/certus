@@ -59,9 +59,9 @@ describe DeliveryItemsController do
       @delivery_item.save
     end
 
-    it “should find delivery item by id when user scaned active product” do
+    it "should find delivery item by id when user scaned active product" do
       post :pick, { barcode: @delivery_item.store_sku, id: @delivery_item.id, delivery_id: @delivery.id, format: :json }
-      expect(assigns[:delivery_item].id).to eq(@delivery_item.id)')
+      expect(assigns[:delivery_item].id).to eq(@delivery_item.id)
     end
   end
 
