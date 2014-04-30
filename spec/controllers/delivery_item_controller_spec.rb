@@ -57,10 +57,20 @@ describe DeliveryItemsController do
       @delivery_item = @delivery.delivery_items.first
       @delivery_item.picked_status = DeliveryItem::PICKED_STATUS[:unpicked]
       @delivery_item.save
+      @other_delivery = create_delivery(:picking)
+      @other_delivery_item = @other_delivery.delivery_items.first
+      @other_delivery_item.picked_status = DeliveryItem::PICKED_STATUS[:unpicked]
+      @other_delivery_item.save
     end
 
     it "should find delivery item by id when user scaned active product" do
+      DeliveryItem.expects(:find_by_store_sku).never
       post :pick, { barcode: @delivery_item.store_sku, id: @delivery_item.id, delivery_id: @delivery.id, format: :json }
+      expect(assigns[:delivery_item].id).to eq(@delivery_item.id)
+    end
+
+    it "should find delivery item by id when user scaned not active product" do
+      post :pick, { barcode: @delivery_item.store_sku, id: @other_delivery_item.id, delivery_id: @other_delivery.id, format: :json }
       expect(assigns[:delivery_item].id).to eq(@delivery_item.id)
     end
   end
