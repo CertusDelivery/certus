@@ -4,6 +4,8 @@
   = form_for @order, url: order_secure_url(@order), html: {id: 'customer_order_form', method: 'patch'} do |f|
     %div.col-md-12.order-info
       %hr
+      - if flash[:notice]
+        %div.alert.alert-warning #{flash[:notice]}
       %div.col-xs-6.col-md-2
         %strong Order ID :
       %div.col-xs-6.col-md-4
@@ -13,17 +15,9 @@
       %div.col-xs-6.col-md-4
         #{@order.placed_at}
       %div.col-xs-6.col-md-2
-        %strong Out Of Stock Qty :
-      %div.col-xs-6.col-md-4
-        #{@order.out_of_stock_quantity}
-      %div.col-xs-6.col-md-2
-        %strong Delivery Window:
-      %div.col-xs-6.col-md-4
-        #{@order.desired_delivery_window}
-      %div.col-xs-6.col-md-2
         %strong Expected Delivery Window:
       %div.col-xs-6.col-md-4
-        #{@order.desired_delivery_window}
+        #{expected_delivery_window(@order.placed_at)}
       %div.clearfix
       %div.col-xs-6.col-md-2
         %strong Delivery Option :
@@ -56,31 +50,60 @@
               %li.tx1 &nbsp;
               %li.tx2 #{status.gsub('_',' ')}
     %div.clearfix
-      %hr
   %div.col-md-12
-    %div
-      %strong Order Items :
-    %table.table.table-hover.order-items-table
-      %thead
-        %tr
-          %th Name 
-          %th Price
-          %th Qty
-          %th Picked
-          %th Substitution 
-      %tbody
-        - @order.delivery_items.each do |item|
-          %tr
-            %td #{item.product_name}
-            %td #{item.price}
-            %td #{item.quantity}
-            %td #{item.picked_quantity}
-            %td #{item.order_item_options_flags}
+    %ul.nav.nav-tabs
+      %li.active 
+        %a{'data-toggle' => 'tab', 'href' => '#substitued_items'} Substituted Items
+      %li 
+        %a{'data-toggle' => 'tab', 'href' => '#all_items'} All Items
+    %div.tab-content
+      %div#substitued_items.tab-pane.fade.active.in
+        %table.table.table-hover.order-items-table
+          %thead
+            %tr
+              %th Name 
+              %th Price
+              %th Qty
+              %th Picked
+              %th Original SKU
+          %tbody
+            - @order.delivery_items.select{|i| i.original_item_id.present? }.each do |item|
+              %tr
+                %td #{item.product_name}
+                %td #{item.price}
+                %td 
+                  #{item.original_item.out_of_stock_quantity}
+                %td 
+                  - if item.original_item.out_of_stock_quantity < item.picked_quantity
+                    #{item.original_item.out_of_stock_quantity}
+                  - else
+                    #{item.picked_quantity}
+                %td #{item.original_item_id}
+      %div#all_items.tab-pane.fade
+        %table.table.table-hover.order-items-table
+          %thead
+            %tr
+              %th Name 
+              %th Price
+              %th Qty
+              %th Picked
+              %th Substitution 
+          %tbody
+            - @order.delivery_items.each do |item|
+              %tr
+                %td #{item.product_name}
+                %td #{item.price}
+                %td #{item.quantity}
+                %td #{item.picked_quantity}
+                %td #{item.order_item_options_flags}
   %div.col-md-12.total-block
-    %table
-      %tr
-        %th Adjusted Total : 
-        %td #{@order.order_total_adjustments}
-      %tr
-        %th Ordered Total : 
-        %td #{@order.order_total_price}
+    %div.col-md-6
+      %strong Order Items: #{@order.picked_quantity}  Unavailable Items: #{@order.message_status == Delivery::MESSAGE_STATUS[:received] ? 0 : @order.out_of_stock_quantity}
+    %div.col-md-6
+      %table
+        %tr
+          %th Adjusted Total : 
+          %td #{@order.order_total_adjustments}
+        %tr
+          %th Ordered Total : 
+          %td #{@order.order_total_price}

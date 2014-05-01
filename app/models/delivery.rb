@@ -41,6 +41,8 @@ class Delivery < ActiveRecord::Base
     end
   end
 
+  attr_accessor :flash_notice
+
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
   scope :picking, -> { where(picked_status: PICKED_STATUS[:picking]) }
@@ -62,6 +64,7 @@ class Delivery < ActiveRecord::Base
   # callbacks .................................................................
   before_create :initial_secure_salt, :initial_delivery_window, :setup_status
   before_update :change_order_items_options_flags, :if => :order_flag_changed?
+  before_update :add_msg_into_flash, :if => :delivery_option_changed?
 
   # class methods .............................................................
 
@@ -107,12 +110,16 @@ class Delivery < ActiveRecord::Base
     delivery_items.inject(0) { |sum, item| sum += item.picked_total_price }
   end
 
+  def quantity
+    delivery_items.inject(0) { |sum, item| sum += item.quantity }
+  end
+
   def picked_quantity
     delivery_items.inject(0) { |sum, item| sum += item.picked_quantity }
   end
 
   def out_of_stock_quantity 
-    delivery_items.inject(0) { |sum, item| sum += (item.quantity - item.picked_quantity) }
+    delivery_items.inject(0) { |sum, item| sum += item.out_of_stock_quantity }
   end
 
   # protected instance methods ................................................
@@ -152,5 +159,9 @@ class Delivery < ActiveRecord::Base
 
   def change_order_items_options_flags
     self.delivery_items.update_all(order_item_options_flags: self.order_flag)
+  end
+
+  def add_msg_into_flash
+    self.flash_notice = "Your driver will be notified of any changes you make to the delivery option for your order." 
   end
 end

@@ -2,18 +2,23 @@
   div{
     padding: 10px 0;
   }
+  div.alert {
+    padding: 10px;
+    border-radius: 0;
+  }
 }
 .order-items-table{
   margin-top: 20px;
-  border-top: 1px solid #ddd;
 }
 .process-container{
   overflow-x: auto;
+  margin-bottom:30px;
 }
 #process{
-  width: 765px;
+  width: 770px;
+  overflow: hidden;
   margin:0 auto;
-  padding:40px 30px 60px;
+  padding:40px 30px 100px;
   .tx1{
     height:36px;margin-bottom:16px;
   }
