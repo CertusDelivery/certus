@@ -95,8 +95,8 @@ class DeliveriesController < ApplicationController
 
   def sort_picking_orders_by_location
     @delivery_items = picking_orders.map(&:delivery_items).flatten.sort! do |delivery_item_a, delivery_item_b|
-      location_a = begin delivery_item_a.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
-      location_b = begin delivery_item_b.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
+      location_a = delivery_item_a.product.try(:location) || Location.new(aisle:'',direction:'',distance:0,shelf:0)
+      location_b = delivery_item_b.product.try(:location) || Location.new(aisle:'',direction:'',distance:0,shelf:0)
       if location_a.aisle != location_b.aisle #location_aisle
         location_a.aisle <=> location_b.aisle
       elsif location_a.direction != location_b.direction #location_direction
