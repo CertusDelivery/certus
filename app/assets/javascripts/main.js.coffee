@@ -9,3 +9,7 @@ windowResize = ->
       scope.gridOptions.$gridScope.columns[4].visible = false
   )
 
+$(document).ready ->
+  if $(".deliveries_picklist").length > 0
+    windowResize()
+    window.onresize = windowResize
