@@ -11,6 +11,7 @@
  *= require bootstrap.min
  *= require ng-grid
  *= require ng-grid-custom
+ *= require deliveries
+ *= require products
  *= require_self
- *= require_tree .
  */

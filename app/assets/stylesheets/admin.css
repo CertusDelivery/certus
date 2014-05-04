@@ -1,0 +1,9 @@
+/*
+ *= require bootstrap.min
+ *= require deliveries
+ */
+
+body {
+  padding-top: 70px;
+  padding-bottom: 40px;
+}

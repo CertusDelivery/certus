@@ -1,0 +1,19 @@
+= form_for @user_session, html: {class: "form-signin", role: :form}do |f|
+  %h2.form-signin-heading
+    Please sign in
+  - if flash
+    .flash
+      - flash.keys.each do |key|
+        %div{:class => key}
+          %ul
+            - if flash[key].kind_of?(Array)
+              - flash[key].each do |msg|
+                %li= msg
+            - else
+              %li=h flash[key]
+
+  = f.text_field :login, class: "form-control", placeholder: "User name", requried: true, autofocus: true
+
+  = f.password_field :password, class: "form-control", placeholder: "Password", requried: true
+
+  = f.submit "Sign in", class: "btn btn-lg btn-primary btn-block"
