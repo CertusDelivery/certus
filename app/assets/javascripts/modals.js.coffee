@@ -4,6 +4,3 @@ $(document).ready ->
   $(".table-selected tbody tr").click ->
     $(".table-selected tbody tr").removeClass 'selected'
     $(this).addClass 'selected'
-  if $(".deliveries_picklist").length > 0
-    windowResize()
-    window.onresize = windowResize
