@@ -19,6 +19,9 @@
         </tr>
       </table>
   </div>
+  <div class="substituted-info" ng-hide="mySelections[0]['out_of_stock_quantity']==0">
+    {{mySelections[0]['order_item_options_flags']}}
+  </div>
   <div>
     <h5>{{mySelections[0].product_name}}</h5>
   </div>

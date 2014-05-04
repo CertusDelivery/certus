@@ -65,7 +65,7 @@
               %th Price
               %th Qty
               %th Picked
-              %th Original SKU
+              %th Original Item Name
           %tbody
             - @order.delivery_items.select{|i| i.original_item_id.present? }.each do |item|
               %tr
@@ -78,7 +78,7 @@
                     #{item.original_item.out_of_stock_quantity}
                   - else
                     #{item.picked_quantity}
-                %td #{item.original_item_id}
+                %td #{item.original_item.product_name}
       %div#all_items.tab-pane.fade
         %table.table.table-hover.order-items-table
           %thead
