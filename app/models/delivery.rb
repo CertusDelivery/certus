@@ -81,11 +81,6 @@ class Delivery < ActiveRecord::Base
         "#{picked_orders.size} orders have been removed from the list."
       end
     end
-
-    def search_by_secure_code(secure_code)
-      #TODO: how make a md5 secure code
-      includes(:delivery_items).where('digest(order_id::text||secure_salt, "md5")=?', secure_code).first
-    end
   end
 
   # public instance methods ...................................................

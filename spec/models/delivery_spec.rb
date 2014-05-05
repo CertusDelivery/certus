@@ -139,12 +139,10 @@ describe Delivery do
 
   describe "call(refer delivery items)" do
     before do  
-      delivery_item1 = build(:delivery_item, picked_quantity: 3, price: 3.2)
-      delivery_item2 = build(:delivery_item, picked_quantity: 2, price: 1.1)
-      delivery_item3 = build(:delivery_item, picked_quantity: 0, price: 2.7)
-      @delivery.delivery_items << delivery_item1
-      @delivery.delivery_items << delivery_item2
-      @delivery.delivery_items << delivery_item3
+      delivery_item1 = create(:delivery_item, picked_quantity: 3, out_of_stock_quantity: 1, price: 3.2, delivery_id: @delivery.id)
+      delivery_item2 = create(:delivery_item, picked_quantity: 2, out_of_stock_quantity: 0, price: 1.1, delivery_id: @delivery.id)
+      delivery_item3 = create(:delivery_item, picked_quantity: 0, out_of_stock_quantity: 5, price: 2.7, delivery_id: @delivery.id)
+      @delivery.reload
     end
 
     describe "#picked_total_price" do
@@ -158,12 +156,45 @@ describe Delivery do
         expect(@delivery.picked_quantity).to eq(5)
       end
     end
+
+    describe "#out_of_stock_quantity" do
+      it "should get sum all out of stock delivery items total out_of_stock_quantity" do
+        expect(@delivery.out_of_stock_quantity).to eq(6)
+      end
+    end
+    
+    describe "#change_order_items_options_flags" do
+      it 'should be changed when its order\'s order flag changed' do
+        flags = Delivery::ORDER_FLAGS.values
+        flags.delete(@delivery.order_flag)
+        @delivery.update(order_flag: flags.sample)
+        @delivery.reload
+        @delivery.delivery_items.each do |item|
+          expect(item.order_item_options_flags).to eq(@delivery.order_flag)
+        end
+      end
+    end
   end
 
   describe "#initial_status" do
     it 'should initial delivery status' do
       expect(@delivery.picked_status).to eq(Delivery::PICKED_STATUS[:unpicked])
       expect(@delivery.message_status).to eq(Delivery::MESSAGE_STATUS[:received])
+    end
+  end
+
+  describe "#initial_secure_url" do
+    it 'should initial secure_order_id' do
+      @delivery.secure_order_id.should_not nil
+    end
+  end
+
+  describe "#add_msg_into_flash" do
+    it 'should get flash notic when order delivery_option changed' do
+      delivery_options = Delivery::DELIVERY_OPTIONS.values
+      delivery_options.delete(@delivery.delivery_option)
+      @delivery.update(delivery_option: delivery_options.sample)
+      expect(@delivery.flash_notice).to eq("Your driver will be notified of any changes you make to the delivery option for your order.")
     end
   end
 end
