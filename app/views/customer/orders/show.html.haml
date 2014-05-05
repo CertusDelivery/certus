@@ -23,7 +23,7 @@
         %strong Delivery Option :
       %div.col-xs-6.col-md-4
         - if Delivery::MESSAGE_STATUS.values.index(@order.message_status) < 3
-          = f.select :delivery_option, Delivery::DELIVERY_OPTIONS 
+          = f.select :delivery_option, Delivery::DELIVERY_OPTIONS.collect{|key,value| [key.to_s.gsub('_',' '), value]}
         - else
           #{@order.delivery_option}
       %div.col-xs-6.col-md-2
