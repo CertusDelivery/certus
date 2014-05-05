@@ -35,7 +35,7 @@
     float: left;
     position: relative;
     height: 13px;
-    background-image: image-url('customer/bg_state.jpg');
+    background-image: image-url('customer/bg_state.png');
     background-repeat: no-repeat;
   }
   .node{
@@ -80,6 +80,33 @@
   }
   .proce.ready{
     background-position:0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  #process{
+    width: 150px;
+    height: auto;
+    padding: 0 60px;
+    .node, .proce{
+      float: none;
+    }
+    .node {
+      margin:5px 0 30px  5px;
+    }
+    .node.wait {
+      margin-left: 4px;
+    }
+    .proce {
+      height: 100px;
+      width: 25px;
+    }
+    .proce.wait{
+      background-position: -180px 0;
+    }
+    .proce.ready{
+      background-position: -165px 0;
+    }
   }
 }
 .delivery-progress-bar{
