@@ -115,6 +115,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   )
 
   $scope.picking = (barcode) ->
+    $scope.notice = ''
+    $scope.errorMessage = ''
     return false unless barcode
     deliveryItem = $scope.mySelections[0]
 
@@ -144,8 +146,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
 
   # operation_code: 1 -> normal, 2 -> out of stock
   $scope.pickProduct = (operation_code) ->
-    $scope.notice = ''
-    $scope.errorMessage = ''
     barcode = $scope.scannedBarcode
     deliveryItem = $scope.mySelections[0]
     if operation_code == 2
