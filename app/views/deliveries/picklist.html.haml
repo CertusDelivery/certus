@@ -25,10 +25,14 @@
             {{unpicked_count}}
       %div.col-xs-12.col-sm-6.col-md-5.col-lg-5
         %div.btn-group.btn-block{'style'=>'margin-top:-5px;margin-bottom:15px;'}
-          %button.btn.btn-default.btn-sm{'ng-click' => "markAsOutOfStock()", 'style' => 'width:30%;'}
-            Out of Stock
-          %button.btn.btn-default.btn-sm{'ng-click' => "removePickedOrders()", 'style' => 'width:40%;'}
-            Remove Picked Orders
-          %button.btn.btn-default.btn-sm{'ng-click' => "productDetail()", 'style' => 'width:30%;'}
+          %button.btn.btn-default.btn-sm{'ng-click' => "markAsOutOfStock()", 'style' => 'width:33%;'}
+            Out Of Stock
+          %button.btn.btn-default.btn-sm{'ng-click' => "markAsPicked()", 'style' => 'width:34%;'}
+            Mark As Picked
+          %button.btn.btn-default.btn-sm{'ng-click' => "productDetail()", 'style' => 'width:33%;'}
             Product Detail
     #picklist.gridStyle{"ng-grid" => "gridOptions"}
+    %div.row{'style' => 'margin-bottom:30px'}
+      %div.col-md-offset-9.col-md-3
+        %button.btn.btn-default.btn-sm{'ng-click' => "removePickedOrders()", 'style' => 'width:100%;'}
+          Remove Picked Orders

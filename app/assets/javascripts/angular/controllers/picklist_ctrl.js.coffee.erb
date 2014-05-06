@@ -117,6 +117,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.picking = (barcode) ->
     return false unless barcode
     deliveryItem = $scope.mySelections[0]
+
     $http.post('/api/delivery_items/pick.json',
        barcode: barcode,
        id: deliveryItem.id,
@@ -157,6 +158,9 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
 
   $scope.markAsOutOfStock = ->
     $scope.pickProduct(2)
+
+  $scope.markAsPicked = ->
+    $scope.picking($scope.mySelections[0]['store_sku'])
 
   $scope.substituteProduct = (deliveryItem, substituteBarcode) ->
     $http.get('api/products/search/'+substituteBarcode+'.json'
