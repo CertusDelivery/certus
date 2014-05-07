@@ -35,6 +35,7 @@ Certus::Application.routes.draw do
     resources :deliveries do
       collection do
         get 'picklist'
+        get 'search'
         get 'unpicked_orders'
         get 'load_unpicked_order'
         get 'sort_picking_orders'

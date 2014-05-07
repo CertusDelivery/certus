@@ -16,6 +16,10 @@ class DeliveriesController < ApplicationController
     end
   end
 
+  def search
+    @delivery = Delivery.find_by id: params[:id]
+  end
+
   def picklist
     respond_to do |format|
       format.html {}
