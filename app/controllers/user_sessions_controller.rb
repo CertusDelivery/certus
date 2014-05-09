@@ -1,4 +1,5 @@
 class UserSessionsController < ApplicationController
+  skip_before_filter :require_picker_user, only: [:new, :create]
 
   layout "login"
 

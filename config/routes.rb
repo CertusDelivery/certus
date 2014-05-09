@@ -23,6 +23,7 @@ Certus::Application.routes.draw do
     resources :deliveries do
       collection do
         get :history
+        get :picklist
       end
     end
   end

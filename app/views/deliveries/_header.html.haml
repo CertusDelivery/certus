@@ -45,3 +45,9 @@
               = link_to 'Print Packing List', "#", 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
             %li
               = link_to 'Print Packing List(out of picking list)', "#", 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
+        %li.dropdown
+          = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
+            #{current_user.login.upcase} 
+          %ul.dropdown-menu
+            %li
+              = link_to 'Logout', logout_path

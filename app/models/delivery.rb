@@ -31,7 +31,9 @@ class Delivery < ActiveRecord::Base
     kitchen_counter_delivery: 'KITCHEN_COUNTER_DELIVERY',
     doorstep_if_no_one_home:  'DOORSTEP_IF_NO_ONE_HOME'
   }
-
+  
+  has_many :delivery_picker_ships
+  has_many :pickers, through: :delivery_picker_ships
   has_many :delivery_items do
     def all_picked?
       collect do |item|
@@ -45,6 +47,7 @@ class Delivery < ActiveRecord::Base
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
+  scope :pickable, lambda{|user| where("picked_status=? or picked_status=?", PICKED_STATUS[:unpicked], PICKED_STATUS[:picking]).where.not(id: user.deliveries.map(&:id))}
   scope :picking, -> { where(picked_status: PICKED_STATUS[:picking]) }
   #customer
   validates_presence_of :customer_name, :shipping_address, :customer_email

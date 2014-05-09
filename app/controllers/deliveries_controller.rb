@@ -1,4 +1,5 @@
 class DeliveriesController < ApplicationController
+  skip_before_filter :require_picker_user, only: [:create]
   protect_from_forgery except: :create
 
   def create
@@ -34,7 +35,12 @@ class DeliveriesController < ApplicationController
   def load_unpicked_order
     # One Time One Order
     if Delivery::MAX_PICKING_COUNT > picking_count
-      Delivery.fifo.unpicked.limit(1).update_all(picked_status: Delivery::PICKED_STATUS[:picking])
+      delivery = Delivery.fifo.pickable(current_user).first
+      if delivery
+        delivery.picked_status = Delivery::PICKED_STATUS[:picking]
+        delivery.save
+        current_user.deliveries << delivery
+      end
     end
     picking_delivery_items
     render 'deliveries/picklist.json'
@@ -86,11 +92,11 @@ class DeliveriesController < ApplicationController
   end
 
   def picking_count
-    @picking_orders_count ||= Delivery.picking.count
+    @picking_orders_count ||= current_user.deliveries.picking.count
   end
 
   def picking_orders
-    @deliveries ||= Delivery.includes(:delivery_items => {:product => :location}).picking.limit(Delivery::MAX_PICKING_COUNT)
+    @deliveries ||= current_user.deliveries.includes(:delivery_items => {:product => :location}).picking.limit(Delivery::MAX_PICKING_COUNT)
   end
 
   def picking_delivery_items
