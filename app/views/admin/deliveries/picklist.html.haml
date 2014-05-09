@@ -9,7 +9,6 @@
         %th Qty 
         %th Picked Qty
         %th Delivery ID
-        %th Picker
     %tbody
       - @deliveries.each do |delivery|
         - delivery.delivery_items.each do |item|
@@ -18,5 +17,4 @@
             %td #{item.quantity}
             %td #{item.picked_quantity}
             %td #{item.delivery_id}
-            %td #{delivery.picker.login if delivery.picker}
   = will_paginate @deliveires, :renderer => BootstrapLinkRender 
