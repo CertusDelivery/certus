@@ -24,7 +24,7 @@ describe DeliveryItemsController do
       response.body.should eq({ status: 'nok', message: 'You scanned the wrong item.'}.to_json)
     end
 
-    it "should retuen error when a delivery item is fully picked" do
+    it "should return error when a delivery item is fully picked" do
       @delivery_item.update_attributes({picked_quantity: @delivery_item.quantity})
 
       post :pick, { barcode: @delivery_item.store_sku }
@@ -49,4 +49,30 @@ describe DeliveryItemsController do
       end
     end
   end
+
+
+  describe '#check_barcode' do
+    before do
+      @delivery = create_delivery(:picking)
+      @delivery_item = @delivery.delivery_items.first
+      @delivery_item.picked_status = DeliveryItem::PICKED_STATUS[:unpicked]
+      @delivery_item.save
+      @other_delivery = create_delivery(:picking)
+      @other_delivery_item = @other_delivery.delivery_items.first
+      @other_delivery_item.picked_status = DeliveryItem::PICKED_STATUS[:unpicked]
+      @other_delivery_item.save
+    end
+
+    it "should find delivery item by id when user scaned active product" do
+      DeliveryItem.expects(:find_by_store_sku).never
+      post :pick, { barcode: @delivery_item.store_sku, id: @delivery_item.id, delivery_id: @delivery.id, format: :json }
+      expect(assigns[:delivery_item].id).to eq(@delivery_item.id)
+    end
+
+    it "should find delivery item by id when user scaned not active product" do
+      post :pick, { barcode: @delivery_item.store_sku, id: @other_delivery_item.id, delivery_id: @other_delivery.id, format: :json }
+      expect(assigns[:delivery_item].id).to eq(@delivery_item.id)
+    end
+  end
+
 end

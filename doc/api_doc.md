@@ -206,6 +206,15 @@ todo
     </tr>
 
     <tr>
+      <td>delivery_option</td>
+      <td>false</td>
+      <td>String</td>
+      <td>
+          Available options: "DOORSTEP_DELIVERY", "KITCHEN_COUNTER_DELIVERY", "DOORSTEP_IF_NO_ONE_HOME".
+      </td>
+    </tr>
+    
+    <tr>
       <td>order_status</td>
       <td>true</td>
       <td>String</td>

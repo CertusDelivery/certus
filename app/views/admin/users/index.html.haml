@@ -1,0 +1,20 @@
+%div.row.history
+  %center
+    %h4 Users
+  %hr
+  %table.table.table-hover.table-selected
+    %thead
+      %tr
+        %th Name
+        %th Role
+        %th Login
+        %th Email
+        %th Enabled
+    %tbody
+      - @users.each do |user|
+        %tr{'class' => 'print_button', 'url' => "#{edit_admin_user_url(user)}"}
+          %td #{user.full_name}
+          %td #{user.role}
+          %td #{user.login}
+          %td #{user.email}
+          %td #{user.enabled? ? "Yes" : "No"}

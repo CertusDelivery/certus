@@ -95,8 +95,8 @@ class DeliveriesController < ApplicationController
 
   def sort_picking_orders_by_location
     @delivery_items = picking_orders.map(&:delivery_items).flatten.sort! do |delivery_item_a, delivery_item_b|
-      location_a = begin delivery_item_a.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
-      location_b = begin delivery_item_b.product.location rescue Location.new(aisle:'',direction:'',distance:0,shelf:0) end
+      location_a = delivery_item_a.product.try(:location) || Location.new(aisle:'',direction:'',distance:0,shelf:0)
+      location_b = delivery_item_b.product.try(:location) || Location.new(aisle:'',direction:'',distance:0,shelf:0)
       if location_a.aisle != location_b.aisle #location_aisle
         location_a.aisle <=> location_b.aisle
       elsif location_a.direction != location_b.direction #location_direction
@@ -113,6 +113,6 @@ class DeliveriesController < ApplicationController
   end
 
   def delivery_params
-    params.require(:delivery).permit(:customer_name, :shipping_address, :customer_email, :order_id, :client_id, :order_piece_count, :payment_id, :payment_card_token, :order_status, :picked_status, :order_grand_total, :payment_amount, :order_sku_count, :order_total_price, :placed_at, delivery_items_attributes: [:picked_status, :product_name, :quantity, :shipping_weight, :shipping_weight_unit, :picked_quantity, :picker_bin_number, :store_sku, :client_sku, :price])
+    params.require(:delivery).permit(:customer_name, :delivery_option, :order_flag, :shipping_address, :customer_email, :order_id, :client_id, :order_piece_count, :payment_id, :payment_card_token, :order_status, :picked_status, :order_grand_total, :payment_amount, :order_sku_count, :order_total_price, :placed_at, delivery_items_attributes: [:picked_status, :product_name, :quantity, :shipping_weight, :shipping_weight_unit, :picked_quantity, :picker_bin_number, :store_sku, :client_sku, :price, :order_item_options_flags])
   end
 end

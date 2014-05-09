@@ -3,6 +3,8 @@ ruby "2.1.0"
 
 gem 'angular-ui-bootstrap-rails'
 gem 'angularjs-rails'
+gem 'authlogic'
+gem 'dynamic_form'
 gem 'formtastic'
 gem 'haml'
 gem 'jbuilder', '~> 1.2'
@@ -34,6 +36,7 @@ end
 
 group :test, :development do
   gem 'rspec-rails'
+  gem 'scrypt', '~> 1.2'
 end
 
 group :deployment do

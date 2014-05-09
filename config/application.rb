@@ -16,6 +16,10 @@ Bundler.require(:default, Rails.env)
 
 module Certus
   class Application < Rails::Application
+
+    config.assets.precompile += ['customer.css', 'login.css', 'admin.css', 'bootstrap.min.css']
+    config.assets.precompile += ['customer.js', 'admin.js']
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Certus Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <%= stylesheet_link_tag    "bootstrap.min", media: "all" %>
+  <%= stylesheet_link_tag    "login", media: "all" %>
+  <%#= javascript_include_tag "customer" %>
+  <%= csrf_meta_tags %>
+  <!--[if lt IE 9]>
+  <script src="<%= asset_path('html5shiv.js') %>"></script>
+  <script src="<%= asset_path('respond.min.js') %>"></script>
+  <![endif]-->
+</head>
+<body class="<%= "#{params[:controller]}_#{params[:action] }" %>">
+  <div class="container">
+    <%= yield %>
+  </div>
+</body>
+</html>

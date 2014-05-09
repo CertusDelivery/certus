@@ -7,7 +7,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.mySelections = []
   cellEditableLocation = "<input ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"  ng-blur=\"updateEntity(row.entity)\" />"
   cellLocation = '<div ng-click=\"removeFocus();editCell();\">{{row.getProperty(col.field)}}</div>'
-  cellTemplatePicked = '<div ng-class="{picked:row.getProperty(\'picked_status\') == \'PICKED\' ? true: false}"><span ng-class="{hidden: row.getProperty(\'picked_status\') == \'PICKED\' ? false : true }">✓</span>{{row.getProperty(col.field)}}</div>'
+  cellTemplatePicked = '<div class="prdouct-name-col">'+
+                         '<span ng-class="{hidden: row.getProperty(\'picked_status\') == \'PICKED\' ? false : true }" class="label label-success">✓</span>'+
+                         '<span ng-class="{hidden: row.getProperty(\'out_of_stock_quantity\') == 0}" class="label label-info">{{row.getProperty("order_item_options_flags")}}</span>'+
+                         '{{row.getProperty(col.field)}}'+
+                       '</div>'
 
   qtySortFn = (a, b) ->
     a_arr = a.split("/")
@@ -170,12 +174,18 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
               needInsertFlag = false
               angular.forEach data, (v, k) ->
                 row[k] = v
-              $scope.gridOptions.selectItem(index, true)
+              if data.picked_status is 'PICKED'
+                $scope.selectUnpickedRow()
+              else
+                $scope.gridOptions.selectItem(index, true)
           if needInsertFlag
             index = $scope.picklist.push data
-            setTimeout( ->
-              $scope.gridOptions.selectItem(index-1, true)
-            , 0)
+            if data.picked_status is 'PICKED'
+              $scope.selectUnpickedRow()
+            else
+              setTimeout( ->
+                $scope.gridOptions.selectItem(index-1, true)
+              , 0)
         )
       else
         $scope.picking(substituteBarcode)

@@ -33,11 +33,12 @@ class ProductsController < ApplicationController
   def update_property
     begin
       product = Product.find(params[:id])
+      original_val = product[params[:property]]
       product[params[:property]] =  params[:value]
       product.save!
       render json: { status: true, value: product[params[:property]] }
     rescue
-      render json: { status: false, message: 'operation failure!' }
+      render json: { status: false, message: 'operation failure!', value: original_val }
     end
   end
 

@@ -19,4 +19,6 @@
 //= require angular-ui-bootstrap-tpls
 //= require ng-grid-2.0.8.debug
 //= require main
-//= require_tree .
+//= require modals
+//= require deliveries
+//= require_tree ./angular

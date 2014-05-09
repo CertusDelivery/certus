@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: "deliveries@certusdelivery.com"
+  include Customer::OrdersHelper
 
   def delivery_mail(deliveries)
     @deliveries = deliveries
@@ -8,6 +9,7 @@ class UserMailer < ActionMailer::Base
 
   def customer_notification(delivery)
     @delivery = delivery
+    @user_profile_url = order_secure_url(delivery)
     mail(:to => delivery.customer_email, :subject => 'CertusDelivery Notification') if delivery.customer_email.present?
   end
 end

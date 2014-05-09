@@ -13,6 +13,7 @@ json.(item,
   :picking_progress,
   :is_replaced,
   :product_image,
-  :price
+  :price,
+  :order_item_options_flags
 )
 json.location item.product.location.info if item.product && item.product.location

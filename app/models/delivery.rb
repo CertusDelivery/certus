@@ -1,3 +1,4 @@
+require 'digest/md5'
 class Delivery < ActiveRecord::Base
 
   MAX_PICKING_COUNT = 3
@@ -18,6 +19,19 @@ class Delivery < ActiveRecord::Base
     delivered:        'DELIVERED'
   }
 
+  ORDER_FLAGS = {
+    substitute: 'SUBSTITUTE',
+    backorder:  'BACKORDER',
+    critical:   'CRITICAL',
+    skip:       'SKIP'
+  }
+
+  DELIVERY_OPTIONS = {
+    doorstep_delivery:        'DOORSTEP_DELIVERY',
+    kitchen_counter_delivery: 'KITCHEN_COUNTER_DELIVERY',
+    doorstep_if_no_one_home:  'DOORSTEP_IF_NO_ONE_HOME'
+  }
+
   has_many :delivery_items do
     def all_picked?
       collect do |item|
@@ -26,6 +40,8 @@ class Delivery < ActiveRecord::Base
       true
     end
   end
+
+  attr_accessor :flash_notice
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
@@ -46,7 +62,9 @@ class Delivery < ActiveRecord::Base
   accepts_nested_attributes_for :delivery_items
 
   # callbacks .................................................................
-  before_create :initial_delivery_window, :setup_status
+  before_create :initial_secure_salt, :initial_delivery_window, :setup_status
+  before_update :change_order_items_options_flags, :if => :order_flag_changed?
+  before_update :add_msg_into_flash, :if => :delivery_option_changed?
 
   # class methods .............................................................
 
@@ -62,6 +80,11 @@ class Delivery < ActiveRecord::Base
       else
         "#{picked_orders.size} orders have been removed from the list."
       end
+    end
+
+    def search_by_secure_code(secure_code)
+      #TODO: how make a md5 secure code
+      includes(:delivery_items).where('digest(order_id::text||secure_salt, "md5")=?', secure_code).first
     end
   end
 
@@ -87,8 +110,16 @@ class Delivery < ActiveRecord::Base
     delivery_items.inject(0) { |sum, item| sum += item.picked_total_price }
   end
 
+  def quantity
+    delivery_items.inject(0) { |sum, item| sum += item.quantity }
+  end
+
   def picked_quantity
     delivery_items.inject(0) { |sum, item| sum += item.picked_quantity }
+  end
+
+  def out_of_stock_quantity 
+    delivery_items.inject(0) { |sum, item| sum += item.out_of_stock_quantity }
   end
 
   # protected instance methods ................................................
@@ -96,6 +127,11 @@ class Delivery < ActiveRecord::Base
 
   def initial_delivery_window
     self.desired_delivery_window = DateTime.current + 6.hours unless self.desired_delivery_window
+  end
+
+  def initial_secure_salt
+    self.secure_salt = SecureRandom.hex(10)
+    self.secure_order_id  = Digest::SHA2.hexdigest("#{self.order_id}#{self.secure_salt}")
   end
 
   def setup_status
@@ -119,5 +155,13 @@ class Delivery < ActiveRecord::Base
     # if order_total_price != delivery_items.to_a.sum(&:total_price)
     #   self.errors.add(:order_total_price,"total price doesn't match the sum of all order_items price")
     # end
+  end
+
+  def change_order_items_options_flags
+    self.delivery_items.update_all(order_item_options_flags: self.order_flag)
+  end
+
+  def add_msg_into_flash
+    self.flash_notice = "Your driver will be notified of any changes you make to the delivery option for your order." 
   end
 end

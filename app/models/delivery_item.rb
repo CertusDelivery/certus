@@ -2,6 +2,8 @@ class DeliveryItem < ActiveRecord::Base
 
   # relationships .............................................................
   belongs_to :delivery
+  belongs_to :original_item, class_name: 'DeliveryItem', foreign_key: 'original_item_id'
+  has_one :substituted_item, class_name: 'DeliveryItem', foreign_key: 'original_item_id'
   belongs_to :product, primary_key: 'store_sku', foreign_key: 'store_sku'
 
   # validations ...............................................................
@@ -46,7 +48,7 @@ class DeliveryItem < ActiveRecord::Base
     end
 
     def substitute(original_item, product_params)
-      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id, picked_quantity: 1, picker_bin_number: original_item.picker_bin_number})
+      item_params = product_params.merge({quantity: original_item.out_of_stock_quantity, delivery_id: original_item.delivery_id, picked_quantity: 1, picker_bin_number: original_item.picker_bin_number, original_item_id: original_item.id})
       self.create(item_params.permit!)
     end
   end
@@ -67,7 +69,7 @@ class DeliveryItem < ActiveRecord::Base
   def out_of_stock!
     out_of_stock = quantity - picked_quantity
     self.update_attributes(out_of_stock_quantity: out_of_stock)
-    self.product.out_of_stock!
+    self.product.out_of_stock! if self.product
   end
 
   # For Test
@@ -82,7 +84,7 @@ class DeliveryItem < ActiveRecord::Base
   end
 
   def substitute_for(other)
-    self.update_attributes({ quantity: quantity + other.out_of_stock_quantity, picked_status: PICKED_STATUS[:unpicked] })
+    self.update_attributes({ quantity: quantity + other.out_of_stock_quantity, picked_status: PICKED_STATUS[:unpicked], original_item_id: other.id })
     self.pick!
   end
 

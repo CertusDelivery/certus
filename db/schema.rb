@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140425024701) do
+ActiveRecord::Schema.define(version: 20140504072800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,9 @@ ActiveRecord::Schema.define(version: 20140425024701) do
     t.string   "customer_phone_number"
     t.string   "lat"
     t.string   "lng"
+    t.string   "delivery_option"
+    t.string   "secure_salt"
+    t.string   "secure_order_id"
   end
 
   create_table "delivery_items", force: true do |t|
@@ -91,6 +94,7 @@ ActiveRecord::Schema.define(version: 20140425024701) do
     t.integer  "out_of_stock_quantity",    default: 0
     t.integer  "scanned_quantity",         default: 0
     t.boolean  "is_replaced",              default: false
+    t.integer  "original_item_id"
   end
 
   create_table "locations", force: true do |t|
@@ -129,6 +133,29 @@ ActiveRecord::Schema.define(version: 20140425024701) do
     t.boolean  "on_sale",              default: true
     t.integer  "location_id"
     t.string   "source",               default: "NORMAL"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "login",                                  null: false
+    t.string   "email",                                  null: false
+    t.string   "crypted_password",                       null: false
+    t.string   "password_salt",                          null: false
+    t.string   "persistence_token",                      null: false
+    t.string   "single_access_token",                    null: false
+    t.string   "perishable_token",                       null: false
+    t.integer  "login_count",         default: 0,        null: false
+    t.integer  "failed_login_count",  default: 0,        null: false
+    t.datetime "last_request_at"
+    t.datetime "current_login_at"
+    t.datetime "last_login_at"
+    t.string   "current_login_ip"
+    t.string   "last_login_ip"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "role",                default: "picker"
+    t.boolean  "enabled",             default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
