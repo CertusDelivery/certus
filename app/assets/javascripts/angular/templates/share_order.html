@@ -1,0 +1,18 @@
+<div class='modal-body product-detail-modal'>
+  <div style="padding:10px;">
+    <p><strong>Select Order</strong></p>
+    <p>
+      <select ng-model="selectOrderAndPicker.order" ng-options="item for item in deliveries"></select>
+    </p>
+    <p style="margin-top:20px;"><strong>Select Picker</strong></p>
+    <p><select ng-model="selectOrderAndPicker.picker" ng-options="user.login for user in pickers"><select></p>
+  </div>
+</div>
+<div class="modal-footer product-detail-modal-footer">
+  <div class="flash">
+    <div class="error ng-binding">{{errorMessage}}</div>
+    <div class="notice ng-binding">{{notic}}</div>
+  </div>
+  <div><button class="btn btn-primary" ng-click="completeShareOrder()" class="productDetailInput">Share Order</button></div>
+  <div style="margin-top:10px;"><button class="btn btn-default" ng-click="dismissModal()" class="cancelShare">Cancel</button></div>
+</div>

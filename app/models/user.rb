@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
 
   ROLES = %w(admin picker)
 
+  has_many :delivery_picker_ships, foreign_key: 'picker_id' 
+  has_many :deliveries, through: :delivery_picker_ships
 
   validates_presence_of :first_name, :last_name, :email, :login
   validates_inclusion_of :role, :in => ROLES

@@ -21,6 +21,8 @@
               = link_to 'Download New Order', "#", 'ng-click' => "loadNewOrder()"
             %li
               = link_to 'Sort By Location', "#", 'ng-click' => "loadOrdersByLocation()"
+            %li
+              = link_to 'Share Order', "#", 'ng-click' => "shareOrder()"
         %li.dropdown
           = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
             Links 
@@ -32,6 +34,8 @@
               = link_to 'Product List', products_url(), {:target => '_blank'}
             %li 
               = link_to 'Location List', locations_url(), {:target => '_blank'}
+            %li 
+              = link_to 'Search Delivery', search_deliveries_url(), {:target => '_blank'}
         %li.dropdown
           = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
             Print
@@ -43,3 +47,9 @@
               = link_to 'Print Packing List', "#", 'id' =>'print_packing_list', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url() }"
             %li
               = link_to 'Print Packing List(out of picking list)', "#", 'id' =>'print_packing_list_complete', 'class' => 'print_button', 'url'=> "#{ print_packing_list_deliveries_url(complete:1) }"
+        %li.dropdown
+          = link_to "#", class: "dropdown-toggle", data: {toggle: "dropdown"} do
+            #{current_user.login.upcase} 
+          %ul.dropdown-menu
+            %li
+              = link_to 'Logout', logout_path

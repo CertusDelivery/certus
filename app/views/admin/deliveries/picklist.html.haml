@@ -1,0 +1,20 @@
+%div.row.history
+  %center
+    %h4 All Picklist
+  %hr
+  %table.table.table-hover.table-selected
+    %thead
+      %tr
+        %th Name 
+        %th Qty 
+        %th Picked Qty
+        %th Delivery ID
+    %tbody
+      - @deliveries.each do |delivery|
+        - delivery.delivery_items.each do |item|
+          %tr
+            %td #{item.product_name}
+            %td #{item.quantity}
+            %td #{item.picked_quantity}
+            %td #{item.delivery_id}
+  = will_paginate @deliveires, :renderer => BootstrapLinkRender 

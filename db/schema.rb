@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504072800) do
+ActiveRecord::Schema.define(version: 20140509074741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,11 @@ ActiveRecord::Schema.define(version: 20140504072800) do
     t.integer  "scanned_quantity",         default: 0
     t.boolean  "is_replaced",              default: false
     t.integer  "original_item_id"
+  end
+
+  create_table "delivery_picker_ships", force: true do |t|
+    t.integer "delivery_id"
+    t.integer "picker_id"
   end
 
   create_table "locations", force: true do |t|

@@ -55,6 +55,7 @@ class DeliveryItem < ActiveRecord::Base
 
   # public instance methods ...................................................
   def pick!(quantity = 1)
+    return false if (quantity + self.picked_quantity + self.out_of_stock_quantity > self.quantity)
     self.update_attributes({ picked_quantity: picked_quantity + quantity })
   end
 

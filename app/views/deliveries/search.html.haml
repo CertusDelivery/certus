@@ -1,0 +1,59 @@
+%div.row
+  %div.col-md-8
+    %h3 Delivery Info
+  %div.form-box.col-md-4
+    %form.form-inline{'action' => search_deliveries_path, 'style' => 'margin-top:20px;'}
+      %div.input-group
+        = text_field_tag 'id', '', placeholder: 'Delivery ID', 'class' => 'form-control'
+        %span.input-group-btn
+          %button.btn.btn-default Search
+  %div.clearfix
+  %div.col-md-12.delivery-info
+    %hr
+    - if @delivery.nil?
+      - if params[:id].present?
+        %div.alert.alert-warning Oops!!! The Delivery doesn't Exsit!
+    - else
+      %div.col-xs-5.col-md-2
+        %strong Delivery ID:
+      %div.col-xs-7.col-md-4
+        #{@delivery.id}
+      %div.col-xs-5.col-md-2
+        %strong Delivery Option :
+      %div.col-xs-7.col-md-4
+        - if @delivery.delivery_option
+          #{@delivery.delivery_option.gsub('_',' ')}
+        - else
+          &nbsp;
+      %div.col-xs-5.col-md-2
+        %strong Delivery Window :
+      %div.col-xs-7.col-md-4
+        #{expected_delivery_window(@delivery.placed_at)}
+      %div.clearfix
+      %hr
+      %div.col-xs-5.col-md-2
+        %strong Customer Name :
+      %div.col-xs-7.col-md-4
+        #{@delivery.customer_name}
+      %div.col-xs-5.col-md-2
+        %strong Shipping Addr :
+      %div.col-xs-7.col-md-4
+        %address #{@delivery.shipping_address}
+      %div.clearfix
+      %hr
+      %table.table.table-hover
+        %thead
+          %tr
+            %th Name 
+            %th Qty
+            %th Picked Qty
+        %tbody
+          - @delivery.delivery_items.each do |item|
+            %tr
+              %td #{item.product_name}
+              %td #{item.quantity}
+              %td #{item.picked_quantity}
+      %div.clearfix
+      %div.delivery-summary
+        %div.col-xs-6 Item Counts : #{@delivery.delivery_items.size}
+        %div.col-xs-6.text-right Picked Counts : #{@delivery.picked_quantity}

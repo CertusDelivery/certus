@@ -81,6 +81,36 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       $scope.location_sort = 'asc'
     $scope.picklist = loader.query()
 
+  $scope.shareOrder = ->
+    $scope.focusScanner = false
+    $scope.errorMessage = ''
+    $scope.deliveries = []
+    angular.forEach $scope.picklist, (delivery_item) ->
+      if $scope.deliveries.indexOf(delivery_item.delivery_id) == -1
+        $scope.deliveries.push(delivery_item.delivery_id)
+    $scope.pickers = $resource('/api/users/pickers.json').query(->
+      $scope.selectOrderAndPicker = {'order': $scope.deliveries[0],'picker': $scope.pickers[0]}
+    )
+    $scope.modal = $modal.open {
+      templateUrl: "<%= asset_path('angular/templates/share_order.html') %>",
+      backdrop: 'static',
+      keyboard: false,
+      windowClass: 'expanded-view'
+      scope: ( ->
+        $scope
+      )()
+    }
+
+  $scope.completeShareOrder = ->
+    params = {delivery_picker_ship: {delivery_id: $scope.selectOrderAndPicker.order, picker_id: $scope.selectOrderAndPicker.picker.id}}
+    console.log params
+    $http.post('/api/delivery_picker_ships/create_by_params', params).success((data) ->
+      if data.status
+        $scope.dismissModal()
+      else
+        $scope.errorMessage = data.message
+    )
+
 
   $scope.addFocus = ->
     $scope.focusScanner = true
@@ -115,8 +145,11 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   )
 
   $scope.picking = (barcode) ->
+    $scope.notice = ''
+    $scope.errorMessage = ''
     return false unless barcode
     deliveryItem = $scope.mySelections[0]
+
     $http.post('/api/delivery_items/pick.json',
        barcode: barcode,
        id: deliveryItem.id,
@@ -143,8 +176,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
 
   # operation_code: 1 -> normal, 2 -> out of stock
   $scope.pickProduct = (operation_code) ->
-    $scope.notice = ''
-    $scope.errorMessage = ''
     barcode = $scope.scannedBarcode
     deliveryItem = $scope.mySelections[0]
     if operation_code == 2
@@ -157,6 +188,9 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
 
   $scope.markAsOutOfStock = ->
     $scope.pickProduct(2)
+
+  $scope.markAsPicked = ->
+    $scope.picking($scope.mySelections[0]['store_sku'])
 
   $scope.substituteProduct = (deliveryItem, substituteBarcode) ->
     $http.get('api/products/search/'+substituteBarcode+'.json'
@@ -219,7 +253,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   $scope.productDetail= (row) ->
     $scope.focusScanner = false
     $scope.focusProductDetailScanner = true
-    $scope.productDetailModal = $modal.open {
+    $scope.modal = $modal.open {
       templateUrl: "<%= asset_path('angular/templates/product_detail.html') %>",
       backdrop: 'static',
       keyboard: false,
@@ -229,10 +263,10 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       )()
    }
 
-  $scope.dismissProductDetail = ->
+  $scope.dismissModal = ->
     $scope.focusScanner = true
     $scope.focusProductDetailScanner = false
-    $scope.productDetailModal.close()
+    $scope.modal.close()
 
   $scope.setScannedBarcode = (e) ->
     if event.which != 13

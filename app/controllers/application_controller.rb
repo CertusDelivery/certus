@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   #include InheritedResources::DSL
   # inherit_resources
+  before_filter :require_picker_user
   protect_from_forgery with: :exception
 
   helper_method :current_user
@@ -55,6 +56,15 @@ class ApplicationController < ActionController::Base
     return unless current_user
     unless current_user.admin?
       flash[:error] = "You must be logged in as an administrator to access this page"
+      deny_access
+    end
+  end
+
+  def require_picker_user
+    require_user
+    return unless current_user
+    unless current_user.picker?
+      flash[:error] = "You must be logged in as an picker to access this page"
       deny_access
     end
   end

@@ -23,14 +23,14 @@
         %strong Delivery Option :
       %div.col-xs-6.col-md-4
         - if Delivery::MESSAGE_STATUS.values.index(@order.message_status) < 3
-          = f.select :delivery_option, Delivery::DELIVERY_OPTIONS.collect{|key,value| [key.to_s.gsub('_',' '), value]}
+          = f.select :delivery_option, Delivery::DELIVERY_OPTIONS.collect{|key,value| [value.gsub('_',' '), value]}
         - else
           #{@order.delivery_option}
       %div.col-xs-6.col-md-2
         %strong Global Substitution :
       %div.col-xs-6.col-md-4
         - if @order.message_status == Delivery::MESSAGE_STATUS[:received]
-          = f.select :order_flag, Delivery::ORDER_FLAGS
+          = f.select :order_flag, Delivery::ORDER_FLAGS.collect{|k,v| [v, v]}
         - else
           #{@order.order_flag}
   %div.clearfix

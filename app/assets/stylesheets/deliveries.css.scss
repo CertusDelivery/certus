@@ -73,6 +73,20 @@ input, .btn {
   margin: -10px -100px;
   text-align: center;
 }
+.delivery-info {
+  div {
+    padding: 5px 0;
+  }
+  .alert {
+    padding: 15px;
+    border-radius: 0;
+  }
+  .delivery-summary {
+    background: #eee;
+    padding: 5px 10px;
+    overflow: auto;
+  }
+}
 @media (max-width: 768px) {
   .barcode-form {
     margin: 20px 0;

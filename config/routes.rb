@@ -23,6 +23,7 @@ Certus::Application.routes.draw do
     resources :deliveries do
       collection do
         get :history
+        get :picklist
       end
     end
   end
@@ -35,6 +36,7 @@ Certus::Application.routes.draw do
     resources :deliveries do
       collection do
         get 'picklist'
+        get 'search'
         get 'unpicked_orders'
         get 'load_unpicked_order'
         get 'sort_picking_orders'
@@ -74,6 +76,18 @@ Certus::Application.routes.draw do
           get 'relocation/:store_sku' => 'products#relocation'
           post 'create_at_location'
         end
+      end
+    end
+
+    resources :users do
+      collection do
+        get 'pickers' => 'users#pickers'
+      end
+    end
+
+    resources :delivery_picker_ships do
+      collection do
+        post 'create_by_params' => 'delivery_picker_ships#create_by_params'
       end
     end
   end

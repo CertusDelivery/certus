@@ -31,7 +31,9 @@ class Delivery < ActiveRecord::Base
     kitchen_counter_delivery: 'KITCHEN_COUNTER_DELIVERY',
     doorstep_if_no_one_home:  'DOORSTEP_IF_NO_ONE_HOME'
   }
-
+  
+  has_many :delivery_picker_ships
+  has_many :pickers, through: :delivery_picker_ships
   has_many :delivery_items do
     def all_picked?
       collect do |item|
@@ -45,6 +47,7 @@ class Delivery < ActiveRecord::Base
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
+  scope :pickable, lambda{|user| where("picked_status=? or picked_status=?", PICKED_STATUS[:unpicked], PICKED_STATUS[:picking]).where.not(id: user.deliveries.map(&:id))}
   scope :picking, -> { where(picked_status: PICKED_STATUS[:picking]) }
   #customer
   validates_presence_of :customer_name, :shipping_address, :customer_email
@@ -80,11 +83,6 @@ class Delivery < ActiveRecord::Base
       else
         "#{picked_orders.size} orders have been removed from the list."
       end
-    end
-
-    def search_by_secure_code(secure_code)
-      #TODO: how make a md5 secure code
-      includes(:delivery_items).where('digest(order_id::text||secure_salt, "md5")=?', secure_code).first
     end
   end
 
