@@ -1,6 +1,11 @@
 .expanded-view, .product-modal-form {
   background: rgba(255,255,255,0.5);
 
+  select {
+    width: 100%;
+    height: 30px;
+  }
+
   .modal-dialog {
     margin: 0;
    }

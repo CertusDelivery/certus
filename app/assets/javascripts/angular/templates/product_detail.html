@@ -5,7 +5,7 @@
           <td rowspan="3">
             <img ng-src='{{mySelections[0].product_image}}' style='width:100%;'>
           </td>
-          <td colspan="2" style="width:50%;"><span class="label label-default" ng-click='dismissProductDetail();'>&nbsp;{{ mySelections[0].delivery_id  }}&nbsp;</span></td>
+          <td colspan="2" style="width:50%;"><span class="label label-default" ng-click='dismissModal();'>&nbsp;{{ mySelections[0].delivery_id  }}&nbsp;</span></td>
         </tr>
         <tr>
           <th colspan="2" style="font-size: 26px;">{{mySelections[0].quantity}}/{{mySelections[0].picked_quantity}}/{{mySelections[0].out_of_stock_quantity}}</th>

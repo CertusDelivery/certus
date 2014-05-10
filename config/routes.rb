@@ -78,6 +78,18 @@ Certus::Application.routes.draw do
         end
       end
     end
+
+    resources :users do
+      collection do
+        get 'pickers' => 'users#pickers'
+      end
+    end
+
+    resources :delivery_picker_ships do
+      collection do
+        post 'create_by_params' => 'delivery_picker_ships#create_by_params'
+      end
+    end
   end
 
   # Example resource route with options:

@@ -35,7 +35,7 @@ class DeliveriesController < ApplicationController
   def load_unpicked_order
     # One Time One Order
     if Delivery::MAX_PICKING_COUNT > picking_count
-      delivery = Delivery.fifo.pickable(current_user).first
+      delivery = Delivery.fifo.unpicked.first
       if delivery
         delivery.picked_status = Delivery::PICKED_STATUS[:picking]
         delivery.save
