@@ -16,6 +16,7 @@ gem 'typhoeus'
 gem 'will_paginate'
 gem 'nested_form'
 gem "inherited_resources", "~> 1.4.1"
+gem 'sidekiq'
 
 group :assets do
   gem 'sass-rails', '~> 4.0.0'
