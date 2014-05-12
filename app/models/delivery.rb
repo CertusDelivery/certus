@@ -72,8 +72,8 @@ class Delivery < ActiveRecord::Base
   # class methods .............................................................
 
   class << self
-    def complete_all
-      picked_orders = Delivery.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
+    def complete_all_for_user(user)
+      picked_orders = user.deliveries.picking.includes(:delivery_items).select{|d| d.can_be_complete? }
       picked_orders.each(&:complete!)
       message = case picked_orders.size
       when 0
@@ -100,7 +100,7 @@ class Delivery < ActiveRecord::Base
   def complete!
     if can_be_complete?
       self.update_attributes({ picked_status: PICKED_STATUS[:store_staging], message_status: MESSAGE_STATUS[:picked]})
-      UserMailer.customer_notification(self).deliver
+      AsyncMailWorker.perform_async(:delivery, self.id)
     end
   end
 

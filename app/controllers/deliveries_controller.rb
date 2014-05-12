@@ -7,7 +7,7 @@ class DeliveriesController < ApplicationController
       #process auth, no auth, response 401(Unauthorized)
       @delivery = Delivery.new(delivery_params)
       if @delivery.save
-        UserMailer.customer_notification(@delivery).deliver
+        AsyncMailWorker.perform_async(:delivery, @delivery.id)
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
