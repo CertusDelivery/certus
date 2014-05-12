@@ -12,9 +12,9 @@
     /Collect the nav links, forms, and other content for toggling
     %nav.navbar-collapse.bs-navbar-collapse.collapse#bs-example-navbar-collapse-1{collapse: "!isCollapsed"}
       %ul.nav.navbar-nav.navbar-left
-        %li{class: active_if_matches(/admin$|history/)}
+        %li{class: active_if_matches(/admin$|history$/)}
           = link_to 'Delivery History', history_admin_deliveries_url
-        %li{class: active_if_matches(/deliveries/)}
+        %li{class: active_if_matches(/deliveries\/(?!history)/)}
           = link_to 'All Picklist', picklist_admin_deliveries_url
         %li.dropdown{class: active_if_matches(/users/)}
           = link_to admin_users_url, class: "dropdown-toggle", data: {toggle: "dropdown"} do

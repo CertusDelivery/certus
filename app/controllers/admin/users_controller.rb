@@ -12,7 +12,7 @@ module Admin
       @user = User.new(user_params)
       if @user.save
         flash[:notice] = "Registration successful."
-        redirect_to root_url
+        redirect_to admin_users_url
       else
         render :action => 'new'
       end
