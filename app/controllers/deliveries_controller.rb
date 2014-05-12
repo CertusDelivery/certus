@@ -1,13 +1,13 @@
 class DeliveriesController < ApplicationController
   skip_before_filter :require_picker_user, only: [:create]
-  protect_from_forgery except: :create
+  protect_from_forgery except: [:create, :remove_picked_orders]
 
   def create
     begin
       #process auth, no auth, response 401(Unauthorized)
       @delivery = Delivery.new(delivery_params)
       if @delivery.save
-        UserMailer.customer_notification(@delivery).deliver
+        AsyncMailWorker.perform_async(:delivery, @delivery.id)
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
@@ -47,7 +47,7 @@ class DeliveriesController < ApplicationController
   end
 
   def remove_picked_orders
-    message = Delivery.complete_all
+    message = Delivery.complete_all_for_user(current_user)
     render json: { status: 'ok', message: message }
   end
 
