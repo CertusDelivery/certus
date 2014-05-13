@@ -1,0 +1,6 @@
+address: 0.0.0.0
+pid: ../tmp/pids/thin.pid
+log: ../log/thin.log
+port: 8080
+servers: 1
+daemonize: true

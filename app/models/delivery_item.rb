@@ -15,6 +15,7 @@ class DeliveryItem < ActiveRecord::Base
   # callbacks .................................................................
   before_create :initial_picked_status, :update_status_if_all_picked #,:init_random_location_for_test
   before_save :update_status_if_all_picked
+  after_update :publish_item_for_faye
   # TODO
   # before_save :calculate_amount
   LOCATION_REG = /^(?<aisle_num>\d{1,3})(?<direction>(N|S|E|W))?-( |(?<front>\d{1,3}))?-(?<shelf>\d{1,2})?$/
@@ -100,6 +101,11 @@ class DeliveryItem < ActiveRecord::Base
 
   # protected instance methods ................................................
   protected
+
+  def publish_item_for_faye
+    client = Faye::Client.new(Setting.faye_server)
+    client.publish('/delivery_items/updated', self)
+  end
 
   def order_to_delivery_convert
     if client_sku != store_sku
