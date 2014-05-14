@@ -1,4 +1,5 @@
 %div{'id' => 'picklist', 'ng-controller' => 'PicklistCtrl', 'class' => 'row'}
+  %div{'ng-init' => "picker_id=#{current_user.id}"}
   = render "header"
   %div.col-md-12{'style' => 'margin-top: 70px;'}
     %center

@@ -17,6 +17,9 @@ gem 'will_paginate'
 gem 'nested_form'
 gem "inherited_resources", "~> 1.4.1"
 gem 'sidekiq'
+gem 'faye'
+gem 'thin'
+gem "settingslogic", "~> 2.0.9"
 
 group :assets do
   gem 'sass-rails', '~> 4.0.0'

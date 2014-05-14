@@ -53,6 +53,26 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     if !found
       $scope.gridOptions.selectRow(0, true)
 
+  $scope.initFaye = ->
+    $scope.client = new Faye.Client '<%= Setting.faye_server %>'
+    $scope.client.subscribe '/delivery_item/updated', (item)->
+      angular.forEach $scope.picklist, (delivery_item) ->
+        if delivery_item.id == item.id 
+          delivery_item.picking_progress = item.picking_progress
+          delivery_item.picked_status = item.picked_status
+    $scope.client.subscribe '/delivery/picked', (items)->
+      items.forEach (item) ->
+        $scope.picklist.forEach (delivery_item, index) ->
+          if delivery_item.id == item.id
+            $scope.picklist.splice index, 1
+    $scope.client.subscribe '/delivery/shared', (ship)->
+      console.log $scope.picker_id
+      if ship.picker_id == $scope.picker_id
+        ship.items.forEach (item) ->
+          $scope.picklist.push item
+
+  $scope.initFaye()
+
   $scope.clearSortingData = ->
     if ($scope.gridOptions)
       $scope.gridOptions.ngGrid.config.sortInfo = { fields:[], directions: [] }
