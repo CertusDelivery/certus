@@ -7,6 +7,9 @@
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <% if current_user %>
+  <script src="<%= "#{Setting.faye_server}/client.js" %>"></script>
+  <% end %>
   <!--[if lt IE 9]>
   <script src="<%= asset_path('html5shiv.js') %>"></script>
   <script src="<%= asset_path('respond.min.js') %>"></script>

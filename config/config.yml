@@ -1,0 +1,20 @@
+defaults: &defaults
+  faye_server: "http://localhost:8080/faye"
+
+# local server
+development:
+  <<: *defaults
+  faye_server: "http://127.0.0.1:8080/faye"
+
+# remote server
+dev:
+  <<: *defaults
+  faye_server: "http://testwf.certusdelivery.com:8080/faye"
+
+staging:
+  <<: *defaults
+  faye_server: "http://stagingwf.certusdelivery.com:8080/faye"
+
+production:
+  <<: *defaults
+  faye_server: "http://wf.certusdelivery.com:8080/faye"

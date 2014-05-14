@@ -4,6 +4,7 @@ class DeliveryPickerShipsController < ApplicationController
     if User.find(ship_params[:picker_id]).deliveries.picking.count < Delivery::MAX_PICKING_COUNT
       if DeliveryPickerShip.where(ship_params).size == 0
         @ship = DeliveryPickerShip.new(ship_params)
+        @ship.shared = true
         render json: {status: @ship.save, message: 'share successfully'}
       else
         render json: {status: false, message: 'This order is already in his pickelist'}

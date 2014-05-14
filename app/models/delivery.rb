@@ -68,6 +68,7 @@ class Delivery < ActiveRecord::Base
   before_create :initial_secure_salt, :initial_delivery_window, :setup_status
   before_update :change_order_items_options_flags, :if => :order_flag_changed?
   before_update :add_msg_into_flash, :if => :delivery_option_changed?
+  after_update :publish_items_for_faye, :if => :picked_status_changed?
 
   # class methods .............................................................
 
@@ -161,5 +162,12 @@ class Delivery < ActiveRecord::Base
 
   def add_msg_into_flash
     self.flash_notice = "Your driver will be notified of any changes you make to the delivery option for your order." 
+  end
+
+  def publish_items_for_faye
+    if self.store_staging?
+      client = Faye::Client.new(Setting.faye_server)
+      client.publish('/delivery/picked', self.delivery_items)
+    end
   end
 end
