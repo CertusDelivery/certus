@@ -104,7 +104,7 @@ class DeliveryItem < ActiveRecord::Base
 
   def publish_item_for_faye
     client = Faye::Client.new(Setting.faye_server)
-    client.publish('/delivery_items/updated', self)
+    client.publish('/delivery_item/updated', self)
   end
 
   def order_to_delivery_convert

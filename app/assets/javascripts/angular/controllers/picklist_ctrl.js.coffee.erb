@@ -55,12 +55,20 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
 
   $scope.initFaye = ->
     $scope.client = new Faye.Client '<%= Setting.faye_server %>'
-    $scope.client.subscribe '/delivery_items/updated', (item)->
+    $scope.client.subscribe '/delivery_item/updated', (item)->
       angular.forEach $scope.picklist, (delivery_item) ->
         if delivery_item.id == item.id 
           delivery_item.picking_progress = item.quantity + '/' + item.picked_quantity + '/' + item.out_of_stock_quantity
           delivery_item.picked_status = item.picked_status
-          console.log item
+    $scope.client.subscribe '/delivery/picked', (items)->
+      console.log items
+      items.forEach (item) ->
+        console.log item
+        $scope.picklist.forEach (delivery_item, index) ->
+          console.log delivery_item
+          if delivery_item.id == item.id
+            $scope.picklist.splice index, 1
+
   $scope.initFaye()
 
   $scope.clearSortingData = ->
