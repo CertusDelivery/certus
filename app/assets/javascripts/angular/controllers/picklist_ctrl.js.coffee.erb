@@ -58,16 +58,18 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     $scope.client.subscribe '/delivery_item/updated', (item)->
       angular.forEach $scope.picklist, (delivery_item) ->
         if delivery_item.id == item.id 
-          delivery_item.picking_progress = item.quantity + '/' + item.picked_quantity + '/' + item.out_of_stock_quantity
+          delivery_item.picking_progress = item.picking_progress
           delivery_item.picked_status = item.picked_status
     $scope.client.subscribe '/delivery/picked', (items)->
-      console.log items
       items.forEach (item) ->
-        console.log item
         $scope.picklist.forEach (delivery_item, index) ->
-          console.log delivery_item
           if delivery_item.id == item.id
             $scope.picklist.splice index, 1
+    $scope.client.subscribe '/delivery/shared', (ship)->
+      console.log $scope.picker_id
+      if ship.picker_id == $scope.picker_id
+        ship.items.forEach (item) ->
+          $scope.picklist.push item
 
   $scope.initFaye()
 
