@@ -5,7 +5,7 @@ class DeliveryPickerShip < ActiveRecord::Base
 
   attr_accessor :shared
   
-  after_create :publish_items_for_faye
+  after_commit :publish_items_for_faye, :on => :create
 
 
   private

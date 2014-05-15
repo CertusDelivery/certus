@@ -16,7 +16,7 @@ class DeliveryItem < ActiveRecord::Base
   # callbacks .................................................................
   before_create :initial_picked_status, :update_status_if_all_picked #,:init_random_location_for_test
   before_save :update_status_if_all_picked
-  after_update :publish_item_for_faye
+  after_commit :publish_item_for_faye, :on => :update
   # TODO
   # before_save :calculate_amount
   LOCATION_REG = /^(?<aisle_num>\d{1,3})(?<direction>(N|S|E|W))?-( |(?<front>\d{1,3}))?-(?<shelf>\d{1,2})?$/
