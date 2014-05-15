@@ -11,10 +11,7 @@ class DeliveryPickerShip < ActiveRecord::Base
   private
   def publish_items_for_faye
     if self.shared
-      EM.run {
-        client = Faye::Client.new(Setting.faye_server)
-        client.publish('/delivery/shared', {picker_id: self.picker_id, items: self.delivery.delivery_items.map(&:as_hash)})
-      }
+      AsyncFayeWorker.perform_async(:delivery_shared, self.id)
     end
   end
 end

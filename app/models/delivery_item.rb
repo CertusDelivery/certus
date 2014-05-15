@@ -124,10 +124,7 @@ class DeliveryItem < ActiveRecord::Base
   protected
 
   def publish_item_for_faye
-    EM.run {
-      client = Faye::Client.new(Setting.faye_server)
-      client.publish('/delivery_item/updated', self.as_hash)
-    }
+    AsyncFayeWorker.perform_async(:delivery_item_updated, self.id)
   end
 
   def order_to_delivery_convert
