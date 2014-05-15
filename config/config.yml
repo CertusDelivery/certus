@@ -6,6 +6,10 @@ development:
   <<: *defaults
   faye_server: "http://127.0.0.1:8080/faye"
 
+test:
+  <<: *defaults
+  faye_server: "http://127.0.0.1:8080/faye"
+
 # remote server
 dev:
   <<: *defaults

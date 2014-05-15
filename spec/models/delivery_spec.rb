@@ -3,6 +3,9 @@ require 'spec_helper'
 describe Delivery do
   before do
     @delivery = create_delivery
+    Delivery.any_instance.stubs(:publish_items_for_faye)
+    DeliveryItem.any_instance.stubs(:publish_item_for_faye)
+    AsyncMailWorker.stubs(:perform_async)
   end
 
   describe "#validate customer_name,shipping_address,customer_email" do
@@ -101,10 +104,13 @@ describe Delivery do
     end
   end
 
-  describe ".complete_all" do
+  describe ".complete_all_for_user" do
+    before do
+      @user     = create(:user)
+    end
     context 'when no order has been completed picked' do
       it 'should return message "No order have been completed picked."' do
-        expect(Delivery.complete_all).to eq("No order have been completed picked.")
+        expect(Delivery.complete_all_for_user(@user)).to eq("No order have been completed picked.")
       end
     end
 
@@ -112,10 +118,12 @@ describe Delivery do
       before do
         @delivery = create_delivery(:picking)
         @delivery.delivery_items.each {|item| item.pick!(item.quantity)}
+        @user.deliveries << @delivery
+        @user.save
       end
 
       it 'should return message "1 order have been removed from the list."' do
-        expect(Delivery.complete_all).to eq("1 order have been removed from the list.")
+        expect(Delivery.complete_all_for_user(@user)).to eq("1 order have been removed from the list.")
       end
     end
 
@@ -129,10 +137,14 @@ describe Delivery do
         [deliverie1, deliverie2].each do |d|
           d.delivery_items.each {|item| item.pick!(item.quantity)}
         end
+        @user.deliveries << deliverie1
+        @user.deliveries << deliverie2
+        @user.deliveries << deliverie3
+        @user.save
       end
 
       it 'should return message "2 orders have been removed from the list."' do
-        expect(Delivery.complete_all).to eq("2 orders have been removed from the list.")
+        expect(Delivery.complete_all_for_user(@user)).to eq("2 orders have been removed from the list.")
       end
     end
   end

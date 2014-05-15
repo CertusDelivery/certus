@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Customer::OrdersHelper do
   before do
     @order = create_delivery
+    Delivery.any_instance.stubs(:publish_items_for_faye)
   end
 
   describe "order_secure_url" do

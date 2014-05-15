@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe DeliveriesController do
+  before do
+    Delivery.any_instance.stubs(:publish_items_for_faye)
+    DeliveryItem.any_instance.stubs(:publish_item_for_faye)
+    user = create(:user)
+    @user_session = UserSession.new({login: user.login, password: "P4$$word"})
+    @user_session.save
+  end
 
   describe "#create" do
     it 'should filt error params when post error params' do

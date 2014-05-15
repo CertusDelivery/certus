@@ -1,3 +1,4 @@
+require 'eventmachine'
 class DeliveryItem < ActiveRecord::Base
 
   # relationships .............................................................
@@ -123,8 +124,10 @@ class DeliveryItem < ActiveRecord::Base
   protected
 
   def publish_item_for_faye
-    client = Faye::Client.new(Setting.faye_server)
-    client.publish('/delivery_item/updated', self.as_hash)
+    EM.run {
+      client = Faye::Client.new(Setting.faye_server)
+      client.publish('/delivery_item/updated', self.as_hash)
+    }
   end
 
   def order_to_delivery_convert

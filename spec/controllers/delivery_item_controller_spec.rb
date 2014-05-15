@@ -3,6 +3,8 @@ require 'spec_helper'
 describe DeliveryItemsController do
   before do
     Product.any_instance.stubs(:propagate_to_client)
+    Delivery.any_instance.stubs(:publish_items_for_faye)
+    DeliveryItem.any_instance.stubs(:publish_item_for_faye)
   end
 
   describe '#pick' do

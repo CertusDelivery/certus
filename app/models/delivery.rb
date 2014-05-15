@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'eventmachine'
 class Delivery < ActiveRecord::Base
 
   MAX_PICKING_COUNT = 3
@@ -166,8 +167,10 @@ class Delivery < ActiveRecord::Base
 
   def publish_items_for_faye
     if self.store_staging?
-      client = Faye::Client.new(Setting.faye_server)
-      client.publish('/delivery/picked', self.delivery_items)
+      EM.run {
+        client = Faye::Client.new(Setting.faye_server)
+        client.publish('/delivery/picked', self.delivery_items)
+      }
     end
   end
 end
