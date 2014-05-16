@@ -15,10 +15,7 @@ class AsyncFayeWorker
   def delivery_picked(id)
     logger = get_logger
     begin
-      EM.run {
-        client = Faye::Client.new(Setting.faye_server)
-        client.publish('/delivery/picked', Delivery.find(id).delivery_items)
-      }
+      FayeClient.send('/delivery/picked', Delivery.find(id).delivery_items)
       logger.info "publish '/delivery/picked' for the delivery #{id} successfully"
     rescue => e
       logger.fatal "raised unrecoverable error!!! #{e.message} (delivery #{id})"
@@ -28,10 +25,7 @@ class AsyncFayeWorker
   def delivery_item_updated(id)
     logger = get_logger
     begin
-      EM.run {
-        client = Faye::Client.new(Setting.faye_server)
-        client.publish('/delivery_item/updated', DeliveryItem.find(id).as_hash)
-      }
+      FayeClient.send('/delivery_item/updated', DeliveryItem.find(id).as_hash)
       logger.info "publish '/delivery_item/updated' for the delivery item #{id} successfully"
     rescue => e
       logger.fatal "raised unrecoverable error!!! #{e.message} (delivery #{id})"
@@ -42,10 +36,7 @@ class AsyncFayeWorker
     logger = get_logger
     begin
       ship = DeliveryPickerShip.find(id)
-      EM.run {
-        client = Faye::Client.new(Setting.faye_server)
-        client.publish('/delivery/shared', {picker_id: ship.picker_id, items: ship.delivery.delivery_items.map(&:as_hash)})
-      }
+      FayeClient.send('/delivery/shared', {picker_id: ship.picker_id, items: ship.delivery.delivery_items.map(&:as_hash)})
       logger.info "publish '/delivery/shared' for the delivery #{id} successfully"
     rescue => e
       logger.fatal "raised unrecoverable error!!!  #{e.message} (delivery #{id})"
