@@ -1,5 +1,5 @@
-class Customer::OrdersController < ApplicationController
-  layout 'customer'
+class Customer::OrdersController < Customer::CustomerController
+    
   include Customer::OrdersHelper
   
   def show

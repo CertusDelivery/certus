@@ -21,7 +21,7 @@ class AsyncFayeWorker
       }
       logger.info "publish '/delivery/picked' for the delivery #{id} successfully"
     rescue => e
-      logger.fatal "raised unrecoverable error #{e}!!! (delivery #{id})"
+      logger.fatal "raised unrecoverable error!!! #{e.message} (delivery #{id})"
     end
   end
 
@@ -33,8 +33,8 @@ class AsyncFayeWorker
         client.publish('/delivery_item/updated', DeliveryItem.find(id).as_hash)
       }
       logger.info "publish '/delivery_item/updated' for the delivery item #{id} successfully"
-    rescue
-      logger.fatal "raised unrecoverable error!!! (delivery #{id})"
+    rescue => e
+      logger.fatal "raised unrecoverable error!!! #{e.message} (delivery #{id})"
     end
   end
 
@@ -47,8 +47,8 @@ class AsyncFayeWorker
         client.publish('/delivery/shared', {picker_id: ship.picker_id, items: ship.delivery.delivery_items.map(&:as_hash)})
       }
       logger.info "publish '/delivery/shared' for the delivery #{id} successfully"
-    rescue
-      logger.fatal "raised unrecoverable error!!! (delivery #{id})"
+    rescue => e
+      logger.fatal "raised unrecoverable error!!!  #{e.message} (delivery #{id})"
     end
   end
 
