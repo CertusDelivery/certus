@@ -77,7 +77,7 @@ class DeliveryItem < ActiveRecord::Base
 
   # For Test
   def product_image
-    "/products/#{['len', 'piggy', 'battery'][self.id%3]}.jpg"
+    self.product.image if self.product
   end
 
   alias :update_out_of_stock_quantity :out_of_stock!

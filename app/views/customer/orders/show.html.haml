@@ -13,7 +13,7 @@
       %div.col-xs-6.col-md-2
         %strong Placed Time :
       %div.col-xs-6.col-md-4
-        #{@order.placed_at}
+        #{format_placed_at(@order.placed_at)}
       %div.col-xs-6.col-md-2
         %strong Expected Delivery Window:
       %div.col-xs-6.col-md-4
@@ -70,7 +70,7 @@
             - @order.delivery_items.select{|i| i.original_item_id.present? }.each do |item|
               %tr
                 %td #{item.product_name}
-                %td #{item.price}
+                %td #{number_to_currency(item.price)}
                 %td 
                   #{item.original_item.out_of_stock_quantity}
                 %td 
@@ -92,7 +92,7 @@
             - @order.delivery_items.each do |item|
               %tr
                 %td #{item.product_name}
-                %td #{item.price}
+                %td #{number_to_currency(item.price)}
                 %td #{item.quantity}
                 %td #{item.picked_quantity}
                 %td #{item.order_item_options_flags}
@@ -103,7 +103,7 @@
       %table
         %tr
           %th Adjusted Total : 
-          %td #{@order.order_total_adjustments}
+          %td #{number_to_currency(@order.order_total_adjustments)}
         %tr
           %th Ordered Total : 
-          %td #{@order.order_total_price}
+          %td #{number_to_currency(@order.order_total_price)}
