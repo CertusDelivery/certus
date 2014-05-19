@@ -21,7 +21,7 @@
       %p
         - case @delivery.message_status
         - when Delivery::MESSAGE_STATUS[:received]
-          = "Your order has been received by the Certus delivery team.  We are pleased to be serving you.  Your expected delivery window is #{@delivery.desired_delivery_window.strftime("%H:%M:%S %h %d %Y")}.  For more information,  please visit your order progress bar at:" 
+          = "Your order has been received by the Certus delivery team.  We are pleased to be serving you.  Your expected delivery window is #{@delivery_window}.  For more information,  please visit your order progress bar at:" 
           = link_to @user_profile_url, @user_profile_url
           %br
           From this webpage, you may change the delivery type for your order to either doorstep delivery or kitchen counter delivery at any time prior to your route driver arriving at your home.
