@@ -11,6 +11,16 @@ class AsyncFayeWorker
     end
   end
 
+  def unpicked_quantity(no_need)
+    logger = get_logger
+    begin
+      FayeClient.send('/delivery/unpicked_quantity', {count: Delivery.unpicked.count})
+      logger.info "publish '/delivery/unpicked_quantity' successfully"
+    rescue => e
+      logger.fatal "raised unrecoverable error!!! #{e.message} (unpicked quantity)"
+    end
+  end
+
   # when delivery status changed
   def delivery_picked(id)
     logger = get_logger

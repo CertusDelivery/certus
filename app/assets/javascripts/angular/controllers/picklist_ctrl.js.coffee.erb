@@ -70,6 +70,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       if ship.picker_id == $scope.picker_id
         ship.items.forEach (item) ->
           $scope.picklist.push item
+    $scope.client.subscribe '/delivery/unpicked_quantity', (unpicked)->
+      $scope.unpicked_count = unpicked.count
 
   $scope.initFaye()
 
@@ -160,10 +162,12 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
   )
   $interval(
     ->
-      $scope.refreshUnpickedCount() 
+      # console.log $('.ngCanvas').height()
+      # console.log $('.ngCanvas').parent().scrollTop()
+      # console.log $('.ngCanvas').find('.selected')
+      # console.log $('.ngCanvas')[0].offsetHeight
     5000
   )
-
   $scope.picking = (barcode) ->
     $scope.notice = ''
     $scope.errorMessage = ''

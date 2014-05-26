@@ -8,6 +8,7 @@ class DeliveriesController < ApplicationController
       @delivery = Delivery.new(delivery_params)
       if @delivery.save
         AsyncMailWorker.perform_async(:delivery, @delivery.id)
+        AsyncFayeWorker.perform_async(:unpicked_quantity, nil)
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
