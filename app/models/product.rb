@@ -19,6 +19,7 @@ class Product < ActiveRecord::Base
 
   before_save :format_price
   before_save :propagate_to_client
+  before_destroy :propagate_to_client_on_destroy
 
   attr_accessor :location_info
   attr_accessor :location_info_temp
@@ -68,23 +69,28 @@ class Product < ActiveRecord::Base
     self.reg_price = self.reg_price.to_f.round_down(2) unless self.reg_price.blank? 
   end
 
-  def propagate_to_client
+  def propagate_to_client_on_destroy
+    propagate_to_client(true)
+  end
+
+  def propagate_to_client(is_destroy = false)
     unless self.import
       options = {
         body: {
           token: '43edc126236f331d578f74ac55fc34259bcd832b',
-          sku: self.store_sku
+          sku: self.store_sku,
+          action: (is_destroy ? 'destroy' : (self.new_record? ? 'create' : 'update'))
         },
         headers: {
           referer: "http://#{APP_CONFIG[:domain]}"
         }
       }
-      if self.new_record? || stock_status_changed?
+      if self.new_record? || stock_status_changed? || is_destroy
         options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale'))
         logger = Logger.new(Rails.root.join('log/typhoeus.log'))
         begin
           logger.info "--------------BEGIN--------"
-          logger.info "Action: #{self.new_record? ? 'Create' : 'Update'}"
+          logger.info "Action: #{options[:body][:action]}"
           logger.info "URL: #{"http://#{APP_CONFIG[:web_shop]}/wc-api.php"}"
           response = Typhoeus::Request.post("http://#{APP_CONFIG[:web_shop]}/wc-api.php", options)
           logger.info "Success: #{response.success?}  Code: #{response.code}"

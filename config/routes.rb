@@ -57,7 +57,7 @@ Certus::Application.routes.draw do
       end
     end
 
-    resources :products, only: [:index, :new, :create] do
+    resources :products, only: [:index, :new, :create, :destroy] do
       collection do
         get 'search/:store_sku' => 'products#search'
       end

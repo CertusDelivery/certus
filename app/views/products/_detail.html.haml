@@ -31,3 +31,5 @@
           %th On Sale:
           %td
             %click-to-select{"data" => "product.on_sale", "ng-click" => "removeFocus()", "after-save" => "updateProduct('on_sale')", "options" => "{\"YES\":true,\"NO\":false}"}
+    %div.col-sm-12.text-right
+      = link_to 'delete', product_path(product), class: 'btn', confirm: 'Are you sure?', method: :delete
