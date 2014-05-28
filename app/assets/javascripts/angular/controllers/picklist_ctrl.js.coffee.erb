@@ -43,15 +43,25 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     $scope.selectUnpickedRow()
   )
 
+  $scope.scrollToActiveRow = (index) ->
+    offset_top = $('.ngCanvas').parent().scrollTop()
+    container_height = $('.ngCanvas').parent().height()
+    selected_item = $('.ngCanvas').children().eq(index)
+    selected_top  = selected_item.height()*index
+    selected_height = selected_top+selected_item.height()
+    if offset_top > selected_top || (offset_top + container_height) < selected_height
+      $('.ngCanvas').parent().scrollTop(selected_top)
+
   $scope.selectUnpickedRow = ->
     found = false
-    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
+    index = 0
+    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, i) ->
       return if found
       if row.entity.picked_status == 'UNPICKED'
-        $scope.gridOptions.selectRow(index, true)
+        index = i
         found = true
-    if !found
-      $scope.gridOptions.selectRow(0, true)
+    $scope.gridOptions.selectRow(index, true)
+    $scope.scrollToActiveRow(index)
 
   $scope.initFaye = ->
     $scope.client = new Faye.Client '<%= Setting.faye_server %>'
@@ -160,14 +170,7 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       $scope.timer()
     1000
   )
-  $interval(
-    ->
-      # console.log $('.ngCanvas').height()
-      # console.log $('.ngCanvas').parent().scrollTop()
-      # console.log $('.ngCanvas').find('.selected')
-      # console.log $('.ngCanvas')[0].offsetHeight
-    5000
-  )
+
   $scope.picking = (barcode) ->
     $scope.notice = ''
     $scope.errorMessage = ''
