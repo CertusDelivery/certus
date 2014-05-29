@@ -2,7 +2,7 @@ require 'csv'
 
 namespace :products do
   
-  desc "Import product data from csv file (options: FILE=/path/to/csv/file.csv)"
+  desc "Import product data from csv file (options: FILE=/path/to/csv/file.csv [SYN=(yes|no)]),if you want to synchronize product data between workflow and webshop, just set SYN to yes"
   task import_from_csv: :environment do
     begin
       # params validation
@@ -20,6 +20,7 @@ namespace :products do
       # import data from cvs file
       pid = nil # print pid when import failse
       count = 0;
+      syn_flag = ENV['SYN'] == 'yes' ? false : true
       puts "Importing the data of product from csv file..."
       @current_procent = 0
       @line_number = 0
@@ -32,7 +33,7 @@ namespace :products do
           product ||= Product.new
           
           product.source = Product::SOURCE[:import]
-          product.import = true
+          product.import = syn_flag
           product.store_sku = row['sku/upc']
           product.name = row['name'] || 'UNDEFINED'
           product.brand = row['brand']

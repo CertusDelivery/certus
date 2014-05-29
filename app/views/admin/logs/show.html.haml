@@ -1,0 +1,34 @@
+%div.row.log
+  %center
+    %h4 Log ##{@log.id}
+  %hr
+  %div.col-md-3
+    %strong Time
+  %div.col-md-9
+    #{@log.created_at}
+  %div.col-md-3
+    %strong Model 
+  %div.col-md-9
+    #{@log.model.upcase}
+  %div.col-md-3
+    %strong Action
+  %div.col-md-9
+    #{@log.action.upcase}
+  %div.col-md-3
+    %strong Success 
+  %div.col-md-9
+    #{@log.success}
+  %div.col-md-3
+    %strong Code
+  %div.col-md-9
+    #{@log.code}
+  %div.col-md-3
+    %strong Info
+  %div.col-md-9
+    %pre
+      #{@log.info}
+  %div.col-md-3
+    %strong Response
+  %div.col-md-9
+    %pre
+      #{@log.response}

@@ -20,6 +20,7 @@ Certus::Application.routes.draw do
   namespace :admin do
     get "/", controller: :deliveries, action: :history
     resources :users
+    resources :logs, only: [:index, :show]
     resources :deliveries do
       collection do
         get :history

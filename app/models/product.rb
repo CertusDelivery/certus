@@ -69,6 +69,14 @@ class Product < ActiveRecord::Base
     self.reg_price = self.reg_price.to_f.round_down(2) unless self.reg_price.blank? 
   end
 
+  def build_log_info(action)
+    info = {action => self.attributes.slice('store_sku', 'name', 'price', 'reg_price', 'stock_status', 'on_sale')}
+    if action == 'update'
+      info['origin'] = changed_attributes()
+    end
+    info.to_s
+  end
+
   def propagate_to_client_on_destroy
     propagate_to_client(true)
   end
@@ -85,7 +93,7 @@ class Product < ActiveRecord::Base
           referer: "http://#{APP_CONFIG[:domain]}"
         }
       }
-      if self.new_record? || stock_status_changed? || is_destroy
+      if self.new_record? || is_destroy || (stock_status_changed? || name_changed? || price_changed? || reg_price_changed? || on_sale_changed?)
         options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale'))
         logger = Logger.new(Rails.root.join('log/typhoeus.log'))
         begin
@@ -96,6 +104,7 @@ class Product < ActiveRecord::Base
           logger.info "Success: #{response.success?}  Code: #{response.code}"
           logger.info "Response: #{response.inspect}" unless response.success?
           logger.info "--------------END----------"
+          Log.record(model: Log::MODEL[:product], action: options[:body][:action], url: "http://#{APP_CONFIG[:web_shop]}/wc-api.php", success: response.success?, code: response.code, info: self.build_log_info(options[:body][:action]), response: response.body)
         rescue => e
           logger.error "Exception: #{e.inspect}"
         end
