@@ -29,6 +29,11 @@
         %strong Delivery Window :
       %div.col-xs-7.col-md-4
         #{expected_delivery_window(@delivery.placed_at)}
+      %div.col-xs-5.col-md-2
+        %strong Desired Delivery Window :
+      %div.col-xs-7.col-md-4
+        - if @delivery.desired_delivery_window_begin
+          #{"#{@delivery.desired_delivery_window_begin.strftime("%Y-%m-%d %H:%M %p")}-#{@delivery.desired_delivery_window_end.strftime("%H:%M %p")}"}
       %div.clearfix
       %hr
       %div.col-xs-5.col-md-2

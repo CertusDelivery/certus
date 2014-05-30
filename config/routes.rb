@@ -45,6 +45,7 @@ Certus::Application.routes.draw do
         get 'picking_print'
         get 'print_packing_list'
         get 'history'
+        post 'set_desired_delivery_window'
       end
     end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529022340) do
+ActiveRecord::Schema.define(version: 20140530020917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(version: 20140529022340) do
     t.string   "delivery_option"
     t.string   "secure_salt"
     t.string   "secure_order_id"
+    t.datetime "desired_delivery_window_begin"
+    t.datetime "desired_delivery_window_end"
   end
 
   create_table "delivery_items", force: true do |t|
