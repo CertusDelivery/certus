@@ -25,6 +25,13 @@
               = link_to 'List', admin_users_url
             %li{class: active_if_matches(/users\/new/)}
               = link_to 'Create', new_admin_user_url
+        %li.dropdown{class: active_if_matches(/products/)}
+          = link_to admin_products_url, class: "dropdown-toggle", data: {toggle: "dropdown"} do
+            Products
+            %b.caret
+          %ul.dropdown-menu
+            %li{class: active_if_matches(/products\/import/)}
+              = link_to 'Import by CSV', import_admin_products_url
         %li{class: active_if_matches(/logs/)}
           = link_to 'Logs', admin_logs_url
       %ul.nav.navbar-nav.navbar-right
