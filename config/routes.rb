@@ -27,6 +27,11 @@ Certus::Application.routes.draw do
         get :picklist
       end
     end
+    resources :products do
+      collection do
+        get :import
+      end
+    end
   end
 
   namespace :customer do

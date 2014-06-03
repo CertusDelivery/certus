@@ -13,6 +13,7 @@ db/*.sqlite3-journal
 log/*
 public/assets
 public/assets/*
+public/uploads/*/*.*
 test/*
 tmp
 

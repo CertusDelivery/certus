@@ -60,6 +60,46 @@ class Product < ActiveRecord::Base
     end
   end
 
+  def self.import(row)
+    pid =  row['pid']
+    product = Product.find_by_store_sku(row['sku/upc'])
+    product ||= Product.new
+    
+    product.source = Product::SOURCE[:import]
+    product.store_sku = row['sku/upc']
+    product.name = row['name'] || 'UNDEFINED'
+    product.brand = row['brand']
+    product.size = row['size1']
+    product.image = row['image']
+    product.sale_qty_min = row['sale qty min']
+    product.sale_qty_limit = row['sale qty limit']
+    product.info_1 = row['more info 1']
+    product.info_2 = row['more info 2']
+
+    if row['unit price']
+      unit_price = row['unit price'].delete('$').split('/') if row['unit price']
+      product.unit_price = unit_price[0]
+      product.unit_price_unit = unit_price[1]
+    end
+
+    if row['sale price']
+      product.price = row['sale price'].delete('$')
+    end
+
+    if row['reg price']
+      product.reg_price = row['reg price'].delete('$')
+    end
+
+    if row['size2']
+      weight = row['size2'].split(' ', 2)
+      product.shipping_weight = weight[0]
+      product.shipping_weight_unit = weight[1]
+    end
+
+    product.category = Category.create_by_string(row['category']) 
+    product.save!
+  end
+
   def out_of_stock!
     self.update_attributes(stock_status: STOCK_STATUS[:out_of_stock])
   end

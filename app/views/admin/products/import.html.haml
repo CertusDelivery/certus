@@ -1,0 +1,16 @@
+%div.row
+  %center
+    %h4 Import Products
+  %hr
+  %div.col-md-8.col-md-offset-2
+    =form_tag({action: 'create'}, multipart: true) do
+      %div.input-group
+        =file_field_tag 'file', {'class' => 'form-control'}
+        %span.input-group-btn
+          =submit_tag 'Import', {'class' => 'btn btn-primary'}
+    - if flash[:notice]
+      %div.alert.alert-success
+        = flash[:notice]
+    - if flash[:alert]
+      %div.alert.alert-danger
+        = flash[:alert]
