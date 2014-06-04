@@ -8,9 +8,16 @@
         =file_field_tag 'file', {'class' => 'form-control'}
         %span.input-group-btn
           =submit_tag 'Import', {'class' => 'btn btn-primary'}
-    - if flash[:notice]
-      %div.alert.alert-success
-        = flash[:notice]
     - if flash[:alert]
       %div.alert.alert-danger
         = flash[:alert]
+    - if flash[:success]
+      %div.alert.alert-success
+        = flash[:success]
+    - if flash[:notice]
+      %div.alert.alert-info
+        = flash[:notice]
+      %div.progress.progress-striped.active
+        %span.sr-only
+          0 / 0
+        %div#import-progress-bar.progress-bar{'role' => 'progressbar', 'aria-valuenow' => '', 'aria-valuemin' => '0', 'aria-valuemax' => '100'}

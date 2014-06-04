@@ -1,5 +1,6 @@
 defaults: &defaults
   faye_server: "http://localhost:8080/faye"
+  max_size_to_show_progress_bar: 50
 
 # local server
 development:

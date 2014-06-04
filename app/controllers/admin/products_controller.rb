@@ -13,19 +13,22 @@ module Admin
         file_name = "#{Time.new.strftime("%Y%m%d%H%M%S")}.#{file_ext}"
         file = File.join('public', 'uploads', 'products', "#{file_name}")
         FileUtils.cp tmp.path, file
-      
-        count = 1
-        Product.transaction do
+        size  = CSV.readlines(file, :headers => true).size
+        if size > Setting.max_size_to_show_progress_bar
+          AsyncImportWorker.perform_async(:import_products, Rails.root.join(file))
+          flash[:notice] = "Start Import..."
+        else
           CSV.foreach(file, :headers => true) do |row|
-            count += 1
             Product.import(row)
           end
+          flash[:success] = "Import Successfully"
         end
-        flash[:notice] = "Import Successfully, Counts: #{count}"
       rescue Exception => ex
         flash[:alert] = ex.message
       end
-      redirect_to :action => 'import'
+      redirect_to :action => 'import', :file => Rails.root.join(file)
     end
+  end
+  def none
   end
 end

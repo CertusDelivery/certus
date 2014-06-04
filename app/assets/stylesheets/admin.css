@@ -16,3 +16,12 @@ body {
   margin-top: 20px;
   padding: 5px;
 }
+.sr-only {
+  width: 100px;
+  height: 20px;
+  margin: 0 -50px;
+  clip: auto;
+  left: 50%;
+  color: black;
+  text-align: center;
+}
