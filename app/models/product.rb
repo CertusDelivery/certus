@@ -1,4 +1,5 @@
 require 'float_ext'
+require 'digest/md5'
 
 class Product < ActiveRecord::Base
   include ModelInLocation
@@ -17,6 +18,7 @@ class Product < ActiveRecord::Base
 
   attr_accessor :import
 
+  before_create :upload_image_to_s3
   before_save :format_price
   before_save :propagate_to_client
   before_destroy :propagate_to_client_on_destroy
@@ -95,13 +97,24 @@ class Product < ActiveRecord::Base
       product.shipping_weight = weight[0]
       product.shipping_weight_unit = weight[1]
     end
-
+    
     product.category = Category.create_by_string(row['category']) 
     product.save!
   end
 
   def out_of_stock!
     self.update_attributes(stock_status: STOCK_STATUS[:out_of_stock])
+  end
+
+  def upload_image_to_s3
+    if self.image.present?
+      filename = "#{Digest::SHA2.hexdigest("#{self.image}")}.#{self.image.split('.').last}"
+      unless AWS::S3::S3Object.exists? filename, Setting.S3_bucket
+        AWS::S3::S3Object.store(filename, open(self.image), Setting.S3_bucket) 
+      end
+      doomsday = Time.mktime(2035, 1, 1).to_i
+      self.image = AWS::S3::S3Object.url_for(filename, Setting.S3_bucket, :expires => doomsday)
+    end
   end
 
   def format_price
@@ -133,8 +146,8 @@ class Product < ActiveRecord::Base
           referer: "http://#{APP_CONFIG[:domain]}"
         }
       }
-      if self.new_record? || is_destroy || (stock_status_changed? || name_changed? || price_changed? || reg_price_changed? || on_sale_changed?)
-        options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale'))
+      if self.new_record? || is_destroy || (stock_status_changed? || name_changed? || price_changed? || reg_price_changed? || on_sale_changed? || image_changed?)
+        options[:body].merge!(self.attributes.slice('name', 'price', 'reg_price', 'stock_status', 'on_sale', 'image'))
         logger = Logger.new(Rails.root.join('log/typhoeus.log'))
         begin
           logger.info "--------------BEGIN--------"
