@@ -29,7 +29,8 @@ Certus::Application.routes.draw do
     end
     resources :products do
       collection do
-        get :import
+        get :csv_import
+        get :csv_export
       end
     end
   end
