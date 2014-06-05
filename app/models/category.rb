@@ -27,5 +27,15 @@ class Category < ActiveRecord::Base
         end
       end
     end
+
+    def get_category_string(category)
+      return '' unless category
+      categories = [category.name]
+      while category.parent do 
+        category = category.parent
+        categories << category.name 
+      end
+      categories.reverse.join(">")
+    end
   end
 end

@@ -34,7 +34,7 @@ module Admin
       csv_string = CSV.generate do |csv|
         csv << ['pid', 'category', 'brand', 'name', 'size1', 'size2', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2']
         products.each do |p|
-          csv << [p.id, p.category, p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2]
+          csv << [p.id, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2]
         end
       end
       send_data csv_string,  
