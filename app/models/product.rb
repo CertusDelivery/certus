@@ -18,7 +18,7 @@ class Product < ActiveRecord::Base
 
   attr_accessor :import
 
-  #before_create :upload_image_to_s3
+  before_create :upload_image_to_s3
   before_save :format_price
   before_save :propagate_to_client
   before_destroy :propagate_to_client_on_destroy

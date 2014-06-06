@@ -6,3 +6,9 @@ $(document).ready ->
       $('span.sr-only').text(progress.count + ' / ' + progress.size);
       if progress.finished
         $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Import Successfully'); 
+  client.subscribe '/delete/products', (progress)->
+    if progress.file == $.query.get('file')
+      $('#delete-progress-bar').attr('aria-valuenow', progress.persent).css('width', progress.persent + '%');
+      $('span.sr-only').text(progress.count + ' / ' + progress.size);
+      if progress.finished
+        $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Delete Successfully'); 

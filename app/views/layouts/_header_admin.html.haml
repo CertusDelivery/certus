@@ -32,6 +32,8 @@
           %ul.dropdown-menu
             %li{class: active_if_matches(/products\/csv_import/)}
               = link_to 'Import by CSV', csv_import_admin_products_url
+            %li{class: active_if_matches(/products\/csv_delete/)}
+              = link_to 'Delete by CSV', csv_delete_admin_products_url
             %li{class: active_if_matches(/products\/csv_export/)}
               = link_to 'Export to CSV', csv_export_admin_products_url
         %li{class: active_if_matches(/logs/)}
