@@ -18,7 +18,7 @@ class Product < ActiveRecord::Base
 
   attr_accessor :import
 
-  before_create :upload_image_to_s3
+  #before_create :upload_image_to_s3
   before_save :format_price
   before_save :propagate_to_client
   before_destroy :propagate_to_client_on_destroy
@@ -71,7 +71,10 @@ class Product < ActiveRecord::Base
     product.store_sku = row['sku/upc']
     product.name = row['name'] || 'UNDEFINED'
     product.brand = row['brand']
+    product.section = row['Custom Category - Section']
+    product.department = row['Department']
     product.size = row['size1']
+    product.size3 = row['size3']
     product.image = row['image']
     product.sale_qty_min = row['sale qty min']
     product.sale_qty_limit = row['sale qty limit']
@@ -97,7 +100,11 @@ class Product < ActiveRecord::Base
       product.shipping_weight = weight[0]
       product.shipping_weight_unit = weight[1]
     end
-    
+
+    if row['location']
+      product.location = Location.create_by_info(row['location'])
+    end
+
     product.category = Category.create_by_string(row['category']) 
     product.save!
   end

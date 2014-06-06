@@ -8,6 +8,7 @@
 .rvmrc
 config/database.yml
 config/initializers/setup_mail.rb
+config/initializers/aws_s3.rb
 db/*.sqlite3
 db/*.sqlite3-journal
 log/*

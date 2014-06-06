@@ -11,7 +11,7 @@ module Admin
         file_ext = tmp.original_filename.split('.').last
         raise "This file is not a CSV!" unless file_ext == 'csv'
         file_name = "#{Time.new.strftime("%Y%m%d%H%M%S")}.#{file_ext}"
-        file = File.join('public', 'uploads', 'products', "#{file_name}")
+        file = File.join('public', 'uploads', 'products', file_name)
         FileUtils.cp tmp.path, file
         size  = CSV.readlines(file, :headers => true).size
         if size > Setting.max_size_to_show_progress_bar
@@ -30,11 +30,11 @@ module Admin
     end
     
     def csv_export
-      products = Product.all
+      products = Product.all.includes(:location)
       csv_string = CSV.generate do |csv|
-        csv << ['pid', 'category', 'brand', 'name', 'size1', 'size2', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2']
+        csv << ['pid', 'Custom Category - Section', 'Department', 'category', 'brand', 'name', 'size1', 'size2', 'size3', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2', 'location']
         products.each do |p|
-          csv << [p.id, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2]
+          csv << [p.id, p.section, p.department, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.size3, p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2, (p.location ? p.location.info : '')]
         end
       end
       send_data csv_string,  
