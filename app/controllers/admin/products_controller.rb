@@ -1,8 +1,6 @@
 require 'csv'
 module Admin
   class ProductsController < AdminController
-    include ActionController::Live
-
     def create
       begin
         require 'fileutils' 
@@ -57,15 +55,16 @@ module Admin
     end
     def csv_export
       products = Product.all.includes(:location)
-      response.headers["Content-Type"] ||= 'text/event-stream'  
-      response.headers["Content-Disposition"] = "attachment; filename=#{Time.new.strftime('%Y%m%d%H%M%S')}-products.csv"
-      response.headers["Content-Transfer-Encoding"] = "binary"
-      response.stream.write ['pid', 'Custom Category - Section', 'Department', 'category', 'brand', 'name', 'size1', 'size2', 'size3', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2', 'location'].to_csv
-      products.each do |p|
-        response.stream.write [p.id, p.section, p.department, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.size3, p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2, (p.location ? p.location.info : '')].to_csv
+      products = Product.all
+      csv_string = CSV.generate do |csv|
+        csv << ['pid', 'Custom Category - Section', 'Department', 'category', 'brand', 'name', 'size1', 'size2', 'size3', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2', 'location']
+        products.each do |p|
+          csv << [p.id, p.section, p.department, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.size3, p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2, (p.location ? p.location.info : '')]
+        end
       end
-    ensure
-      response.stream.close
+      send_data csv_string,  
+                :type=>'text/csv; charset=iso-8859-1; header=present',  
+                :disposition => "attachment; filename=#{Time.new.strftime('%Y%m%d%H%M%S')}-products.csv"
     end
   end
 end
