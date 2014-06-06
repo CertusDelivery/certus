@@ -15,6 +15,8 @@ class AsyncImportWorker
     begin
       count   = 1
       size  = CSV.readlines(file["path"], :headers => true, encoding: "ISO8859-1").size
+      param = {count: 0, size: size, persent: 0, finished: false, file: file["path"]}
+      FayeClient.send('/import/products', param)
       Product.transaction do
         CSV.foreach(file["path"], :headers => true, encoding: "ISO8859-1") do |row|
           Product.import(row)
@@ -33,6 +35,8 @@ class AsyncImportWorker
     begin
       count   = 1
       size  = CSV.readlines(file["path"], :headers => true, encoding: "ISO8859-1").size
+      param = {count: 0, size: size, persent: 0, finished: false, file: file["path"]}
+      FayeClient.send('/delete/products', param)
       Product.transaction do
         CSV.foreach(file["path"], :headers => true, encoding: "ISO8859-1") do |row|
           if row['sku/upc']
