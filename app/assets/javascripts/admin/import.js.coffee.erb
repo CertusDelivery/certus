@@ -14,8 +14,9 @@ $(document).ready ->
         $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Delete Successfully'); 
   client.subscribe '/export/products', (progress)->
     if progress.key+'' == $.query.get('key')+''
-      $('#export-progress-bar').attr('aria-valuenow', progress.persent).css('width', progress.persent + '%');
-      $('span.sr-only').text(progress.count + ' / ' + progress.size);
-      if progress.finished
-        $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Export Successfully'); 
-        window.location.href = progress.file
+      if progress.count > $('#export-progress-bar').attr('count')
+        $('#export-progress-bar').attr('aria-valuenow', progress.persent).attr('count', progress.count).css('width', progress.persent + '%');
+        $('span.sr-only').text(progress.count + ' / ' + progress.size);
+        if progress.finished
+          $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Export Successfully'); 
+          window.location.href = progress.file
