@@ -54,6 +54,30 @@ class AsyncImportWorker
     end
   end
 
+  def export_products(key)
+    begin
+      products  = Product.all.includes(:location)
+      size      = products.size
+      tmp_path  = Rails.root.join('public', 'tmp')
+      Dir.mkdir tmp_path unless File.exist? tmp_path 
+      file_path = "#{tmp_path}/#{key}-products.csv"
+      file_name = "/tmp/#{key}-products.csv"
+      return if File.exist? file_path
+      csv = CSV.open(file_path, "wb")
+      csv << ['pid', 'Custom Category - Section', 'Department', 'category', 'brand', 'name', 'size1', 'size2', 'size3', 'sku/upc', 'reg price', 'unit price', 'sale price', 'sale qty min', 'sale qty limit', 'image', 'unit variables', 'more info 1', 'more info 2', 'location']
+      products.each_with_index do |p,i|
+        csv << [p.id, p.section, p.department, Category.get_category_string(p.category), p.brand, p.name, p.size, "#{p.shipping_weight} #{p.shipping_weight_unit}", p.size3, p.store_sku, "$#{p.reg_price}", "$#{p.unit_price}/#{p.unit_price_unit}", "$#{p.price}", p.sale_qty_min, p.sale_qty_limit, p.image, p.info_1, p.info_2, (p.location ? p.location.info : '')]
+        param = {count: i+1, size: size, persent: (((i+1)*1.0/size)*100).to_i, finished: i+1 == size, file: file_name, key: key}
+        FayeClient.send('/export/products', param)
+      end
+    rescue => e
+      logger = get_logger
+      logger.fatal "raised unrecoverable error!!!  #{e.message} (file #{file})"
+    ensure
+      csv.close if csv
+    end
+  end
+
   def get_logger
     worker_logfile = File.open("#{Rails.root}/log/async_import_worker.log", 'a')
     worker_logfile.sync = true

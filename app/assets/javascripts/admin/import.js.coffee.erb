@@ -12,3 +12,10 @@ $(document).ready ->
       $('span.sr-only').text(progress.count + ' / ' + progress.size);
       if progress.finished
         $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Delete Successfully'); 
+  client.subscribe '/export/products', (progress)->
+    if progress.key+'' == $.query.get('key')+''
+      $('#export-progress-bar').attr('aria-valuenow', progress.persent).css('width', progress.persent + '%');
+      $('span.sr-only').text(progress.count + ' / ' + progress.size);
+      if progress.finished
+        $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Export Successfully'); 
+        window.location.href = progress.file
