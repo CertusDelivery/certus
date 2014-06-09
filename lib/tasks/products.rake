@@ -26,7 +26,7 @@ namespace :products do
       @line_number = 0
       @total_line_count = (`wc -l #{file_path}`[/\d+/]).to_f
       Product.transaction do
-        CSV.foreach(file_path, :headers => true) do |row|
+        CSV.foreach(file_path, :headers => true, encoding: "ISO8859-1") do |row|
           pid =  row['pid']
           count += 1
           Product.import row
