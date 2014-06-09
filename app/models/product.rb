@@ -80,6 +80,8 @@ class Product < ActiveRecord::Base
     product.sale_qty_limit = row['sale qty limit']
     product.info_1 = row['more info 1']
     product.info_2 = row['more info 2']
+    product.stock_status = row['stock status']
+    product.on_sale = row['on_sale']
 
     if row['unit price']
       unit_price = row['unit price'].delete('$').split('/') if row['unit price']
