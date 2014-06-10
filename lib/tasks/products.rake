@@ -19,26 +19,29 @@ namespace :products do
 
       # import data from cvs file
       pid = nil # print pid when import failse
-      count = 0;
+      count = 0
+      error = 0
       syn_flag = ENV['SYN'] == 'yes' ? false : true
       puts "Importing the data of product from csv file..."
       @current_procent = 0
       @line_number = 0
       @total_line_count = (`wc -l #{file_path}`[/\d+/]).to_f
-      Product.transaction do
-        CSV.foreach(file_path, :headers => true, encoding: "ISO8859-1") do |row|
-          pid =  row['pid']
-          count += 1
+      CSV.foreach(file_path, :headers => true, encoding: "ISO8859-1") do |row|
+        pid =  row['pid']
+        count += 1
+        begin
           Product.import row
-          csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{row['name']}` created successfully"] 
-          display_progress
+          #csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{row['name']}` created successfully"] 
+        rescue Exception => ex
+          csv << ["F", Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "*** ##{pid}  #{ex.message}"] if csv
+          error += 1
         end
-        puts "\r\nImport Succseefully!!!"
-        csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Counts: #{count} "] 
+        display_progress
       end
+      puts "\r\nImport Succseefully!!!"
+      csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Success: #{count-error} Error: #{error} "] 
     rescue Exception => ex
-      csv << ["F", Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "*** ##{pid}  #{ex.message}"] if csv
-      puts "*** ##{pid}  #{ex.message}"
+      puts "*** #{ex.message}"
       puts "Rollback!"
     ensure
       csv.close if csv

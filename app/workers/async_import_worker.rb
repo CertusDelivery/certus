@@ -12,21 +12,23 @@ class AsyncImportWorker
   end
 
   def import_products(file)
+    logger = get_logger
     begin
       count   = 1
       size  = CSV.readlines(file["path"], :headers => true, encoding: "ISO8859-1").size
       param = {count: 0, size: size, persent: 0, finished: false, file: file["path"]}
       FayeClient.send('/import/products', param)
-      Product.transaction do
-        CSV.foreach(file["path"], :headers => true, encoding: "ISO8859-1") do |row|
+      CSV.foreach(file["path"], :headers => true, encoding: "ISO8859-1") do |row|
+        begin
           Product.import(row)
-          param = {count: count, size: size, persent: ((count*1.0/size)*100).to_i, finished: count == size, file: file["path"]}
-          FayeClient.send('/import/products', param)
-          count += 1
+        rescue => e
+          logger.fatal "raised unrecoverable error!!!  #{e.message} (pid #{row['pid']})"
         end
+        param = {count: count, size: size, persent: ((count*1.0/size)*100).to_i, finished: count == size, file: file["path"]}
+        FayeClient.send('/import/products', param)
+        count += 1
       end
     rescue => e
-      logger = get_logger
       logger.fatal "raised unrecoverable error!!!  #{e.message} (file #{file})"
     end
   end
