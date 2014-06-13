@@ -42,6 +42,7 @@ class Delivery < ActiveRecord::Base
       true
     end
   end
+  belongs_to :router, class_name: 'User', foreign_key: 'router_id'
 
   attr_accessor :flash_notice
 
@@ -49,6 +50,8 @@ class Delivery < ActiveRecord::Base
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
   scope :pickable, lambda{|user| where("picked_status=? or picked_status=?", PICKED_STATUS[:unpicked], PICKED_STATUS[:picking]).where.not(id: user.deliveries.map(&:id))}
   scope :picking, -> { where(picked_status: PICKED_STATUS[:picking]) }
+  #router
+  scope :unroute, -> { where(picked_status: PICKED_STATUS[:store_staging], message_status: MESSAGE_STATUS[:picked], router_id: nil)}
   #customer
   validates_presence_of :customer_name, :shipping_address, :customer_email
   validates_format_of :customer_email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'customer email must be valid'
@@ -101,6 +104,13 @@ class Delivery < ActiveRecord::Base
   def complete!
     if can_be_complete?
       self.update_attributes({ picked_status: PICKED_STATUS[:store_staging], message_status: MESSAGE_STATUS[:picked]})
+      AsyncMailWorker.perform_async(:delivery, self.id)
+    end
+  end
+
+  def out_for_delivery(user)
+    if user
+      self.update_attributes({message_status: MESSAGE_STATUS[:out_for_delivery], router_id: user.id})
       AsyncMailWorker.perform_async(:delivery, self.id)
     end
   end

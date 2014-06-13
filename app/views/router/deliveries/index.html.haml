@@ -1,0 +1,18 @@
+%div.col-md-12
+  %div.row
+    %table.table.table-hover
+      %thead
+        %tr
+          %th Shipping Address
+          %th Delivery Window
+          %th Delivery ID
+          %th Item Counts
+      %tbody
+        - @deliveries.each do |delivery|
+          %tr
+            %td= delivery.shipping_address
+            %td= expected_delivery_window(delivery.placed_at)
+            %td= delivery.id
+            %td= delivery.quantity
+    = will_paginate @deliveries, :renderer => BootstrapLinkRender
+  =link_to 'Go to unroute list', unroute_router_deliveries_url, class: 'pull-right'

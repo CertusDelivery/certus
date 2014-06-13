@@ -11,6 +11,6 @@ class UserMailer < ActionMailer::Base
     @delivery = delivery
     @user_profile_url = order_secure_url(delivery)
     @delivery_window  = expected_delivery_window(delivery.placed_at)
-    mail(:to => 'cod7ce@qq.com', :subject => 'CertusDelivery Notification') if delivery.customer_email.present?
+    mail(:to => delivery.customer_email, :subject => 'CertusDelivery Notification') if delivery.customer_email.present?
   end
 end

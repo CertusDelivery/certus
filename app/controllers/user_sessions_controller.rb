@@ -11,7 +11,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
       flash.now[:notice] = "Successfully logged in."
-      redirect_to current_user.admin? ? admin_url : root_url
+      redirect_to self.method("#{current_user.role}_url").call
     else
       flash[:error] = @user_session.errors.full_messages.to_a
       redirect_to login_url

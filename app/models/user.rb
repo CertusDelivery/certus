@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
 
-  ROLES = %w(admin picker)
+  ROLES = %w(admin picker router)
 
   has_many :delivery_picker_ships, foreign_key: 'picker_id' 
   has_many :deliveries, through: :delivery_picker_ships
+  has_many :route_list, class_name:'Delivery', foreign_key: 'router_id' 
 
   validates_presence_of :first_name, :last_name, :email, :login
   validates_inclusion_of :role, :in => ROLES

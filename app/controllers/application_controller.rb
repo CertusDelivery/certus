@@ -60,11 +60,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_router_user
+    require_user
+    return unless current_user
+    unless current_user.router?
+      flash[:error] = "You must be logged in as a router to access this page"
+      deny_access
+    end
+  end
+
   def require_picker_user
     require_user
     return unless current_user
     unless current_user.picker?
-      flash[:error] = "You must be logged in as an picker to access this page"
+      flash[:error] = "You must be logged in as a picker to access this page"
       deny_access
     end
   end
