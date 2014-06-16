@@ -16,11 +16,8 @@
   <![endif]-->
 </head>
 <body class="<%= "#{params[:controller]}_#{params[:action] }" %>">
-  <div class="container">
     <%= render "/layouts/header_router" %>
-    <div class="content">
-      <%= yield %>
-    </div>
+    <%= yield %>
   </div>
 </body>
 </html>

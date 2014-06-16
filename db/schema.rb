@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140613052924) do
+ActiveRecord::Schema.define(version: 20140616054802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20140613052924) do
     t.datetime "desired_delivery_window_begin"
     t.datetime "desired_delivery_window_end"
     t.integer  "router_id"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   create_table "delivery_items", force: true do |t|

@@ -45,6 +45,7 @@ class Delivery < ActiveRecord::Base
   belongs_to :router, class_name: 'User', foreign_key: 'router_id'
 
   attr_accessor :flash_notice
+  geocoded_by :shipping_address
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
@@ -68,6 +69,7 @@ class Delivery < ActiveRecord::Base
   accepts_nested_attributes_for :delivery_items
 
   # callbacks .................................................................
+  after_validation :geocode, :if => :shipping_address_changed?
   before_create :initial_secure_salt, :initial_delivery_window, :setup_status
   before_update :change_order_items_options_flags, :if => :order_flag_changed?
   before_update :add_msg_into_flash, :if => :delivery_option_changed?

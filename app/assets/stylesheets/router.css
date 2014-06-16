@@ -27,3 +27,27 @@ body {
 .dropdown-menu {
   border-radius: 0;
 }
+.list-container {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  width: 300px;
+  padding: 0 0 19px 0;
+  overflow-x: hidden;
+  border-right: 2px solid #ccc;
+}
+.list-ul li {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+.link-to-unroute{
+  position: fixed;
+  bottom: 0;
+  width: 298px;
+  text-align: center;
+  padding: 5px;
+  height: 30px;
+  background: white;
+  border-top: 1px solid #ccc;
+}

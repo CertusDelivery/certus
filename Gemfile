@@ -21,6 +21,7 @@ gem 'faye'
 gem 'thin'
 gem "settingslogic", "~> 2.0.9"
 gem 'aws-s3'
+gem 'geocoder'
 
 group :assets do
   gem 'sass-rails', '~> 4.0.0'

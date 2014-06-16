@@ -97,6 +97,7 @@ GEM
       rake
     formtastic (2.2.1)
       actionpack (>= 3.0)
+    geocoder (1.2.2)
     haml (4.0.5)
       tilt
     has_scope (0.6.0.rc)
@@ -252,6 +253,7 @@ DEPENDENCIES
   faye
   ffaker
   formtastic
+  geocoder
   haml
   inherited_resources (~> 1.4.1)
   jbuilder (~> 1.2)
