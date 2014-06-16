@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'time_ext'
 class Delivery < ActiveRecord::Base
 
   MAX_PICKING_COUNT = 3
@@ -131,6 +132,10 @@ class Delivery < ActiveRecord::Base
 
   def out_of_stock_quantity 
     delivery_items.inject(0) { |sum, item| sum += item.out_of_stock_quantity }
+  end
+
+  def expected_delivery_window
+    "#{(placed_at+3.hours).round_off(30.minutes).strftime("%Y-%m-%d %H:%M %p")} - #{(placed_at+4.hours).round_off(30.minutes).strftime("%H:%M %p")}"
   end
 
   # protected instance methods ................................................

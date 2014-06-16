@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="certus">
 <head>
   <title>Certus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
   <script src="<%= asset_path('respond.min.js') %>"></script>
   <![endif]-->
 </head>
-<body class="<%= "#{params[:controller]}_#{params[:action] }" %>">
+<body ng-view class="<%= "#{params[:controller]}_#{params[:action] }" %>">
     <%= render "/layouts/header_router" %>
     <%= yield %>
   </div>

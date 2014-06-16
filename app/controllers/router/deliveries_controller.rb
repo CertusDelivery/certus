@@ -1,7 +1,10 @@
 module Router
   class DeliveriesController < RouterController
     def index
-      @deliveries = current_user.route_list.page(params[:page])
+      respond_to do |format|
+        format.html {}
+        format.json { @deliveries = current_user.route_list }
+      end
     end
 
     def unroute

@@ -1,10 +1,13 @@
-%div.list-container
-  %ul.list-unstyled.list-ul
-    - @deliveries.each do |delivery|
-      %li
-        %h5.address= delivery.shipping_address
-        %p= expected_delivery_window(delivery.placed_at)
-        %p= "Delivery ID: #{delivery.id}   Item Quantity: #{delivery.quantity}"
-  %div.link-to-unroute
-    =link_to 'Go to unroute list', unroute_router_deliveries_url, target: '_blank'
-%div.map-contianer
+%div{'ng-controller' => 'RouterCtrl'}
+  %div.list-container
+    %ul.list-unstyled.list-ul
+      %li{'ng-repeat' => 'marker in routelist', 'ng-click' => 'openInfoWindow($event, marker)'}
+        %h5.address
+          {{marker.shipping_address}}
+        %p
+          Delivery ID: {{marker.id}}   Item Quantity: {{marker.quantity}}
+        %p
+          {{marker.expected_delivery_window}}
+    %div.link-to-unroute
+      =link_to 'Go to unroute list', unroute_router_deliveries_url, target: '_blank'
+  %div#map.map-container

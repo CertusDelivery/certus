@@ -27,6 +27,9 @@ body {
 .dropdown-menu {
   border-radius: 0;
 }
+.navbar-default{
+  border-bottom: 1px solid #888;
+}
 .list-container {
   position: absolute;
   left: 0;
@@ -35,11 +38,14 @@ body {
   width: 300px;
   padding: 0 0 19px 0;
   overflow-x: hidden;
-  border-right: 2px solid #ccc;
+  border-right: 1px solid #888;
+  z-index: 999;
+  box-shadow: 1px 0 10px #888;
 }
 .list-ul li {
   border-bottom: 1px solid #ccc;
   padding: 10px;
+  cursor: pointer;
 }
 .link-to-unroute{
   position: fixed;
@@ -50,4 +56,11 @@ body {
   height: 30px;
   background: white;
   border-top: 1px solid #ccc;
+}
+#map{
+  position: absolute;
+  left: 300px;
+  right: 0;
+  top: 50px;
+  bottom: 0;
 }
