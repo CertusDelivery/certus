@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140509074741) do
+ActiveRecord::Schema.define(version: 20140616054802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,11 @@ ActiveRecord::Schema.define(version: 20140509074741) do
     t.string   "delivery_option"
     t.string   "secure_salt"
     t.string   "secure_order_id"
+    t.datetime "desired_delivery_window_begin"
+    t.datetime "desired_delivery_window_end"
+    t.integer  "router_id"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   create_table "delivery_items", force: true do |t|
@@ -112,6 +117,18 @@ ActiveRecord::Schema.define(version: 20140509074741) do
 
   add_index "locations", ["info"], name: "index_locations_on_info", unique: true, using: :btree
 
+  create_table "logs", force: true do |t|
+    t.string   "model"
+    t.string   "action"
+    t.string   "url"
+    t.boolean  "success"
+    t.string   "code"
+    t.text     "info"
+    t.text     "response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "products", force: true do |t|
     t.string   "name",                                      null: false
     t.string   "store_sku",                                 null: false
@@ -138,6 +155,9 @@ ActiveRecord::Schema.define(version: 20140509074741) do
     t.boolean  "on_sale",              default: true
     t.integer  "location_id"
     t.string   "source",               default: "NORMAL"
+    t.string   "size3"
+    t.string   "section"
+    t.string   "department"
   end
 
   create_table "users", force: true do |t|

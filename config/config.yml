@@ -1,10 +1,18 @@
 defaults: &defaults
   faye_server: "http://localhost:8080/faye"
+  max_size_to_show_progress_bar: 50
+  S3_bucket: "CertusMarket" 
 
 # local server
 development:
   <<: *defaults
   faye_server: "http://127.0.0.1:8080/faye"
+  S3_bucket: "certus_test" 
+
+test:
+  <<: *defaults
+  faye_server: "http://127.0.0.1:8080/faye"
+  S3_bucket: "certus_test" 
 
 # remote server
 dev:

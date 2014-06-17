@@ -1,3 +1,4 @@
+require 'eventmachine'
 class DeliveryItem < ActiveRecord::Base
 
   # relationships .............................................................
@@ -15,7 +16,7 @@ class DeliveryItem < ActiveRecord::Base
   # callbacks .................................................................
   before_create :initial_picked_status, :update_status_if_all_picked #,:init_random_location_for_test
   before_save :update_status_if_all_picked
-  after_update :publish_item_for_faye
+  after_commit :publish_item_for_faye, :on => :update
   # TODO
   # before_save :calculate_amount
   LOCATION_REG = /^(?<aisle_num>\d{1,3})(?<direction>(N|S|E|W))?-( |(?<front>\d{1,3}))?-(?<shelf>\d{1,2})?$/
@@ -76,7 +77,7 @@ class DeliveryItem < ActiveRecord::Base
 
   # For Test
   def product_image
-    "/products/#{['len', 'piggy', 'battery'][self.id%3]}.jpg"
+    self.product.image if self.product
   end
 
   alias :update_out_of_stock_quantity :out_of_stock!
@@ -123,8 +124,7 @@ class DeliveryItem < ActiveRecord::Base
   protected
 
   def publish_item_for_faye
-    client = Faye::Client.new(Setting.faye_server)
-    client.publish('/delivery_item/updated', self.as_hash)
+    AsyncFayeWorker.perform_async(:delivery_item_updated, self.id)
   end
 
   def order_to_delivery_convert

@@ -30,6 +30,11 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 
+  def destroy 
+    Product.find(params[:id]).destroy
+    redirect_to products_url
+  end
+
   def update_property
     begin
       product = Product.find(params[:id])

@@ -1,0 +1,22 @@
+$(document).ready ->
+  client = new Faye.Client '<%= Setting.faye_server %>'
+  client.subscribe '/import/products', (progress)->
+    if progress.file == $.query.get('file')
+      $('#import-progress-bar').attr('aria-valuenow', progress.persent).css('width', progress.persent + '%');
+      $('span.sr-only').text(progress.count + ' / ' + progress.size);
+      if progress.finished
+        $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Import Successfully'); 
+  client.subscribe '/delete/products', (progress)->
+    if progress.file == $.query.get('file')
+      $('#delete-progress-bar').attr('aria-valuenow', progress.persent).css('width', progress.persent + '%');
+      $('span.sr-only').text(progress.count + ' / ' + progress.size);
+      if progress.finished
+        $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Delete Successfully'); 
+  client.subscribe '/export/products', (progress)->
+    if progress.key+'' == $.query.get('key')+''
+      if progress.count > $('#export-progress-bar').attr('count')
+        $('#export-progress-bar').attr('aria-valuenow', progress.persent).attr('count', progress.count).css('width', progress.persent + '%');
+        $('span.sr-only').text(progress.count + ' / ' + progress.size);
+        if progress.finished
+          $('div.alert-info').removeClass('alert-info').addClass('alert-success').text('Export Successfully'); 
+          window.location.href = progress.file

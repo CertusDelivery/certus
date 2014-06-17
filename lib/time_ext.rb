@@ -1,7 +1,7 @@
 require 'active_support/core_ext/numeric'
 class Time
   def round_off(seconds = 60)
-    Time.at((self.to_f / seconds).round * seconds).getutc
+    Time.at((self.to_f / seconds).round * seconds).utc
   end
 
   def floor(seconds = 60)

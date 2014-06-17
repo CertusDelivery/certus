@@ -1,0 +1,11 @@
+%div.row
+  %center
+    %h4 Export Products
+  %hr
+  %div.col-md-8.col-md-offset-2
+    - if params['key']
+      %div.alert.alert-info
+        = "Export Products..."
+      %div.progress.progress-striped.active
+        %span.sr-only 0 / 0
+        %div#export-progress-bar.progress-bar{'role' => 'progressbar', 'aria-valuenow' => '', 'aria-valuemin' => '0', 'aria-valuemax' => '100', 'count' => '0'}

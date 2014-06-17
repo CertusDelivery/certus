@@ -43,21 +43,31 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     $scope.selectUnpickedRow()
   )
 
+  $scope.scrollToActiveRow = (index) ->
+    offset_top = $('.ngCanvas').parent().scrollTop()
+    container_height = $('.ngCanvas').parent().height()
+    selected_item = $('.ngCanvas').children().eq(index)
+    selected_top  = selected_item.height()*index
+    selected_height = selected_top+selected_item.height()
+    if offset_top > selected_top || (offset_top + container_height) < selected_height
+      $('.ngCanvas').parent().scrollTop(selected_top)
+
   $scope.selectUnpickedRow = ->
     found = false
-    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, index) ->
+    index = 0
+    angular.forEach $scope.gridOptions.$gridScope.renderedRows, (row, i) ->
       return if found
       if row.entity.picked_status == 'UNPICKED'
-        $scope.gridOptions.selectRow(index, true)
+        index = i
         found = true
-    if !found
-      $scope.gridOptions.selectRow(0, true)
+    $scope.gridOptions.selectRow(index, true)
+    $scope.scrollToActiveRow(index)
 
   $scope.initFaye = ->
     $scope.client = new Faye.Client '<%= Setting.faye_server %>'
     $scope.client.subscribe '/delivery_item/updated', (item)->
       angular.forEach $scope.picklist, (delivery_item) ->
-        if delivery_item.id == item.id 
+        if delivery_item.id == item.id
           delivery_item.picking_progress = item.picking_progress
           delivery_item.picked_status = item.picked_status
     $scope.client.subscribe '/delivery/picked', (items)->
@@ -70,6 +80,8 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
       if ship.picker_id == $scope.picker_id
         ship.items.forEach (item) ->
           $scope.picklist.push item
+    $scope.client.subscribe '/delivery/unpicked_quantity', (unpicked)->
+      $scope.unpicked_count = unpicked.count
 
   $scope.initFaye()
 
@@ -157,11 +169,6 @@ app.controller('PicklistCtrl', ['$scope', '$resource', '$http', '$modal', '$inte
     ->
       $scope.timer()
     1000
-  )
-  $interval(
-    ->
-      $scope.refreshUnpickedCount() 
-    5000
   )
 
   $scope.picking = (barcode) ->

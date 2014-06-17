@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="certus">
+<head>
+  <title>Certus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <%= stylesheet_link_tag    "router", media: "all" %>
+  <%= javascript_include_tag "router" %>
+  <%= csrf_meta_tags %>
+  <% if current_user %>
+  <script src="<%= "#{Setting.faye_server}/client.js" %>"></script>
+  <% end %>
+  <!--[if lt IE 9]>
+  <script src="<%= asset_path('html5shiv.js') %>"></script>
+  <script src="<%= asset_path('respond.min.js') %>"></script>
+  <![endif]-->
+</head>
+<body ng-view class="<%= "#{params[:controller]}_#{params[:action] }" %>">
+    <%= render "/layouts/header_router" %>
+    <%= yield %>
+  </div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'time_ext'
 class Delivery < ActiveRecord::Base
 
   MAX_PICKING_COUNT = 3
@@ -42,13 +43,17 @@ class Delivery < ActiveRecord::Base
       true
     end
   end
+  belongs_to :router, class_name: 'User', foreign_key: 'router_id'
 
   attr_accessor :flash_notice
+  geocoded_by :shipping_address
 
   scope :fifo, -> {order(id: :asc)}
   scope :unpicked, -> { where(picked_status: PICKED_STATUS[:unpicked]) }
   scope :pickable, lambda{|user| where("picked_status=? or picked_status=?", PICKED_STATUS[:unpicked], PICKED_STATUS[:picking]).where.not(id: user.deliveries.map(&:id))}
   scope :picking, -> { where(picked_status: PICKED_STATUS[:picking]) }
+  #router
+  scope :unroute, -> { where(picked_status: PICKED_STATUS[:store_staging], message_status: MESSAGE_STATUS[:picked], router_id: nil)}
   #customer
   validates_presence_of :customer_name, :shipping_address, :customer_email
   validates_format_of :customer_email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'customer email must be valid'
@@ -65,6 +70,7 @@ class Delivery < ActiveRecord::Base
   accepts_nested_attributes_for :delivery_items
 
   # callbacks .................................................................
+  after_validation :geocode, :if => :shipping_address_changed?
   before_create :initial_secure_salt, :initial_delivery_window, :setup_status
   before_update :change_order_items_options_flags, :if => :order_flag_changed?
   before_update :add_msg_into_flash, :if => :delivery_option_changed?
@@ -105,6 +111,13 @@ class Delivery < ActiveRecord::Base
     end
   end
 
+  def out_for_delivery(user)
+    if user
+      self.update_attributes({message_status: MESSAGE_STATUS[:out_for_delivery], router_id: user.id})
+      AsyncMailWorker.perform_async(:delivery, self.id)
+    end
+  end
+
   def picked_total_price
     delivery_items.inject(0) { |sum, item| sum += item.picked_total_price }
   end
@@ -119,6 +132,10 @@ class Delivery < ActiveRecord::Base
 
   def out_of_stock_quantity 
     delivery_items.inject(0) { |sum, item| sum += item.out_of_stock_quantity }
+  end
+
+  def expected_delivery_window
+    "#{(placed_at+3.hours).round_off(30.minutes).strftime("%Y-%m-%d %H:%M %p")} - #{(placed_at+4.hours).round_off(30.minutes).strftime("%H:%M %p")}"
   end
 
   # protected instance methods ................................................
@@ -166,8 +183,7 @@ class Delivery < ActiveRecord::Base
 
   def publish_items_for_faye
     if self.store_staging?
-      client = Faye::Client.new(Setting.faye_server)
-      client.publish('/delivery/picked', self.delivery_items)
+      AsyncFayeWorker.perform_async(:delivery_picked, self.id)
     end
   end
 end

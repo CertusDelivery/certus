@@ -1,0 +1,35 @@
+app = angular.module('certus', [])
+app.controller('RouterCtrl', ['$scope', '$http', ($scope, $http) ->
+  $scope.map = new google.maps.Map($('#map')[0], {zoom: 6, center: new google.maps.LatLng(40.0000, -98.0000), mapTypeId: google.maps.MapTypeId.ROADMAP})
+  $scope.markers = []
+  
+  # create marker
+  infoWindow = new google.maps.InfoWindow()
+  $scope.createMarker = (info)->
+    marker = new google.maps.Marker({
+      map: $scope.map,
+      position: new google.maps.LatLng(info.latitude, info.longitude),
+      title: info.shipping_address
+    })
+    marker.content = '<div class="infoWindowContent">' +
+                     '<p><strong>Delivery ID:</strong> '+info.id+'&nbsp;&nbsp;'+
+                     '<strong>Item Quantity:</strong> '+info.quantity+'</p>'+
+                     '<p><strong>Delivery Window: </strong>'+info.expected_delivery_window+'</p>'+
+                     '</div>'
+    google.maps.event.addListener(marker, 'click', ->
+      infoWindow.setContent('<h5>' + marker.title + '</h5>' + marker.content)
+      infoWindow.open($scope.map, marker)
+    )
+    $scope.markers.push(marker)
+    
+  # open window, triggle marker
+  $scope.openInfoWindow = (e, selectedMarker)->
+    e.preventDefault()
+    google.maps.event.trigger(selectedMarker, 'click')
+
+  $http.get('/router.json').success( (data) ->
+    $scope.routelist = data
+    angular.forEach $scope.routelist, (d)->
+      $scope.createMarker(d)
+  )
+])

@@ -4,3 +4,7 @@ log: ../log/thin.log
 port: 8080
 servers: 1
 daemonize: true
+max_conns: 20480
+require: []
+max_persistent_conns: 14048
+timeout: 120

@@ -2,7 +2,7 @@ require 'csv'
 
 namespace :products do
   
-  desc "Import product data from csv file (options: FILE=/path/to/csv/file.csv)"
+  desc "Import product data from csv file (options: FILE=/path/to/csv/file.csv [SYN=(yes|no)]),if you want to synchronize product data between workflow and webshop, just set SYN to yes"
   task import_from_csv: :environment do
     begin
       # params validation
@@ -19,61 +19,29 @@ namespace :products do
 
       # import data from cvs file
       pid = nil # print pid when import failse
-      count = 0;
+      count = 0
+      error = 0
+      syn_flag = ENV['SYN'] == 'yes' ? false : true
       puts "Importing the data of product from csv file..."
       @current_procent = 0
       @line_number = 0
       @total_line_count = (`wc -l #{file_path}`[/\d+/]).to_f
-      Product.transaction do
-        CSV.foreach(file_path, :headers => true) do |row|
-          pid =  row['pid']
-          count += 1
-          product = Product.find_by_store_sku(row['sku/upc'])
-          product ||= Product.new
-          
-          product.source = Product::SOURCE[:import]
-          product.import = true
-          product.store_sku = row['sku/upc']
-          product.name = row['name'] || 'UNDEFINED'
-          product.brand = row['brand']
-          product.size = row['size1']
-          product.image = row['image']
-          product.sale_qty_min = row['sale qty min']
-          product.sale_qty_limit = row['sale qty limit']
-          product.info_1 = row['more info 1']
-          product.info_2 = row['more info 2']
-
-          if row['unit price']
-            unit_price = row['unit price'].delete('$').split('/') if row['unit price']
-            product.unit_price = unit_price[0]
-            product.unit_price_unit = unit_price[1]
-          end
-
-          if row['sale price']
-            product.price = row['sale price'].delete('$')
-          end
-
-          if row['reg price']
-            product.reg_price = row['reg price'].delete('$')
-          end
-
-          if row['size2']
-            weight = row['size2'].split(' ', 2)
-            product.shipping_weight = weight[0]
-            product.shipping_weight_unit = weight[1]
-          end
-
-          product.category = Category.create_by_string(row['category']) 
-          product.save!
-          csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{product.name}` created successfully"] 
-          display_progress
+      CSV.foreach(file_path, :headers => true, encoding: "ISO8859-1") do |row|
+        pid =  row['pid']
+        count += 1
+        begin
+          Product.import row
+          #csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "`#{row['name']}` created successfully"] 
+        rescue Exception => ex
+          csv << ["F", Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "*** ##{pid}  #{ex.message}"] if csv
+          error += 1
         end
-        puts "\r\nImport Succseefully!!!"
-        csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Counts: #{count} "] 
+        display_progress
       end
+      puts "\r\nImport Succseefully!!!"
+      csv << ['I', Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "Import Successfully, Success: #{count-error} Error: #{error} "] 
     rescue Exception => ex
-      csv << ["F", Time.now.strftime("%Y-%m-%d %H:%M:%S %L"), "*** ##{pid}  #{ex.message}"] if csv
-      puts "*** ##{pid}  #{ex.message}"
+      puts "*** #{ex.message}"
       puts "Rollback!"
     ensure
       csv.close if csv

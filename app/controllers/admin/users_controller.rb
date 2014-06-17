@@ -24,9 +24,9 @@ module Admin
     
     def update
       @user = User.find(params[:id])
-      if @user.update_attributes(params[:user])
+      if @user.update_attributes(user_params)
         flash[:notice] = "Successfully updated profile."
-        redirect_to root_url
+        redirect_to admin_users_url
       else
         render :action => 'edit'
       end
@@ -35,7 +35,7 @@ module Admin
     private
 
     def user_params
-      params.require(:user).permit(:login, :email, :password, :password_confirmation, :first_name, :last_name, :enabled)
+      params.require(:user).permit(:login, :email, :password, :password_confirmation, :first_name, :last_name, :role, :enabled)
     end
   end
 end

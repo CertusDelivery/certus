@@ -15,4 +15,8 @@ module Customer::OrdersHelper
   def expected_delivery_window(placed_at)
     "#{(placed_at+3.hours).round_off(30.minutes).strftime("%Y-%m-%d %H:%M %p")} - #{(placed_at+4.hours).round_off(30.minutes).strftime("%H:%M %p")}"
   end
+
+  def format_placed_at(placed_at)
+    placed_at.localtime.strftime("%Y-%m-%d %H:%M %p")
+  end
 end

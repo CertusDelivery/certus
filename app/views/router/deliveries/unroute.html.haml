@@ -1,0 +1,28 @@
+%div.col-md-12
+  =form_tag add_router_deliveries_url do
+    %div.row
+      %div.col-md-8.col-sm-12
+        %h4 Unroute List
+      %div.col-md-4.col-sm-12
+        %button.btn.btn-default.pull-right{type: 'submit'}
+          Add Selected Deliveries To Route
+    %div.row
+      %hr
+      %table.table.table-hover
+        %thead
+          %tr
+            %th 
+            %th Shipping Address
+            %th Delivery Window
+            %th Delivery ID
+            %th Item Counts
+        %tbody
+          - @deliveries.each do |delivery|
+            %tr
+              %td
+                %input{type: 'checkbox', value: delivery.id, name: 'deliveries[]'}
+              %td= delivery.shipping_address
+              %td= expected_delivery_window(delivery.placed_at)
+              %td= delivery.id
+              %td= delivery.quantity
+      = will_paginate @deliveries, :renderer => BootstrapLinkRender

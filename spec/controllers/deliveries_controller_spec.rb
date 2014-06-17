@@ -1,6 +1,16 @@
 require 'spec_helper'
+require 'authlogic/test_case'
 
 describe DeliveriesController do
+  include Authlogic::TestCase
+  before do
+    Delivery.any_instance.stubs(:publish_items_for_faye)
+    DeliveryItem.any_instance.stubs(:publish_item_for_faye)
+    activate_authlogic
+    @user = create(:user)
+    UserSession.create(@user)
+    controller.stubs(:current_user).returns(@user)
+  end
 
   describe "#create" do
     it 'should filt error params when post error params' do
@@ -31,7 +41,10 @@ describe DeliveriesController do
   describe '#picklist' do
     before do
       3.times { create_delivery }
-      2.times { create_delivery(:picking) }
+      2.times do
+        @user.deliveries << create_delivery(:picking)
+      end
+      @user.save
     end
 
     it 'should render picklist template when format is html' do
@@ -64,7 +77,11 @@ describe DeliveriesController do
   describe '#load_unpicked_order' do
     before do
       3.times { create_delivery }
-      1.times { create_delivery(:picking) }
+      1.times do
+        picking_delivery = create_delivery(:picking)
+        @user.deliveries << picking_delivery
+        @user.save
+      end
     end
 
     it 'should load one order into picklist' do
@@ -73,27 +90,33 @@ describe DeliveriesController do
       get :load_unpicked_order
       response.should render_template('deliveries/picklist.json')
       assigns[:deliveries].size.should == 2
-      Delivery.picking.count.should == 2
+      @user.deliveries.picking.count.should == 2
       Delivery.unpicked.count.should == 2
     end
 
     it 'should not load new order into picklist when current picking orders count equal to MAX_PICKING_COUNT' do
-      2.times { |i| create_delivery(:picking) }
-      Delivery.picking.count.should == 3
+      2.times do
+        @user.deliveries << create_delivery(:picking)
+      end
+      @user.save
+      @user.deliveries.picking.count.should == 3
       Delivery.unpicked.count.should == 3
       get :load_unpicked_order
       response.should render_template('deliveries/picklist.json')
       assigns[:deliveries].size.should == 3
-      Delivery.picking.count.should == 3
+      @user.deliveries.picking.count.should == 3
       Delivery.unpicked.count.should == 3
     end
   end
 
   describe '#remove_picked_orders' do
     before do
-      2.times { create_delivery(:picking) }
+      2.times do 
+        @user.deliveries << create_delivery(:picking)
+      end
+      @user.save
       3.times { create_delivery }
-      Delivery.picking.each do |d|
+      @user.deliveries.picking.each do |d|
         d.delivery_items.each{|item| item.pick!(item.quantity)}
       end
     end
@@ -110,6 +133,7 @@ describe DeliveriesController do
     before do
       #delivery 1
       delivery = FactoryGirl.build :delivery, :picking, order_sku_count: 3
+      @user.deliveries << delivery
       total_price = 0
 
       @delivery_item_1 = FactoryGirl.build(:delivery_item)
@@ -134,6 +158,7 @@ describe DeliveriesController do
       delivery.save!
       #delivery 2
       delivery2 = FactoryGirl.build :delivery, :picking, order_sku_count: 2
+      @user.deliveries << delivery2
       total_price = 0
 
       @delivery2_delivery_item_4 = FactoryGirl.build(:delivery_item)

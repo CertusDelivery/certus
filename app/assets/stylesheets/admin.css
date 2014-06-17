@@ -7,3 +7,24 @@ body {
   padding-top: 70px;
   padding-bottom: 40px;
 }
+.log div {
+  padding: 7px;
+  border-top: 1px solid #ccc;
+}
+.alert {
+  border-radius: 0;
+  margin-top: 20px;
+  padding: 5px;
+}
+.sr-only {
+  width: 100px;
+  height: 20px;
+  margin: 0 -50px;
+  clip: auto;
+  left: 50%;
+  color: black;
+  text-align: center;
+}
+.dropdown-menu {
+  border-radius: 0;
+}

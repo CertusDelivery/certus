@@ -1,0 +1,66 @@
+/*
+ *= require bootstrap.min
+ */
+
+body {
+  padding-top: 70px;
+  padding-bottom: 40px;
+}
+.log div {
+  padding: 7px;
+  border-top: 1px solid #ccc;
+}
+.alert {
+  border-radius: 0;
+  margin-top: 20px;
+  padding: 5px;
+}
+.sr-only {
+  width: 100px;
+  height: 20px;
+  margin: 0 -50px;
+  clip: auto;
+  left: 50%;
+  color: black;
+  text-align: center;
+}
+.dropdown-menu {
+  border-radius: 0;
+}
+.navbar-default{
+  border-bottom: 1px solid #888;
+}
+.list-container {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  width: 300px;
+  padding: 0 0 19px 0;
+  overflow-x: hidden;
+  border-right: 1px solid #888;
+  z-index: 999;
+  box-shadow: 1px 0 10px #888;
+}
+.list-ul li {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  cursor: pointer;
+}
+.link-to-unroute{
+  position: fixed;
+  bottom: 0;
+  width: 298px;
+  text-align: center;
+  padding: 5px;
+  height: 30px;
+  background: white;
+  border-top: 1px solid #ccc;
+}
+#map{
+  position: absolute;
+  left: 300px;
+  right: 0;
+  top: 50px;
+  bottom: 0;
+}

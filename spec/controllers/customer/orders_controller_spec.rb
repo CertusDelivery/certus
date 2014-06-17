@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Customer::OrdersController do
   before do
     @order = create_delivery
+    Delivery.any_instance.stubs(:publish_items_for_faye).returns(nil)
   end
 
   describe "GET show" do

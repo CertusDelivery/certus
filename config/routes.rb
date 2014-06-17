@@ -7,6 +7,7 @@ Certus::Application.routes.draw do
   get "orders/show"
   # You can have the root of your site routed with "root"
   root 'deliveries#picklist'
+  get :picker, controller: :deliveries, action: :picklist
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -16,14 +17,36 @@ Certus::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
 
+  namespace :router do
+    get "/", controller: :deliveries, action: :index
+    resources :deliveries do
+      collection do
+        get  :unroute
+        post :add
+      end
+    end
+  end
 
   namespace :admin do
     get "/", controller: :deliveries, action: :history
     resources :users
+    resources :logs, only: [:index, :show] do
+      collection do
+        get :csv_export
+      end
+    end
     resources :deliveries do
       collection do
         get :history
         get :picklist
+      end
+    end
+    resources :products do
+      collection do
+        get  :csv_import
+        get  :csv_delete
+        post :delete
+        get  :csv_export
       end
     end
   end
@@ -44,6 +67,7 @@ Certus::Application.routes.draw do
         get 'picking_print'
         get 'print_packing_list'
         get 'history'
+        post 'set_desired_delivery_window'
       end
     end
 
@@ -57,7 +81,7 @@ Certus::Application.routes.draw do
       end
     end
 
-    resources :products, only: [:index, :new, :create] do
+    resources :products, only: [:index, :new, :create, :destroy] do
       collection do
         get 'search/:store_sku' => 'products#search'
       end

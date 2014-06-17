@@ -3,6 +3,7 @@ require 'spec_helper'
 describe DeliveryItem do
   before do
     @delivery_item = create(:delivery_item)
+    DeliveryItem.any_instance.stubs(:publish_item_for_faye)
   end
 
   describe "#order_to_delivery_convert" do
@@ -85,7 +86,6 @@ describe DeliveryItem do
 
     it 'should create substitute item with right quantities' do
       substitute_item = DeliveryItem.substitute(@original_item, @product_params)
-      
       expect(substitute_item.quantity).to eq(@original_item.out_of_stock_quantity)
       expect(substitute_item.picked_quantity).to eq(1)
     end

@@ -1,6 +1,6 @@
 class DeliveriesController < ApplicationController
-  skip_before_filter :require_picker_user, only: [:create]
-  protect_from_forgery except: [:create, :remove_picked_orders]
+  skip_before_filter :require_picker_user, only: [:create, :set_desired_delivery_window]
+  protect_from_forgery except: [:create, :remove_picked_orders, :set_desired_delivery_window]
 
   def create
     begin
@@ -8,7 +8,24 @@ class DeliveriesController < ApplicationController
       @delivery = Delivery.new(delivery_params)
       if @delivery.save
         AsyncMailWorker.perform_async(:delivery, @delivery.id)
+        AsyncFayeWorker.perform_async(:unpicked_quantity, nil)
         render json: {:status => :ok, order: {order_status: 'IN_FULFILLMENT',estimated_delivery_window: @delivery.desired_delivery_window }}
+      else
+        render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
+      end
+    rescue => e
+      render json: {:status => :nok, reason: "Invalid Order. #{e.inspect}"}, status: :bad_request
+    end
+  end
+
+  # leave desired_delivery_window, end this sprint, rewrite this field, maybe delete it.
+  def set_desired_delivery_window
+    begin
+      @delivery = Delivery.find_by_order_id(params[:order_id])
+      @delivery.desired_delivery_window_begin = Time.at(params[:start_utc].to_i).utc
+      @delivery.desired_delivery_window_end   = Time.at(params[:end_utc].to_i).utc
+      if @delivery.save()
+        render json: {:status => :ok}
       else
         render json: {:status => :nok, reason: @delivery.errors.full_messages}, status: :unprocessable_entity
       end
