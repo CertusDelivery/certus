@@ -21,4 +21,6 @@
 //= require main
 //= require modals
 //= require deliveries
-//= require_tree ./angular
+//= require ./angular/controllers/picklist_ctrl.js.coffee.erb
+//= require ./angular/controllers/products_ctrl.js.coffee.erb
+//= require ./angular/controllers/locations_ctrl.js.coffee.erb
