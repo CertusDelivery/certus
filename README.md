@@ -44,6 +44,21 @@ PostgreSQL
     psql --host localhost postgres
     create role [your login] superuser login
 
+Redis
+-----
+
+	# install
+	$ wget http://download.redis.io/releases/redis-2.8.9.tar.gz
+    $ tar xzf redis-2.8.9.tar.gz
+    $ cd redis-2.8.9
+    $ make
+    
+    # start
+    $ redis-server redis.conf
+    
+    # stop
+    $ kill -9 $(cat tmp/pids/puma.pid)
+    
 
 NodeJS
 ---
@@ -89,3 +104,51 @@ To run the spec features(in spec/features, file ext with .feature):
 
     bundle exec rake spec:features
 
+
+Servicers 
+---------
+
+	1. Nginx
+	2. Puma
+	
+		puma -C config/puma.rb -d
+		 
+	3. Redis
+	
+	   	/path/redis/redis-server /path/redis/redis.conf
+	   	
+	4. Sidekiq
+	
+		sidekiq -C config/sidekiq.yml -d -L log/sidekiq-server.log
+		
+	5. Faye
+	
+		cd faye && thin start -C thin.yml
+		
+Redeploy
+--------
+
+0. #### login server
+		$ ssh ~~~~
+		$ cd /root/certus
+1. #### kill all servers
+        $ ./killpids.sh
+        ------------ or kill one by one ------------
+        $ kill -9 $(cat tmp/pids/puma.pid)
+        $ kill -9 $(cat tmp/pids/sidekiq.pid)
+        $ kill -9 $(cat tmp/pids/thin.8080.pid)
+3. #### update certus code
+        $ git pull [origin remote_branch]
+4. #### install missing gems
+        $ bundle install       
+5. #### update database
+        $ rake db:migrate RAILS_ENV=(dev|staging|production)
+6. #### compile asset files
+        $ rake assets:precompile RAILS_ENV=(dev|staging|production)
+7. #### start all servers
+        $ ./run.sh
+        ------------ or start one by one ------------
+        $ RAILS_ENV=(dev|staging|production) sidekiq -C config/sidekiq.yml -d -L log/sidekiq-server.log
+		$ RAILS_ENV=(dev|staging|production) puma -C config/puma.rb -d
+		$ cd faye
+		$ RAILS_ENV=(dev|staging|production) thin start -C thin.yml
