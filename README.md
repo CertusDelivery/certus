@@ -129,8 +129,8 @@ Redeploy
 --------
 
 0. #### login server
-		$ ssh ~~~~
-		$ cd /root/certus
+		    $ ssh ~~~~
+        $ cd /root/certus
 1. #### kill all servers
         $ ./killpids.sh
         ------------ or kill one by one ------------
@@ -149,6 +149,6 @@ Redeploy
         $ ./run.sh
         ------------ or start one by one ------------
         $ RAILS_ENV=(dev|staging|production) sidekiq -C config/sidekiq.yml -d -L log/sidekiq-server.log
-		$ RAILS_ENV=(dev|staging|production) puma -C config/puma.rb -d
-		$ cd faye
-		$ RAILS_ENV=(dev|staging|production) thin start -C thin.yml
+        $ RAILS_ENV=(dev|staging|production) puma -C config/puma.rb -d
+        $ cd faye
+        $ RAILS_ENV=(dev|staging|production) thin start -C thin.yml
