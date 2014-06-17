@@ -129,38 +129,38 @@ Redeploy
 
 0. login server
 
-    $ ssh ~~~~
-    $ cd /root/certus
+        $ ssh ~~~~
+        $ cd /root/certus
 
 1. kill all servers
 
-    $ ./killpids.sh
-    ------------ or kill one by one ------------
-    $ kill -9 $(cat tmp/pids/puma.pid)
-    $ kill -9 $(cat tmp/pids/sidekiq.pid)
-    $ kill -9 $(cat tmp/pids/thin.8080.pid)
+        $ ./killpids.sh
+        ------------ or kill one by one ------------
+        $ kill -9 $(cat tmp/pids/puma.pid)
+        $ kill -9 $(cat tmp/pids/sidekiq.pid)
+        $ kill -9 $(cat tmp/pids/thin.8080.pid)
 
 3. update certus code
 
-    $ git pull [origin remote_branch]
+        $ git pull [origin remote_branch]
     
 4. install missing gems
 
-    $ bundle install       
+        $ bundle install       
 
 5. update database
 
-    $ rake db:migrate RAILS_ENV=(dev|staging|production)
+        $ rake db:migrate RAILS_ENV=(dev|staging|production)
 
 6. compile asset files
 
-    $ rake assets:precompile RAILS_ENV=(dev|staging|production)
+        $ rake assets:precompile RAILS_ENV=(dev|staging|production)
 
 7. start all servers
 
-    $ ./run.sh
-    ------------ or start one by one ------------
-    $ RAILS_ENV=(dev|staging|production) sidekiq -C config/sidekiq.yml -d -L log/sidekiq-server.log
-    $ RAILS_ENV=(dev|staging|production) puma -C config/puma.rb -d
-    $ cd faye
-    $ RAILS_ENV=(dev|staging|production) thin start -C thin.yml
+        $ ./run.sh
+        ------------ or start one by one ------------
+        $ RAILS_ENV=(dev|staging|production) sidekiq -C config/sidekiq.yml -d -L log/sidekiq-server.log
+        $ RAILS_ENV=(dev|staging|production) puma -C config/puma.rb -d
+        $ cd faye
+        $ RAILS_ENV=(dev|staging|production) thin start -C thin.yml
